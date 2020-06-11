@@ -1,2 +1,2 @@
 # gmc.sh
-Personal URL Shortener
+Blazing fast and easy to use URL shortener.
