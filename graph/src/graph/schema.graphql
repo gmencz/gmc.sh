@@ -1,0 +1,16 @@
+"""
+A shortened resource represents an external or internal resource
+which's URL is difficult to remember.
+"""
+type ShortenedResource {
+  """
+  The original URL of the external or internal resource
+  we're trying to shorten.
+  """
+  originalURL: String!
+
+  """
+  The shortened URL which points to an external or internal resource.
+  """
+  shortenedURL: String! @id
+}
