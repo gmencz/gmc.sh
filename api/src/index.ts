@@ -6,6 +6,5 @@ const watcher = watch(join(`${__dirname}`, 'graph'), {
 });
 
 watcher.on('change', (path) => {
-  console.log(__dirname);
   console.log(`File ${path} has changed`);
 });
