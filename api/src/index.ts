@@ -1,0 +1,11 @@
+import { watch } from 'chokidar';
+import { join } from 'path';
+
+const watcher = watch(join(`${__dirname}`, 'graph', 'schema.graphql'), {
+  persistent: true,
+});
+
+watcher.on('change', (path) => {
+  console.log(__dirname);
+  console.log(`File ${path} has changed`);
+});

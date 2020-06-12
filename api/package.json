@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API for gmc.sh",
+  "main": "src/index.ts",
+  "scripts": {
+    "start:dev": "ts-node-dev --transpileOnly --respawn src/index.ts"
+  },
+  "author": "Gabriel Méndez",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.0.13",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "chokidar": "^3.4.0"
+  }
+}
