@@ -1,7 +1,7 @@
 import { watch } from 'chokidar';
 import { join } from 'path';
 
-const watcher = watch(join(`${__dirname}`, 'graph', 'schema.graphql'), {
+const watcher = watch(join(`${__dirname}`, 'graph'), {
   persistent: true,
 });
 
