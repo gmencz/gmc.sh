@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 import { greenBright } from 'chalk';
 import {
   redirectBySlug,
@@ -6,6 +7,8 @@ import {
 } from './controllers/redirectionsController';
 
 const api = express();
+
+api.use(morgan('combined'));
 
 api.get('/:slug', redirectBySlug);
 api.get('*', redirectToApp);
