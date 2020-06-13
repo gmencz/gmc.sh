@@ -11,7 +11,11 @@ const api = express();
 // Log every request
 api.use(morgan('combined'));
 
+// Redirect to the shortened URL by slug
 api.get('/:slug', redirectBySlug);
+
+// Redirect to react application whenever we hit a route
+// which isn't the /:slug one
 api.get('*', redirectToApp);
 
 const PORT = process.env.PORT || 8081;
