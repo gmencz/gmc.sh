@@ -8,6 +8,7 @@ import {
 
 const api = express();
 
+// Log every request
 api.use(morgan('combined'));
 
 api.get('/:slug', redirectBySlug);
