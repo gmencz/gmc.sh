@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+host: https://gmc.sh

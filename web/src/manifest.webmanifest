@@ -1,0 +1,51 @@
+{
+  "name": "gmc.sh - The fastest URL shortener in the web.",
+  "short_name": "gmc.sh",
+  "start_url": "/",
+  "lang": "en",
+  "background_color": "#222",
+  "theme_color": "#FFFB00",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "img/logo48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
