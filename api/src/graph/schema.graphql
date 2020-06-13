@@ -1,6 +1,0 @@
-"The user root type"
-type User {
-  id: ID!
-  username: String! @id
-  name: String!
-}
