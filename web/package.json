@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Web app for gmc.sh",
   "main": "src/index.ts",
-  "scripts": {},
+  "scripts": {
+    "start:dev": "parcel src/index.html"
+  },
   "author": "Gabriel Méndez",
   "license": "MIT",
   "devDependencies": {
