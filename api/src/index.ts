@@ -6,14 +6,26 @@ import {
   redirectToApp,
 } from './controllers/redirectionsController';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 const api = express();
 
 // Middlewares ->
-// Log every request
-api.use(morgan('combined'));
+// Secure response headers for protection against possible attacks
 api.use(helmet());
 
+// Only allow 100 requests every 30 minutes.
+api.use(
+  rateLimit({
+    windowMs: 30 * 60 * 1000,
+    max: 100,
+  })
+);
+
+// Log every request
+api.use(morgan('combined'));
+
+// API endpoints ->
 // Redirect to the shortened URL by slug
 api.get('/:slug', redirectBySlug);
 
