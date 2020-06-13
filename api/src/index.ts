@@ -5,11 +5,14 @@ import {
   redirectBySlug,
   redirectToApp,
 } from './controllers/redirectionsController';
+import helmet from 'helmet';
 
 const api = express();
 
+// Middlewares ->
 // Log every request
 api.use(morgan('combined'));
+api.use(helmet());
 
 // Redirect to the shortened URL by slug
 api.get('/:slug', redirectBySlug);
