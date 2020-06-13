@@ -32,7 +32,7 @@ export default class GraphWatcher {
     try {
       const bufferedGraph = await fs.readFile(graphPath);
 
-      log(whiteBright('🤖 Upadting DGraph...'));
+      log(whiteBright('🤖 Updating DGraph...'));
 
       const dgraphResponse = await fetch('http://localhost:8080/admin/schema', {
         method: 'POST',

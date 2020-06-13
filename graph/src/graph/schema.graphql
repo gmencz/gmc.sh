@@ -4,13 +4,16 @@ which's URL is difficult to remember.
 """
 type ShortenedResource {
   """
-  The original URL of the external or internal resource
-  we're trying to shorten.
+  The unique identifier of the shortened resource.
+  It represents the last fragment of the shortened URL, e.g:
+  "me" which would come from "https://gmc.sh/me".
   """
-  originalURL: String!
+  slug: String! @id
 
   """
-  The shortened URL which points to an external or internal resource.
+  The original FQDN of the external or internal resource
+  we're trying to shorten, an FQDN is a fully qualified
+  domain name so this could possibly be an URL.
   """
-  shortenedURL: String! @id
+  originalFQDN: String!
 }
