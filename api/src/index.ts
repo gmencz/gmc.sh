@@ -5,6 +5,13 @@ const api = express();
 
 api.get('/:slug', (req, res) => {
   const { slug } = req.params;
+
+  if (!slug) {
+    res.status(400).json({
+      message: 'No slug was specified',
+    });
+  }
+
   res.json({ slug });
 });
 
