@@ -8,7 +8,7 @@ type ShortenedResource {
   It represents the last fragment of the shortened URL, e.g:
   "me" which would come from "https://gmc.sh/me".
   """
-  slug: String! @id
+  slug: String! @id @search(by: [fulltext])
 
   """
   The original FQDN of the external or internal resource
