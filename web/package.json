@@ -2,7 +2,7 @@
   "name": "web",
   "version": "1.0.0",
   "description": "Web app for gmc.sh",
-  "main": "src/index.ts",
+  "main": "src/index.html",
   "scripts": {
     "start:dev": "parcel src/index.html"
   },
