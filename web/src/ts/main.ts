@@ -19,7 +19,7 @@ interface GraphQLError {
   message: string;
 }
 
-const urlShortenerForm = document.querySelector(
+var urlShortenerForm = document.querySelector(
   '.url-shortener'
 ) as HTMLFormElement;
 
@@ -35,7 +35,7 @@ urlInput.addEventListener('keydown', () => {
   successBox.classList.add('invisible');
 });
 
-urlShortenerForm.addEventListener('submit', async (event) => {
+urlShortenerForm.addEventListener('submit', async event => {
   if (event.preventDefault) {
     event.preventDefault();
   } else {
@@ -114,7 +114,7 @@ urlShortenerForm.addEventListener('submit', async (event) => {
     const parsedGraphQLErrors = JSON.parse('{' + rawGraphQLInfo.join('{'))
       .response.errors as GraphQLError[];
 
-    const slugAlreadyExistsError = parsedGraphQLErrors.some((error) =>
+    const slugAlreadyExistsError = parsedGraphQLErrors.some(error =>
       error.message.includes('already exists')
     );
 
