@@ -38,7 +38,7 @@ export const redirectBySlug = async (
       const redirectDestination =
         process.env.NODE_ENV === 'production'
           ? 'https://app.gmc.sh/error?code=not_found'
-          : 'http://localhost:3000/error?code=not_found';
+          : 'http://localhost:1234/error?code=not_found';
 
       return res.redirect(redirectDestination);
     }
@@ -55,7 +55,7 @@ export const redirectBySlug = async (
     const redirectDestination =
       process.env.NODE_ENV === 'production'
         ? 'https://app.gmc.sh/error?code=unknown'
-        : 'http://localhost:3000/error?code=unknown';
+        : 'http://localhost:1234/error?code=unknown';
 
     return res.redirect(redirectDestination);
   }
@@ -65,7 +65,7 @@ export const redirectToApp = (_: Request, res: Response): void => {
   const redirectDestination =
     process.env.NODE_ENV === 'production'
       ? 'https://app.gmc.sh'
-      : 'http://localhost:3000';
+      : 'http://localhost:1234';
 
   return res.redirect(redirectDestination);
 };
