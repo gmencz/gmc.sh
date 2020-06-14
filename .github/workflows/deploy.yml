@@ -17,6 +17,5 @@ jobs:
           username: ${{ secrets.GH_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          workdir: ./api
           dockerfile: ./api/Dockerfile
           tags: latest
