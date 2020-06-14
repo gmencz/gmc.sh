@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Publish to Github Package Registry
+      - name: Publish API docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: gabrielmendezc/gmc.sh/api
@@ -20,10 +20,18 @@ jobs:
           workdir: api
           dockerfile: Dockerfile
           tags: latest
-      - name: Deploy package to AWS Lightsail instance
+      - name: Deploy API package to AWS Lightsail instance
         uses: appleboy/ssh-action@master
+        env:
+          GITHUB_USERNAME: ${{ secrets.GH_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.AWS_LIGHTSAIL_HOST }}
           username: ${{ secrets.AWS_LIGHTSAIL_USERNAME }}
           key: ${{ secrets.AWS_INSTANCE_IDENTITY }}
-          script: whoami
+          envs: GITHUB_USERNAME, GITHUB_TOKEN
+          script: |
+            sudo docker container stop $(sudo docker container ps -a -q)
+            sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_TOKEN
+            sudo docker image pull docker.pkg.github.com/gabrielmendezc/gmc.sh/api:latest
+            sudo docker container run -dit -p 8081:8081 docker.pkg.github.com/gabrielmendezc/gmc.sh/api:latest
