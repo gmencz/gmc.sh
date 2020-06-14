@@ -19,7 +19,7 @@ interface GraphQLError {
   message: string;
 }
 
-var urlShortenerForm = document.querySelector(
+const urlShortenerForm = document.querySelector(
   '.url-shortener'
 ) as HTMLFormElement;
 
