@@ -77,8 +77,8 @@ urlShortenerForm.addEventListener('submit', async (event) => {
       console.error(`Something went wrong, we're working on a fix`);
     }
 
-    const [, ...rawGraphQLError] = splitByBracket;
-    const parsedGraphQLErrors = JSON.parse('{' + rawGraphQLError.join('{'))
+    const [, ...rawGraphQLInfo] = splitByBracket;
+    const parsedGraphQLErrors = JSON.parse('{' + rawGraphQLInfo.join('{'))
       .response.errors as GraphQLError[];
 
     const slugAlreadyExistsError = parsedGraphQLErrors.some((error) =>
