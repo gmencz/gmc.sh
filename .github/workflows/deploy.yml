@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: ./docker/api
       - name: Publish to Github Package Registry
-      - uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: gabrielmendezc/gmc.sh/gmc.sh
           registry: docker.pkg.github.com
