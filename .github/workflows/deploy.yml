@@ -11,7 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: ./docker/api
-      # Eventually setup testing for CI step here
       - name: Publish to Github Package Registry
       - uses: elgohr/Publish-Docker-Github-Action@master
         with:
