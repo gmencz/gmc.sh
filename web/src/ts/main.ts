@@ -5,12 +5,29 @@ interface NewShortenedUrlMutationVariables {
   slugForShortenedURL: string;
 }
 
+interface NewShortenedUrlMutationResponse {
+  addShortenedResource: {
+    shortenedresource: {
+      slug: string;
+    }[];
+  };
+}
+
+interface GraphQLError {
+  message: string;
+}
+
 const urlShortenerForm = document.querySelector(
   '.url-shortener'
 ) as HTMLFormElement;
 
 urlShortenerForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
+  if (event.preventDefault) {
+    event.preventDefault();
+  } else {
+    event.returnValue = false;
+  }
+
   const urlToShorten = (document.querySelector(
     'input#url-to-shorten'
   ) as HTMLInputElement).value;
@@ -20,9 +37,6 @@ urlShortenerForm.addEventListener('submit', async (event) => {
   ) as HTMLInputElement).value;
 
   // TODO: Validate form stuff
-
-  console.log(urlToShorten);
-  console.log(slugForShortenedURL);
 
   const newShortenedURLMutation = `
     mutation ShortenURL(
@@ -35,9 +49,7 @@ urlShortenerForm.addEventListener('submit', async (event) => {
       }]) {
         shortenedresource {
           slug
-          originalFQDN
         }
-        numUids
       }
     }
   `;
@@ -48,29 +60,33 @@ urlShortenerForm.addEventListener('submit', async (event) => {
   };
 
   try {
-    const data = await request(
+    const response: NewShortenedUrlMutationResponse = await request(
       'http://localhost:8080/graphql',
       newShortenedURLMutation,
       newShortenedURLMutationVariables
     );
 
-    console.log(data);
+    // Here's the shortened url!
+    console.log(
+      `https://gmc.sh/${response.addShortenedResource.shortenedresource[0].slug}`
+    );
   } catch (error) {
+    console.log(error);
     const splitByBracket = error.message.split('{');
     if (splitByBracket.length === 0) {
-      alert(`Something went wrong, we're working on a fix`);
+      console.error(`Something went wrong, we're working on a fix`);
     }
 
-    const [_, ...rawGraphQLError] = splitByBracket;
+    const [, ...rawGraphQLError] = splitByBracket;
     const parsedGraphQLErrors = JSON.parse('{' + rawGraphQLError.join('{'))
-      .response.errors;
+      .response.errors as GraphQLError[];
 
-    const slugAlreadyExistsError = parsedGraphQLErrors.some((error: any) =>
+    const slugAlreadyExistsError = parsedGraphQLErrors.some((error) =>
       error.message.includes('already exists')
     );
 
     if (slugAlreadyExistsError) {
-      alert('Slug already exists');
+      console.error('Slug already exists');
     }
   }
 });
