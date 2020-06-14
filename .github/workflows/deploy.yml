@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: ./api
       - name: Publish to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: gabrielmendezc/gmc.sh/gmc.sh
+          name: gabrielmendezc/gmc.sh/api
           registry: docker.pkg.github.com
           username: ${{ secrets.GH_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          dockerfile: ./docker/apiDockerfile
+          dockerfile: Dockerfile
           tags: latest
-          context: ./api
