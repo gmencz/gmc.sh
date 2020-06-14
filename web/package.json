@@ -4,9 +4,8 @@
   "description": "Web app for gmc.sh",
   "main": "src/index.html",
   "scripts": {
-    "start": "parcel src/index.html",
-    "poststart": "workbox generateSW",
-    "build": "parcel build src/index.html",
+    "dev": "parcel src/index.html -d dev",
+    "build": "parcel build src/index.html -d build",
     "postbuild": "workbox generateSW"
   },
   "author": "Gabriel Méndez",

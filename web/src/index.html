@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./scss/main.scss" />
     <meta name="theme-color" content="#FFFB00" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <title>gmc.sh - The fastest URL shortener in the web.</title>
+    <title>gmc.sh - The fastest URL shortener on the web.</title>
     <link rel="icon" href="./img/logo48x48.png" />
     <script defer src="./ts/registerServiceWorker.ts"></script>
     <script defer src="./ts/main.ts"></script>
@@ -33,7 +33,7 @@
     />
     <meta
       property="og:title"
-      content="gmc.sh - The fastest URL shortener in the web."
+      content="gmc.sh - The fastest URL shortener on the web."
     />
     <meta property="og:image" content="./img/logo48x48.png" />
     <meta property="og:url" content="https://gmc.sh" />
@@ -44,7 +44,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="gmc.sh - The fastest URL shortener in the web."
+      content="gmc.sh - The fastest URL shortener on the web."
     />
     <meta
       name="twitter:description"
@@ -56,7 +56,7 @@
           "@context": "http://schema.org",
           "@type": "WebSite",
           "url": "https://gmc.sh",
-          "name": "gmc.sh - The fastest URL shortener in the web.",
+          "name": "gmc.sh - The fastest URL shortener on the web.",
           "alternateName": "gmc.sh"
         }
       ]
@@ -65,6 +65,22 @@
   <body>
     <main>
       <h1 class="site-title">gmc.sh</h1>
+      <h2>⚡ Shorten any URL in a heartbeat.</h2>
+      <form class="url-shortener">
+        <div class="input">
+          <label for="url-to-shorten">URL to shorten</label>
+          <input
+            type="url"
+            id="url-to-shorten"
+            placeholder="https://example.com"
+          />
+        </div>
+        <div class="input">
+          <label for="shortened-url-slug">Slug for the shortened URL</label>
+          <input type="url" id="shortened-url-slug" placeholder="my-example" />
+        </div>
+        <button type="submit">Shorten</button>
+      </form>
     </main>
   </body>
 </html>
