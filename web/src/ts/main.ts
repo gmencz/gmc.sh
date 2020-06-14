@@ -23,7 +23,7 @@ const urlShortenerForm = document.querySelector(
   '.url-shortener'
 ) as HTMLFormElement;
 
-var urlInput = document.querySelector(
+const urlInput = document.querySelector(
   'input#url-to-shorten'
 ) as HTMLInputElement;
 
