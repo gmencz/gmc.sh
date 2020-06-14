@@ -9,7 +9,7 @@ jobs:
   build-api:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
       - uses: ./api
       - name: Publish to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
@@ -18,6 +18,6 @@ jobs:
           registry: docker.pkg.github.com
           username: ${{ secrets.GH_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          workdir: ./api
           dockerfile: Dockerfile
           tags: latest
-          workdir: api
