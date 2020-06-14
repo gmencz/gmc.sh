@@ -20,3 +20,10 @@ jobs:
           workdir: api
           dockerfile: Dockerfile
           tags: latest
+      - name: Deploy package to AWS Lightsail instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_LIGHTSAIL_HOST }}
+          username: ${{ AWS_LIGHTSAIL_USERNAME }}
+          key: ${{ secrets.AWS_INSTANCE_IDENTITY }}
+          script: whoami
