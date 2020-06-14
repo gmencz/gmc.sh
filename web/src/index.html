@@ -66,10 +66,11 @@
     <main>
       <h1 class="site-title">gmc.sh</h1>
       <h2>⚡ Shorten any URL in a heartbeat.</h2>
-      <form class="url-shortener">
+      <form class="url-shortener" novalidate>
         <div class="input">
-          <label for="url-to-shorten">URL to shorten</label>
+          <label for="url-to-shorten">URL to shorten*</label>
           <input
+            required
             type="url"
             id="url-to-shorten"
             placeholder="https://example.com"
@@ -81,6 +82,12 @@
         </div>
         <button type="submit">Shorten</button>
       </form>
+      <div class="error-box invisible">
+        <strong>Invalid URL to shorten.</strong>
+      </div>
+      <div class="shortened-box invisible">
+        <strong></strong>
+      </div>
     </main>
   </body>
 </html>
