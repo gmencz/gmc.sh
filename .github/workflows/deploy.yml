@@ -1,0 +1,24 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./docker/api
+      # Eventually setup testing for CI step here
+      - name: Publish to Github Package Registry
+      - uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: gabrielmendezc/gmc.sh/gmc.sh
+          registry: docker.pkg.github.com
+          username: ${{ secrets.GH_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: Dockerfile
+          tags: latest
+          context: ../../api
