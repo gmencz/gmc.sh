@@ -10,13 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: ./api
       - name: Run tests
         uses: actions/setup-node@v2-beta
         with:
           node-version: 12
-      - run: npm install
-      - run: npm run test:ci
+      - run: cd api && npm install
+      - run: cd api && npm run test:ci
       - name: Publish docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
