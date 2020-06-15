@@ -1,4 +1,3 @@
-import { join } from 'path';
 import { log } from 'console';
 import { promises as fs } from 'fs';
 import { whiteBright, greenBright, red, redBright, green } from 'chalk';
@@ -13,7 +12,7 @@ interface DGraphResponse {
 }
 
 export default class GraphWatcher {
-  watch(graphPath: string) {
+  watch(graphPath: string): void {
     const watcher = watch(graphPath, {
       persistent: true,
     });

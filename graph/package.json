@@ -4,7 +4,9 @@
   "description": "Graph for gmc.sh",
   "main": "src/index.ts",
   "scripts": {
-    "watch": "ts-node-dev --transpileOnly --respawn src/index.ts"
+    "watch": "ts-node-dev --transpileOnly --respawn src/watch.ts",
+    "push:dev": "ts-node-dev --transpileOnly --respawn src/utils/pushGraph.ts",
+    "push:prod": "tsc && node dist/utils/pushGraph.js"
   },
   "author": "Gabriel Méndez",
   "license": "MIT",
