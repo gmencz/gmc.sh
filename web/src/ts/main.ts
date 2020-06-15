@@ -82,6 +82,8 @@ urlShortenerForm.addEventListener('submit', async event => {
     'form.url-shortener button[type="submit"]'
   ) as HTMLButtonElement;
 
+  console.log(process.env.NODE_ENV);
+
   const endpoint =
     process.env.NODE_ENV === 'production'
       ? 'http://graphql.gmc.sh/graphql'
