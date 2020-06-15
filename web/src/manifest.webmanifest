@@ -1,5 +1,6 @@
 {
-  "name": "gmc.sh - The fastest URL shortener on the web.",
+  "name": "gmc.sh",
+  "description": "Shorten any URL in a heartbeat.",
   "short_name": "gmc.sh",
   "start_url": "/",
   "lang": "en",
