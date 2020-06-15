@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Publish API docker image to Github Package Registry
+      - name: Publish docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: gabrielmendezc/gmc.sh/api
@@ -20,7 +20,7 @@ jobs:
           workdir: api
           dockerfile: Dockerfile
           tags: latest
-      - name: Deploy API package to AWS Lightsail instance
+      - name: Deploy package to AWS Lightsail instance
         uses: appleboy/ssh-action@master
         env:
           GITHUB_USERNAME: ${{ secrets.GH_USERNAME }}
