@@ -16,6 +16,5 @@
   "exclude": [
     "dist",
     "build",
-    "src/__tests__"
   ]
 }
