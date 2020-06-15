@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start:dev": "ts-node-dev --transpileOnly --respawn src/index.ts",
-    "start:prod": "tsc && node dist/index.js"
+    "start:prod": "tsc && node dist/index.js",
+    "test": "jest"
   },
   "author": "Gabriel Méndez",
   "license": "MIT",
