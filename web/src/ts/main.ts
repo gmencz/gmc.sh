@@ -86,7 +86,7 @@ urlShortenerForm.addEventListener('submit', async event => {
 
   const endpoint =
     process.env.NODE_ENV === 'production'
-      ? 'http://graphql.gmc.sh/graphql'
+      ? 'https://graphql.gmc.sh/graphql'
       : 'http://localhost:8080/graphql';
 
   try {
@@ -133,7 +133,7 @@ urlShortenerForm.addEventListener('submit', async event => {
       };
 
       const response: NewShortenedUrlMutationResponse = await request(
-        'http://localhost:8080/graphql',
+        endpoint,
         newShortenedURLMutation,
         variables
       );
