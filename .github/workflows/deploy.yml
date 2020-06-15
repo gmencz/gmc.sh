@@ -37,7 +37,7 @@ jobs:
           key: ${{ secrets.AWS_INSTANCE_IDENTITY }}
           envs: GITHUB_USERNAME, GITHUB_TOKEN
           script: |
-            sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_TOKEN
+            sudo docker container stop $(sudo docker container ps -a -q)
+            echo "$GITHUB_TOKEN" | sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
             sudo docker image pull docker.pkg.github.com/gabrielmendezc/gmc.sh/api:latest
-            sudo docker container stop gmc.sh-api
-            sudo docker container run --name gmc.sh-api -dit -p 8081:8081 docker.pkg.github.com/gabrielmendezc/gmc.sh/api:latest
+            sudo docker container run -dit -p 8081:8081 docker.pkg.github.com/gabrielmendezc/gmc.sh/api:latest
