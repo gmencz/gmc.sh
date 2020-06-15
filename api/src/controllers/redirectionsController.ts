@@ -52,6 +52,7 @@ export const redirectBySlug = async (
 
     return res.redirect(shortenedResourceOriginalFQDN);
   } catch (error) {
+    console.error(error);
     const redirectDestination =
       process.env.NODE_ENV === 'production'
         ? 'https://app.gmc.sh/error?code=unknown'
