@@ -15,7 +15,7 @@ export default function App() {
         <Routes />
         <Scripts />
         <footer>
-          <p>This page was rendered at {data.date.toLocaleString()}</p>
+          <p>This page was rendered at {data.date.toLocaleString()} s</p>
         </footer>
       </body>
     </html>
