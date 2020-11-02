@@ -6,10 +6,11 @@
     "start": "NODE_ENV=development concurrently \"remix run\" \"tsc -b -w\" \"nodemon --ignore app server.js\""
   },
   "dependencies": {
-    "@remix-run/cli": "^0.6.0",
-    "@remix-run/express": "^0.6.0",
-    "@remix-run/loader": "^0.6.0",
-    "@remix-run/react": "^0.6.0",
+    "@prisma/client": "^2.10.1",
+    "@remix-run/cli": "^0.6.2",
+    "@remix-run/express": "^0.6.2",
+    "@remix-run/loader": "^0.6.2",
+    "@remix-run/react": "^0.6.2",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "react": "^17.0.1",
@@ -18,11 +19,12 @@
     "react-router-dom": "^6.0.0-beta.0"
   },
   "devDependencies": {
-    "@types/react": "^16.9.53",
-    "@types/react-dom": "^16.9.8",
+    "@prisma/cli": "^2.10.1",
+    "@types/react": "^16.9.55",
+    "@types/react-dom": "^16.9.9",
     "concurrently": "^5.3.0",
-    "nodemon": "^2.0.5",
-    "typescript": "^4.0.3"
+    "nodemon": "^2.0.6",
+    "typescript": "^4.0.5"
   },
   "engines": {
     "node": "12"
