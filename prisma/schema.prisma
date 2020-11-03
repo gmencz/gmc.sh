@@ -17,10 +17,20 @@ model Url {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String?
-  email     String   @unique
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  Session   Session[]
   Url       Url[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  sessionId String   @unique
+  userId    Int
+  duration  Int      @default(30)
+  issuedAt  DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
 }

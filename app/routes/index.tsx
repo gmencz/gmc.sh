@@ -1,34 +1,36 @@
-import React from "react";
-import { useRouteData } from "@remix-run/react";
+import { useRouteData } from '@remix-run/react'
+import React from 'react'
 
-interface PageData {
-  todos: Todo[];
-}
-
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
+interface RouteData {
+  user: {
+    id: string
+    email: string
+    name: string
+    createdAt: string
+  }
 }
 
 export function meta() {
   return {
-    title: "Remix Todo App",
-    description: "Simple Todo App built with Remix!",
-  };
+    title: 'gmc.sh',
+    description: 'Url shortener!',
+  }
 }
 
 export default function Index() {
-  let data = useRouteData<PageData>();
+  const { user } = useRouteData<RouteData>()
+
+  console.log(user)
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Simple Todo App built with Remix!</h2>
-      <ul>
-        {data.todos.map((todo) => (
-          <li key={todo.id}>{todo.title}</li>
-        ))}
-      </ul>
+      <h2>gmc.sh!</h2>
+      <p>
+        Hello {user.name}{' '}
+        <span role="img" aria-label="wave">
+          👋
+        </span>
+      </p>
     </div>
-  );
+  )
 }
