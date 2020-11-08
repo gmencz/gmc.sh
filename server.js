@@ -8,7 +8,9 @@ const { nanoid: createId } = require('nanoid')
 const { json } = require('express')
 
 let app = express()
-const db = new PrismaClient()
+const db = new PrismaClient({
+  log: ['query', 'info', 'error', 'warn'],
+})
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
@@ -71,7 +73,7 @@ app.post('/api/signup', async (req, res) => {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 5184000000,
   })
-  return res.json({ message: 'successfully logged in' })
+  return res.redirect('/')
 })
 
 app.post('/api/login', async (req, res) => {
@@ -133,7 +135,7 @@ app.post('/api/login', async (req, res) => {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 5184000000,
   })
-  return res.json({ message: 'successfully logged in' })
+  return res.redirect('/')
 })
 
 app.get(
