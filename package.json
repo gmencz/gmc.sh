@@ -1,6 +1,11 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "clean-install": "npm run clean && npm run bootstrap",
+    "clean": "npx lerna clean -y",
+    "bootstrap": "npx lerna bootstrap --hoist"
+  },
   "devDependencies": {
     "lerna": "^3.22.1"
   }
