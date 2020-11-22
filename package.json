@@ -1,0 +1,15 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "clean-install": "npm run clean && npm run bootstrap",
+    "clean": "npx lerna clean -y",
+    "bootstrap": "npx lerna bootstrap --hoist",
+    "dev": "lerna run dev --stream",
+    "test": "lerna run test --stream",
+    "pre-commit": "lerna run --concurrency 1 --stream pre-commit --since HEAD --exclude-dependents"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}
