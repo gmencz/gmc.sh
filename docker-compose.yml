@@ -7,3 +7,11 @@ services:
       - ./docker/db/.env
     ports:
       - 6543:5432
+  flyway:
+    image: flyway/flyway:7.2
+    command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    volumes:
+      - ./flyway/sql_versions:/flyway/sql
+      - ./flyway/docker-flyway.config:/flyway/conf/flyway.config
+    depends_on:
+      - db
