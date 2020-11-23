@@ -2,6 +2,7 @@ import { config as configureEnv } from 'dotenv'
 configureEnv()
 
 import fastify from 'fastify'
+import fastifyCookie from 'fastify-cookie'
 import { v1Routes } from 'routes/v1'
 import admin from 'firebase-admin'
 import firebase from 'firebase'
@@ -20,6 +21,8 @@ firebase.initializeApp({
 admin.initializeApp()
 
 const server = fastify({ logger: true })
+
+server.register(fastifyCookie)
 
 server.register(v1Routes, { prefix: '/v1' })
 
