@@ -1,8 +1,24 @@
-import fastify from 'fastify'
 import { config as configureEnv } from 'dotenv'
-import { v1Routes } from 'routes/v1'
-
 configureEnv()
+
+import fastify from 'fastify'
+import { v1Routes } from 'routes/v1'
+import admin from 'firebase-admin'
+import firebase from 'firebase'
+
+firebase.initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_AUTH_DB_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+})
+
+admin.initializeApp()
+
 const server = fastify({ logger: true })
 
 server.register(v1Routes, { prefix: '/v1' })

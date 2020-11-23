@@ -9,7 +9,7 @@
     "check-types": "tsc --noEmit",
     "format": "pretty-quick",
     "start": "tsc && node dist/index.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/index.ts",
+    "dev": "cross-env NODE_ENV=development tsnd -r tsconfig-paths/register --no-notify --respawn --transpile-only ./src",
     "prettier": "prettier --write '**/*.{ts,js,json,md,graphql}'"
   },
   "keywords": [],
@@ -32,13 +32,18 @@
     "ts-jest": "^26.4.4",
     "ts-node-dev": "^1.0.0",
     "tsconfig-paths": "^3.9.0",
-    "tsconfig-paths-jest": "0.0.1",
     "typescript": "^4.1.2"
   },
   "dependencies": {
     "@gmcsh/shared": "^1.0.0",
     "@prisma/client": "^2.11.0",
+    "@sinclair/typebox": "^0.12.7",
+    "argon2": "^0.27.0",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
-    "fastify": "^3.8.0"
+    "fastify": "^3.8.0",
+    "firebase": "^8.1.1",
+    "firebase-admin": "^9.4.1",
+    "nanoid": "^3.1.18"
   }
 }

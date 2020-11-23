@@ -12,6 +12,7 @@ model User {
   username  String   @unique
   email     String   @unique
   createdAt DateTime @default(now())
+  password  String
 }
 
 model flyway_schema_history {

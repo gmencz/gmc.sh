@@ -24,6 +24,5 @@ module.exports = {
   rules: {
     'import/no-named-as-default-member': 'off',
     'import/no-named-as-default': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
   },
 }
