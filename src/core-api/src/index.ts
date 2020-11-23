@@ -23,6 +23,7 @@ admin.initializeApp()
 const server = fastify({ logger: true })
 
 server.register(fastifyCookie)
+server.decorateRequest('userId', '')
 
 server.register(v1Routes, { prefix: '/v1' })
 

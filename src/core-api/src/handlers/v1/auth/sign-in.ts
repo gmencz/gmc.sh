@@ -1,31 +1,27 @@
+import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
 import { Static, Type } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
-import { nanoid as uniqueId } from 'nanoid'
-import { hash } from 'argon2'
-import { PrismaClientKnownRequestError, User } from '@prisma/client'
+import { verify } from 'argon2'
 import admin from 'firebase-admin'
 import firebase from 'firebase'
-import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
-import { handleValidationError } from 'utils/handle-validation-error'
 import { db } from 'utils/db'
+import { handleValidationError } from 'utils/handle-validation-error'
 
-const registerBody = Type.Object({
+const signinBody = Type.Object({
   username: Type.String({ minLength: 1, maxLength: 255 }),
-  email: Type.String({ minLength: 1, maxLength: 255, format: 'email' }),
   password: Type.String({
     minLength: 6,
     maxLength: 255,
   }),
 })
 
-const register: RouteHandler<{
-  Body: Static<typeof registerBody>
-  Reply: ApiTypes.ErrorResponse | ApiTypes.RegisterResponse
+const signin: RouteHandler<{
+  Body: Static<typeof signinBody>
+  Reply: ApiTypes.LoginResponse | ApiTypes.ErrorResponse
 }> = async (request, reply): Promise<void> => {
-  // Validate request body
   if (request.validationError) {
-    reply.log.error(request.validationError.validation)
     const errors = handleValidationError(request.validationError.validation)
+    reply.log.error(request.validationError.validation)
     reply.status(422).send({
       message: 'Validation failed',
       info: {
@@ -35,46 +31,21 @@ const register: RouteHandler<{
     return
   }
 
-  const { email, username, password } = request.body
-  const hashedPassword = await hash(password)
-  let user: Omit<User, 'password'>
-
-  try {
-    user = await db.user.create({
-      data: {
-        id: `u-${uniqueId()}`,
-        email,
-        password: hashedPassword,
-        username,
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        createdAt: true,
-      },
+  const { username, password: plainPassword } = request.body
+  const user = await db.user.findOne({ where: { username } })
+  if (!user) {
+    reply.status(401).send({
+      message: 'Wrong username or password, please check your spelling.',
+      info: {},
     })
-  } catch (error) {
-    reply.log.error(error)
+    return
+  }
 
-    if (error instanceof PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        const { target } = error?.meta as { target: string[] }
-        reply.status(409).send({
-          message: `Taken ${target.join(', ')}.`,
-          info: {
-            ...error,
-          },
-        })
-        return
-      }
-    }
-
-    reply.status(500).send({
-      message: 'Server error',
-      info: {
-        ...error,
-      },
+  const validPassword = await verify(user.password, plainPassword)
+  if (!validPassword) {
+    reply.status(401).send({
+      message: 'Wrong username or password, please check your spelling.',
+      info: {},
     })
     return
   }
@@ -133,7 +104,6 @@ const register: RouteHandler<{
   }
 
   let decodedIdToken: admin.auth.DecodedIdToken
-
   try {
     const checkRevoked = true
     decodedIdToken = await admin.auth().verifyIdToken(authToken, checkRevoked)
@@ -171,9 +141,12 @@ const register: RouteHandler<{
 
   reply.send({
     user: {
-      ...user,
+      id: user.id,
+      username: user.username,
+      createdAt: user.createdAt,
+      email: user.email,
     },
   })
 }
 
-export { register, registerBody }
+export { signin, signinBody }

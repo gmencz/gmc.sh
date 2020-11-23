@@ -2,6 +2,7 @@
   "name": "@gmcsh/shared",
   "version": "1.0.0",
   "private": true,
+  "main": "./src/index.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -33,5 +34,8 @@
     "tsconfig-paths": "^3.9.0",
     "tsconfig-paths-jest": "0.0.1",
     "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "@gmcsh/core-api": "^1.0.0"
   }
 }

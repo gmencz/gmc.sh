@@ -4,7 +4,7 @@ import { healthCheckRoutes } from './health-check'
 
 const v1Routes: FastifyPluginCallback = (instance, _, next) => {
   instance.register(healthCheckRoutes)
-  instance.register(authRoutes)
+  instance.register(authRoutes, { prefix: '/auth' })
 
   next()
 }
