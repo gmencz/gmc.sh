@@ -156,8 +156,8 @@ const register: RouteHandler<{
     })
   }
 
-  // Expires in a week (7 days)
-  const expiresIn = 60 * 60 * 24 * 7 * 1000
+  // Expires in 2 weeks (14 days)
+  const expiresIn = 60 * 60 * 24 * 14 * 1000
   const sessionCookie = await admin
     .auth()
     .createSessionCookie(authToken, { expiresIn })

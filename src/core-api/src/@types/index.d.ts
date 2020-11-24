@@ -1,7 +1,8 @@
 import fastify from 'fastify'
+import admin from 'firebase-admin'
 
 declare module 'fastify' {
   interface FastifyRequest {
-    userId: string
+    user: admin.auth.DecodedIdToken
   }
 }
