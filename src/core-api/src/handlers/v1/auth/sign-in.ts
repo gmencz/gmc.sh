@@ -32,7 +32,7 @@ const signin: RouteHandler<{
   }
 
   const { username, password: plainPassword } = request.body
-  const user = await db.user.findOne({ where: { username } })
+  const user = await db.user.findUnique({ where: { username } })
   if (!user) {
     reply.status(401).send({
       message: 'Wrong username or password, please check your spelling.',
@@ -124,6 +124,7 @@ const signin: RouteHandler<{
       message: 'Recent sign in required!',
       info: {},
     })
+    return
   }
 
   // Expires in 2 weeks (14 days)

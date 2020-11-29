@@ -36,7 +36,7 @@ model Url {
   url          String   @unique
   target       String
   createdAt    DateTime @default(now())
-  userId       String
+  userId       String?
   timesVisited Int      @default(0)
-  User         User     @relation(fields: [userId], references: [id])
+  User         User?    @relation(fields: [userId], references: [id])
 }

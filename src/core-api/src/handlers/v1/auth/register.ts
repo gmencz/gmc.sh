@@ -130,6 +130,7 @@ const register: RouteHandler<{
         ...error,
       },
     })
+    return
   }
 
   let decodedIdToken: admin.auth.DecodedIdToken
@@ -154,6 +155,7 @@ const register: RouteHandler<{
       message: 'Recent sign in required!',
       info: {},
     })
+    return
   }
 
   // Expires in 2 weeks (14 days)
