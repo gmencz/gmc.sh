@@ -13,6 +13,7 @@ model User {
   email     String   @unique
   createdAt DateTime @default(now())
   password  String
+  Url       Url[]
 }
 
 model flyway_schema_history {
@@ -28,4 +29,14 @@ model flyway_schema_history {
   success        Boolean
 
   @@index([success], name: "flyway_schema_history_s_idx")
+}
+
+model Url {
+  id           String   @id
+  url          String   @unique
+  target       String
+  createdAt    DateTime @default(now())
+  userId       String
+  timesVisited Int      @default(0)
+  User         User     @relation(fields: [userId], references: [id])
 }

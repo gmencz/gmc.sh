@@ -1,11 +1,12 @@
 import { preValidationHookHandler } from 'fastify'
 import admin from 'firebase-admin'
 import firebase from 'firebase'
+import addWeeks from 'date-fns/addWeeks'
+import isAfter from 'date-fns/isAfter'
 
 const isAuthenticatedHook: preValidationHookHandler = async (
   request,
   reply,
-  done,
 ) => {
   const sessionCookie = request.cookies.__session || ''
 
@@ -27,11 +28,11 @@ const isAuthenticatedHook: preValidationHookHandler = async (
 
   // If the session is a week old (could be any time before expiry limit but I chose a week)
   // create a new session cookie so we have a session which never expires.
-  const minutesInAWeek = 10080
-  if (
-    new Date().getTime() / 1000 - decodedToken.auth_time <
-    minutesInAWeek * 60
-  ) {
+  const sessionCreatedAt = new Date(decodedToken.auth_time * 1000)
+  const sessionRefreshDate = addWeeks(sessionCreatedAt, 1)
+  const today = new Date()
+
+  if (isAfter(today, sessionRefreshDate)) {
     let customToken = ''
 
     try {
@@ -123,7 +124,6 @@ const isAuthenticatedHook: preValidationHookHandler = async (
   }
 
   request.user = decodedToken
-  done()
 }
 
 export { isAuthenticatedHook }

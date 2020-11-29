@@ -1,4 +1,4 @@
-import { User } from '@gmcsh/core-api/node_modules/.prisma/client'
+import { User, Url } from '@gmcsh/core-api/node_modules/.prisma/client'
 
 export interface ErrorResponse {
   message: string
@@ -13,4 +13,14 @@ export interface RegisterResponse {
 
 export interface LoginResponse {
   user: SafeUser
+}
+
+export interface QueryUrlsResponse {
+  urls: Pick<Url, 'id' | 'createdAt' | 'target' | 'timesVisited' | 'url'>[]
+  cursor: string | null
+  take: number
+}
+
+export interface QueryUrlResponse {
+  url: Url
 }

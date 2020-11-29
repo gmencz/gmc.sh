@@ -3,6 +3,6 @@ import admin from 'firebase-admin'
 
 declare module 'fastify' {
   interface FastifyRequest {
-    user: admin.auth.DecodedIdToken
+    user: admin.auth.DecodedIdToken | null
   }
 }
