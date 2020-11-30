@@ -101,6 +101,7 @@ const signin: RouteHandler<{
         ...error,
       },
     })
+    return
   }
 
   let decodedIdToken: admin.auth.DecodedIdToken

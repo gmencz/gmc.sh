@@ -11,7 +11,7 @@ type BuildOptions = {
   disableLogger?: boolean
 }
 
-async function build(options: BuildOptions = {}): Promise<FastifyInstance> {
+function build(options: BuildOptions = {}): FastifyInstance {
   firebase.initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,

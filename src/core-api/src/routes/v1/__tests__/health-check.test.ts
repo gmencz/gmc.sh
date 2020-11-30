@@ -1,14 +1,9 @@
-import { FastifyInstance } from 'fastify'
-import { build } from 'server'
+import { createTestContext } from 'test/create-test-context'
 
-let server: FastifyInstance
-
-beforeAll(async () => {
-  server = await build({ disableLogger: true })
-})
+const ctx = createTestContext()
 
 test('health check endpoint sends a successful response', async () => {
-  const response = await server.inject({
+  const response = await ctx.server.inject({
     method: 'GET',
     url: '/v1/health-check',
   })

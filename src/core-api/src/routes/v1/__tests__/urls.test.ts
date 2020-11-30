@@ -1,17 +1,14 @@
-import { FastifyInstance } from 'fastify'
 import { nanoid } from 'nanoid'
-import { build } from 'server'
 import { hash } from 'argon2'
-import { db } from 'utils/db'
+import { createTestContext } from 'test/create-test-context'
 
-let server: FastifyInstance
 const testUsername = 'testuser'
 let testPassword: string
+const ctx = createTestContext()
 
 beforeAll(async () => {
-  server = await build({ disableLogger: true })
   testPassword = await hash('testpw123')
-  await db.user.create({
+  await ctx.db.user.create({
     data: {
       id: `u-${nanoid()}`,
       email: 'test@test.com',
@@ -22,17 +19,15 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await db.user.delete({
+  await ctx.db.user.delete({
     where: {
       username: testUsername,
     },
   })
-  await server.close()
-  await db.$disconnect()
 })
 
 test(`returns the currently logged in user's urls`, async () => {
-  const signinResponse = await server.inject({
+  const signinResponse = await ctx.server.inject({
     method: 'POST',
     url: '/v1/auth/sign-in',
     payload: {
@@ -48,7 +43,7 @@ test(`returns the currently logged in user's urls`, async () => {
 
   expect(sessionCookie).toBeTruthy()
 
-  const newUrl = await db.url.create({
+  const newUrl = await ctx.db.url.create({
     data: {
       id: nanoid(),
       target: 'https://github.com/gmencz',
@@ -61,7 +56,7 @@ test(`returns the currently logged in user's urls`, async () => {
     },
   })
 
-  const response = await server.inject({
+  const response = await ctx.server.inject({
     method: 'GET',
     url: '/v1/urls',
     cookies: {
