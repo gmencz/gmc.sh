@@ -1,7 +1,8 @@
+import { Url } from '@prisma/client'
 import { nanoid } from 'nanoid'
 import { createTestContext } from 'test/create-test-context'
-import { db } from 'utils/db'
 import { createUserTestingSession } from 'test/create-user-testing-session'
+import { db } from 'utils/db'
 
 const ctx = createTestContext()
 
@@ -13,33 +14,33 @@ afterAll(async () => {
   await db.url.deleteMany({})
 })
 
-test(`GET /v1/urls returns the currently logged in user's urls`, async () => {
-  const { sessionCookie, user } = await createUserTestingSession(ctx.server)
+test(`GET /v1/urls/:id returns the url with the provided id`, async () => {
+  const { sessionCookie } = await createUserTestingSession(ctx.server)
 
   const newUrl = await db.url.create({
     data: {
       id: nanoid(),
       target: 'https://github.com/gmencz',
       url: 'https://gmc.sh/me',
-      User: {
-        connect: {
-          id: user.id,
-        },
-      },
     },
   })
 
   const response = await ctx.server.inject({
     method: 'GET',
-    url: '/v1/urls',
+    url: `/v1/urls/${newUrl.id}`,
     cookies: {
       __session: sessionCookie,
     },
   })
 
   const body = JSON.parse(response.body)
-  expect(body.urls).toHaveLength(1)
-  expect(body.urls[0].id).toBe(newUrl.id)
-  expect(body.cursor).toBeNull()
-  expect(body.take).toBe(10)
+
+  expect(body.url).toMatchObject<Url>({
+    id: newUrl.id,
+    createdAt: (newUrl.createdAt.toISOString() as unknown) as Date,
+    target: newUrl.target,
+    timesVisited: newUrl.timesVisited,
+    url: newUrl.url,
+    userId: newUrl.userId,
+  })
 })
