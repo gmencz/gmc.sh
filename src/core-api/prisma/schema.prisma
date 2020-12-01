@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id
+  username  String   @unique
+  email     String   @unique
+  createdAt DateTime @default(now())
+  password  String
+  Url       Url[]
+}
+
+model flyway_schema_history {
+  installed_rank Int      @id
+  version        String?
+  description    String
+  type           String
+  script         String
+  checksum       Int?
+  installed_by   String
+  installed_on   DateTime @default(now())
+  execution_time Int
+  success        Boolean
+
+  @@index([success], name: "flyway_schema_history_s_idx")
+}
+
+model Url {
+  id           String   @id
+  url          String   @unique
+  target       String
+  createdAt    DateTime @default(now())
+  userId       String?
+  timesVisited Int      @default(0)
+  User         User?    @relation(fields: [userId], references: [id])
+}

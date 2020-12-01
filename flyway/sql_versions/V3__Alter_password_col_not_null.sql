@@ -1,0 +1,3 @@
+ALTER TABLE "User"
+ALTER COLUMN password
+SET NOT NULL;

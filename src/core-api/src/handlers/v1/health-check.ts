@@ -1,7 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-function healthCheck(_: FastifyRequest, reply: FastifyReply): void {
-  reply.send({
+async function healthCheck(
+  _: FastifyRequest,
+  reply: FastifyReply,
+): Promise<FastifyReply> {
+  return reply.send({
     status: 'OK',
   })
 }
