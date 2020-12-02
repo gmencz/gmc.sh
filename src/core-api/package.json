@@ -11,7 +11,7 @@
     "start": "npm run gen-secret-key && tsc && cross-env NODE_ENV=production node -r ./tsconfig-paths-bootstrap.js dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon",
     "prettier": "prettier --write '**/*.{ts,js,json,md,graphql}'",
-    "gen-secret-key": "./node_modules/.bin/secure-session-gen-key > ./src/session-secret-key"
+    "gen-secret-key": "./node_modules/.bin/secure-session-gen-key > ./session-secret-key"
   },
   "keywords": [],
   "author": "",
