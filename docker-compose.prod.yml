@@ -15,13 +15,13 @@ services:
       - "traefik.enable=true"
       # The domain the service will respond to
       # The routers property has to match the container name (api.gmc.sh)
-      - "traefik.http.routers.api-gabrielmendezc-com.rule=Host(`core-api`)"
+      - "traefik.http.routers.core-api.rule=Host(`api.gmc.sh`)"
       # Allow request only from the predefined entry point named "websecure"
-      - "traefik.http.routers.api-gabrielmendezc-com.entrypoints=websecure"
+      - "traefik.http.routers.core-api.entrypoints=websecure"
       # Tell traefik to use the port 4500 to connect to this container
-      - "traefik.http.services.api-gabrielmendezc-com.loadbalancer.server.port=4500"
+      - "traefik.http.services.core-api.loadbalancer.server.port=4500"
       # Tell traefik to use the certificate resolver named "myresolver"
-      - "traefik.http.routers.api-gabrielmendezc-com.tls.certresolver=myresolver"
+      - "traefik.http.routers.core-api.tls.certresolver=myresolver"
       # Redirect http to https
       - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
       - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
