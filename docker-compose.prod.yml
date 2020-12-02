@@ -10,6 +10,8 @@ services:
       - gmc-sh-net
     env_file:
       - ./src/core-api/.env
+    ports:
+      - 4500:4500
     labels:
       # Explicitly tell Traefik to expose this container
       - "traefik.enable=true"
