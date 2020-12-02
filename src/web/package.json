@@ -8,18 +8,26 @@
     "start": "next start"
   },
   "dependencies": {
+    "@gmcsh/shared": "^1.0.0",
     "@headlessui/react": "^0.2.0",
+    "@hookform/resolvers": "^1.1.1",
     "@tailwindcss/forms": "^0.2.1",
     "autoprefixer": "^10.0.4",
     "next": "10.0.3",
     "postcss": "^8.1.10",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "tailwindcss": "^2.0.1"
+    "react-hook-form": "^6.12.1",
+    "react-query": "^2.26.3",
+    "react-query-devtools": "^2.6.3",
+    "tailwindcss": "^2.0.1",
+    "ts-custom-error": "^3.2.0",
+    "yup": "^0.31.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.10",
     "@types/react": "^17.0.0",
+    "@types/yup": "^0.29.9",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "eslint": "^7.14.0",

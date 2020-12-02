@@ -19,8 +19,8 @@ test(`GET /v1/urls returns the currently logged in user's urls`, async () => {
   const newUrl = await db.url.create({
     data: {
       id: nanoid(),
-      target: 'https://github.com/gmencz',
-      url: 'https://gmc.sh/me',
+      target: `https://${nanoid()}`,
+      url: `https://${nanoid()}`,
       User: {
         connect: {
           id: user.id,

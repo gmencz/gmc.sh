@@ -135,10 +135,11 @@ const signin: RouteHandler<{
     .createSessionCookie(authToken, { expiresIn })
 
   reply.setCookie('__session', sessionCookie, {
-    maxAge: expiresIn,
+    maxAge: expiresIn / 1000,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
+    path: '/',
   })
 
   reply.send({

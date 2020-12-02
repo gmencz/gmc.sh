@@ -2,7 +2,8 @@ import { config as configureEnv } from 'dotenv'
 configureEnv()
 
 import fastify, { FastifyInstance } from 'fastify'
-import fastifyCookie from 'fastify-cookie'
+import cookies from 'fastify-cookie'
+import cors from 'fastify-cors'
 import { v1Routes } from 'routes/v1'
 import admin from 'firebase-admin'
 import firebase from 'firebase'
@@ -33,7 +34,15 @@ function build(options: BuildOptions = {}): FastifyInstance {
   server.decorateRequest('user', null)
 
   // Plugins
-  server.register(fastifyCookie)
+  server.register(cors, {
+    origin:
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://app.gmc.sh',
+    credentials: true,
+  })
+
+  server.register(cookies)
 
   // Routes
   server.register(v1Routes, { prefix: '/v1' })

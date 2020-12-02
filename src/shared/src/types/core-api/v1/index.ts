@@ -15,6 +15,8 @@ export interface LoginResponse {
   user: SafeUser
 }
 
+export type MeResponse = SafeUser
+
 export interface QueryUrlsResponse {
   urls: Pick<Url, 'id' | 'createdAt' | 'target' | 'timesVisited' | 'url'>[]
   cursor: string | null

@@ -16,12 +16,13 @@ afterAll(async () => {
 
 test(`GET /v1/urls/:id returns the url with the provided id`, async () => {
   const { sessionCookie } = await createUserTestingSession(ctx.server)
+  await db.url.deleteMany({})
 
   const newUrl = await db.url.create({
     data: {
       id: nanoid(),
-      target: 'https://github.com/gmencz',
-      url: 'https://gmc.sh/me',
+      target: `https://${nanoid()}`,
+      url: `https://${nanoid()}`,
     },
   })
 

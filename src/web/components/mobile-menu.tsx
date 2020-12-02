@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Transition } from '@headlessui/react'
-import { useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useDialog } from '../hooks/use-dialog'
 
 type MobileMenuProps = {
   isOpen: boolean
@@ -9,37 +9,7 @@ type MobileMenuProps = {
 }
 
 function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const menuRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    const listener = (event: MouseEvent) => {
-      if (
-        !isOpen ||
-        !menuRef.current ||
-        menuRef.current.contains(event.target as Node)
-      ) {
-        return
-      }
-
-      onClose()
-    }
-
-    const keyListener = (event: KeyboardEvent) => {
-      if (isOpen && event.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    document.addEventListener('click', listener)
-    document.addEventListener('touchstart', listener)
-    document.addEventListener('keydown', keyListener)
-
-    return () => {
-      document.removeEventListener('click', listener)
-      document.removeEventListener('touchstart', listener)
-      document.removeEventListener('keydown', keyListener)
-    }
-  }, [isOpen, onClose])
+  const { ref: menuRef } = useDialog({ isOpen, onClose })
 
   return (
     <div ref={menuRef}>
@@ -137,13 +107,14 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   </Link>
                 </div>
                 <div role="none">
-                  <a
-                    href="#"
-                    className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    Log in
-                  </a>
+                  <Link href="/sign-in">
+                    <a
+                      className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      Log in
+                    </a>
+                  </Link>
                 </div>
               </div>
             </div>
