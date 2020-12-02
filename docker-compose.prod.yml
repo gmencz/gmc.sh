@@ -25,6 +25,7 @@ services:
       # Redirect http to https
       - "traefik.http.middlewares.api-redirectscheme.redirectscheme.scheme=https"
       - "traefik.http.middlewares.api-redirectscheme.redirectscheme.permanent=true"
+      - "traefik.docker.network=core_traefik-net"
   db:
     image: postgres:13.0-alpine
     env_file:
