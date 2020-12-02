@@ -23,8 +23,8 @@ services:
       # Tell traefik to use the certificate resolver named "myresolver"
       - "traefik.http.routers.core-api.tls.certresolver=myresolver"
       # Redirect http to https
-      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+      - "traefik.http.middlewares.api-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.api-redirectscheme.redirectscheme.permanent=true"
   db:
     image: postgres:13.0-alpine
     env_file:
