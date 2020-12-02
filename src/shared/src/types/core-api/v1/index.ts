@@ -1,4 +1,19 @@
-import { User, Url } from '@gmcsh/core-api/node_modules/.prisma/client'
+type User = {
+  id: string
+  username: string
+  email: string
+  createdAt: Date
+  password: string
+}
+
+type Url = {
+  id: string
+  url: string
+  target: string
+  createdAt: Date
+  userId: string | null
+  timesVisited: number
+}
 
 export interface ErrorResponse {
   message: string

@@ -46,10 +46,8 @@
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "fastify": "^3.8.0",
-    "fastify-cookie": "^4.1.0",
     "fastify-cors": "^5.0.0",
-    "firebase": "^8.1.1",
-    "firebase-admin": "^9.4.1",
+    "fastify-secure-session": "^2.3.0",
     "memjs": "^1.2.2",
     "nanoid": "^3.1.18",
     "pino-pretty": "^4.3.0"
