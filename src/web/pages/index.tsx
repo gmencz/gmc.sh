@@ -1,13 +1,19 @@
+import { V1ApiTypes } from '@gmcsh/shared'
 import Head from 'next/head'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import Header from '../components/header'
-import { withAuthComponent } from '../components/with-auth'
 import { withAuthServerSideProps } from '../utils/with-auth-server-side-props'
+
+type HomeProps = {
+  user: V1ApiTypes.MeResponse | null
+}
 
 export const getServerSideProps = withAuthServerSideProps()
 
-function Home() {
+function Home({ user }: HomeProps) {
+  console.log(user)
+
   return (
     <Fragment>
       <Head>
@@ -60,7 +66,7 @@ function Home() {
           </svg>
         </div>
         <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
-          <Header />
+          <Header isAuthenticated={!!user} />
           <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-24 sm:px-6 lg:mt-32">
             <div className="lg:grid lg:grid-cols-12 lg:gap-8">
               <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
@@ -175,4 +181,4 @@ function Home() {
   )
 }
 
-export default withAuthComponent(Home)
+export default Home

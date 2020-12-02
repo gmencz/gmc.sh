@@ -1,6 +1,7 @@
 import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
 import { RouteHandler } from 'fastify'
 import admin from 'firebase-admin'
+import { cache } from 'utils/cache'
 import { db } from 'utils/db'
 
 const me: RouteHandler<{
@@ -12,7 +13,7 @@ const me: RouteHandler<{
   try {
     decodedToken = await admin
       .auth()
-      .verifySessionCookie(sessionCookie, true /* checkRevoked */)
+      .verifySessionCookie(sessionCookie, false /* checkRevoked */)
   } catch (error) {
     reply.clearCookie('__session')
     reply.status(401).send({
@@ -20,6 +21,14 @@ const me: RouteHandler<{
       info: {
         ...error,
       },
+    })
+    return
+  }
+
+  const cacheHit = await cache.get(`user_${decodedToken.uid}`)
+  if (cacheHit.value) {
+    reply.send({
+      ...JSON.parse(cacheHit.value.toString()),
     })
     return
   }
@@ -43,6 +52,11 @@ const me: RouteHandler<{
     })
     return
   }
+
+  const cachedUserExpiry = 60 * 60 * 24 * 14
+  await cache.add(`user_${decodedToken.uid}`, JSON.stringify({ ...user }), {
+    expires: cachedUserExpiry,
+  })
 
   reply.send({
     ...user,

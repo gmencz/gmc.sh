@@ -17,6 +17,10 @@ services:
       - ./flyway/docker-flyway.config:/flyway/conf/flyway.config
     depends_on:
       - db
+  memcached:
+    image: memcached:1.6.9-alpine
+    ports:
+      - 11211:11211
   flyway_test:
     image: flyway/flyway:7.2
     env_file:

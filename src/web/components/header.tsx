@@ -3,7 +3,11 @@ import Link from 'next/link'
 import { Fragment, useState } from 'react'
 import MobileMenu from './mobile-menu'
 
-function Header() {
+type HeaderProps = {
+  isAuthenticated: boolean
+}
+
+function Header({ isAuthenticated }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
@@ -80,15 +84,27 @@ function Header() {
             </Link>
           </div>
         </div>
-        <div className="hidden md:block text-right">
-          <span className="inline-flex rounded-md shadow-md ring-1 ring-black ring-opacity-5">
-            <Link href="/sign-in">
-              <a className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50">
-                Sign in
-              </a>
-            </Link>
-          </span>
-        </div>
+        {isAuthenticated ? (
+          <div className="hidden md:block text-right">
+            <span className="inline-flex rounded-md shadow-md ring-1 ring-black ring-opacity-5">
+              <Link href="/app">
+                <a className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50">
+                  Open app in browser
+                </a>
+              </Link>
+            </span>
+          </div>
+        ) : (
+          <div className="hidden md:block text-right">
+            <span className="inline-flex rounded-md shadow-md ring-1 ring-black ring-opacity-5">
+              <Link href="/sign-in">
+                <a className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50">
+                  Sign in
+                </a>
+              </Link>
+            </span>
+          </div>
+        )}
       </nav>
 
       <MobileMenu
