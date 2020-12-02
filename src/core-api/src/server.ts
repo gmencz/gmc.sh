@@ -1,4 +1,4 @@
-import { addWeeks, getUnixTime } from 'date-fns'
+import { addWeeks } from 'date-fns'
 import { config as configureEnv } from 'dotenv'
 configureEnv()
 
@@ -30,14 +30,12 @@ function build(options: BuildOptions = {}): FastifyInstance {
     credentials: true,
   })
 
-  const now = new Date()
-  const inTwoWeeks = addWeeks(now, 2)
   server.register(session, {
     cookieName: '__session',
     key: readFileSync(join(__dirname, 'secret-key')),
     cookie: {
-      expires: inTwoWeeks,
-      maxAge: getUnixTime(inTwoWeeks),
+      expires: addWeeks(new Date(), 2),
+      maxAge: 60 * 60 * 24 * 14,
       path: '/',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

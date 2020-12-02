@@ -2,17 +2,22 @@ import { AppProps } from 'next/app'
 import { Fragment } from 'react'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
+import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
-export const queryCache = new QueryCache()
+const queryCache = new QueryCache()
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Fragment>
       <ReactQueryCacheProvider queryCache={queryCache}>
-        <Component {...pageProps} />
+        <Hydrate state={pageProps.dehydratedState}>
+          <Component {...pageProps} />
+        </Hydrate>
       </ReactQueryCacheProvider>
-      <ReactQueryDevtools initialIsOpen />
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen />
+      )}
     </Fragment>
   )
 }
