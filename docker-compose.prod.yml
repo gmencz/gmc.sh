@@ -5,33 +5,37 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.api
-    container_name: "api.gmc.sh"
     networks:
       - traefik-net
+      - gmc-sh-net
     env_file:
       - ./src/core-api/.env
     labels:
       # Explicitly tell Traefik to expose this container
       - "traefik.enable=true"
       # The domain the service will respond to
-      # The routers property has to match the container name (api.gmc.sh)
+      # The routers property has to match the container name (api-gabrielmendezc-com)
       - "traefik.http.routers.core-api.rule=Host(`api.gmc.sh`)"
       # Allow request only from the predefined entry point named "websecure"
       - "traefik.http.routers.core-api.entrypoints=web"
-      # Tell traefik to use the port 4500 to connect to this container
+      # Tell traefik to use the port 3000 to connect to this container
       - "traefik.http.services.core-api.loadbalancer.server.port=4500"
       # Tell traefik to use the certificate resolver named "myresolver"
-      # - "traefik.http.routers.core-api.tls.certresolver=myresolver"
+      # - "traefik.http.routers.erp-api-confialis-com.tls.certresolver=myresolver"
       # Redirect http to https
-      # - "traefik.http.middlewares.api-redirectscheme.redirectscheme.scheme=https"
-      # - "traefik.http.middlewares.api-redirectscheme.redirectscheme.permanent=true"
-      - "traefik.docker.network=traefik-net"
+      # - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+      # - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+      - "traefik.docker.network=projects_traefik-net"
   db:
     image: postgres:13.0-alpine
+    networks:
+      - gmc-sh-net
     env_file:
       - ./docker/db/.env
   flyway:
     image: flyway/flyway:7.2
+    networks:
+      - gmc-sh-net
     env_file:
       - ./docker/db/.env
     command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
@@ -45,3 +49,6 @@ networks:
   traefik-net:
     external:
       name: core_traefik-net
+  gmc-sh-net:
+    name: gmc-sh-net
+    driver: bridge
