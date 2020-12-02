@@ -17,14 +17,14 @@ services:
       # The routers property has to match the container name (api.gmc.sh)
       - "traefik.http.routers.core-api.rule=Host(`api.gmc.sh`)"
       # Allow request only from the predefined entry point named "websecure"
-      - "traefik.http.routers.core-api.entrypoints=websecure"
+      - "traefik.http.routers.core-api.entrypoints=web"
       # Tell traefik to use the port 4500 to connect to this container
       - "traefik.http.services.core-api.loadbalancer.server.port=4500"
       # Tell traefik to use the certificate resolver named "myresolver"
-      - "traefik.http.routers.core-api.tls.certresolver=myresolver"
+      # - "traefik.http.routers.core-api.tls.certresolver=myresolver"
       # Redirect http to https
-      - "traefik.http.middlewares.api-redirectscheme.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.api-redirectscheme.redirectscheme.permanent=true"
+      # - "traefik.http.middlewares.api-redirectscheme.redirectscheme.scheme=https"
+      # - "traefik.http.middlewares.api-redirectscheme.redirectscheme.permanent=true"
       - "traefik.docker.network=traefik-net"
   db:
     image: postgres:13.0-alpine
