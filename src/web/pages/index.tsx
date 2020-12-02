@@ -9,11 +9,19 @@ type HomeProps = {
   user: V1ApiTypes.MeResponse | null
 }
 
+// export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
+//   const queryCache = new QueryCache()
+
+//   await queryCache.prefetchQuery(meKey, () => user)
+
+//   return {
+//     dehydratedState: dehydrate(queryCache),
+//   }
+// })
+
 export const getServerSideProps = withAuthServerSideProps()
 
 function Home({ user }: HomeProps) {
-  console.log(user)
-
   return (
     <Fragment>
       <Head>

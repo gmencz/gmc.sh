@@ -4,11 +4,12 @@ import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { QueryStatus, useMutation, useQueryCache } from 'react-query'
+import { QueryStatus, useMutation } from 'react-query'
 import { V1ApiTypes } from '@gmcsh/shared'
 import { API_ENDPOINT } from '../utils/constants'
 import { ApiError } from '../utils/api-error'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 type Inputs = {
   username: string
@@ -46,10 +47,10 @@ async function signIn({ username, password }: Inputs) {
 }
 
 function SignIn() {
-  const cache = useQueryCache()
+  const router = useRouter()
   const [signInToApp, { error, status }] = useMutation(signIn, {
-    onSuccess: data => {
-      cache.setQueryData('me', data)
+    onSuccess: () => {
+      router.push('/app')
     },
   })
 

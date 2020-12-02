@@ -1,31 +1,19 @@
+import { addWeeks } from 'date-fns'
 import { config as configureEnv } from 'dotenv'
 configureEnv()
 
 import fastify, { FastifyInstance } from 'fastify'
-import cookies from 'fastify-cookie'
 import cors from 'fastify-cors'
+import session from 'fastify-secure-session'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 import { v1Routes } from 'routes/v1'
-import admin from 'firebase-admin'
-import firebase from 'firebase'
 
 type BuildOptions = {
   disableLogger?: boolean
 }
 
 function build(options: BuildOptions = {}): FastifyInstance {
-  firebase.initializeApp({
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.FIREBASE_AUTH_DB_URL,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
-  })
-
-  admin.initializeApp()
-
   const server = fastify(
     options.disableLogger ? {} : { logger: { prettyPrint: true } },
   )
@@ -42,7 +30,18 @@ function build(options: BuildOptions = {}): FastifyInstance {
     credentials: true,
   })
 
-  server.register(cookies)
+  server.register(session, {
+    cookieName: '__session',
+    key: readFileSync(join(__dirname, 'secret-key')),
+    cookie: {
+      expires: addWeeks(new Date(), 2),
+      maxAge: 60 * 60 * 24 * 14,
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    },
+  })
 
   // Routes
   server.register(v1Routes, { prefix: '/v1' })

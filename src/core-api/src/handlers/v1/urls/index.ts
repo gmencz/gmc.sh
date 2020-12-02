@@ -14,7 +14,7 @@ const queryUrls: RouteHandler<{
 }> = async (request, reply) => {
   const urls = await db.url.findMany({
     where: {
-      userId: request.user?.uid,
+      userId: request.session.get('data').user.id,
     },
     take: request.query.take,
     ...(request.query.cursor && {
