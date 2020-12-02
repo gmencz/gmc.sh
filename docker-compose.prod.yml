@@ -20,8 +20,9 @@ services:
       - "traefik.http.routers.core-api.rule=Host(`api.gmc.sh`)"
       # Allow request only from the predefined entry point named "websecure"
       - "traefik.http.routers.core-api.entrypoints=websecure"
+      - "traefik.http.routers.core-api.service=core-api-service"
       # Tell traefik to use the port 3000 to connect to this container
-      - "traefik.http.services.core-api.loadbalancer.server.port=4500"
+      - "traefik.http.services.core-api-service.loadbalancer.server.port=4500"
       # Tell traefik to use the certificate resolver named "myresolver"
       - "traefik.http.routers.core-api.tls.certresolver=myresolver"
       # Redirect http to https
