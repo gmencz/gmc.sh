@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { build } from 'server'
+import { build } from '../server'
 import { db } from 'utils/db'
 
 type Context = {

@@ -33,7 +33,7 @@ function build(options: BuildOptions = {}): FastifyInstance {
   server.register(session, {
     cookieName: '__session',
     key: readFileSync(
-      join(__dirname, process.env.SESSION_SECRET_PATH as string),
+      join(__dirname, '..', process.env.SESSION_SECRET_PATH as string),
     ),
     cookie: {
       expires: addWeeks(new Date(), 2),
