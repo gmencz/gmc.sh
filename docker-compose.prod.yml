@@ -30,12 +30,14 @@ services:
       - "traefik.docker.network=core_traefik-net"
   db:
     image: postgres:13.0-alpine
+    container_name: "gmc.sh-db"
     networks:
       - gmc-sh-net
     env_file:
       - ./docker/db/.env
   flyway:
     image: flyway/flyway:7.2
+    container_name: "gmc.sh-flyway"
     networks:
       - gmc-sh-net
     env_file:
