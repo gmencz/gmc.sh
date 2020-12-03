@@ -2,7 +2,7 @@ import { build } from './server'
 
 const server = build()
 
-server.listen(Number(process.env.PORT), (err, address) => {
+server.listen(Number(process.env.PORT), '0.0.0.0', (err, address) => {
   if (err) {
     server.log.error(err.message)
     process.exit(1)
