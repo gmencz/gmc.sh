@@ -1,10 +1,9 @@
 version: "3.8"
 
 services:
-  core-api:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.api
+  whoami:
+    # A container that exposes an API to show its IP address
+    image: traefik/whoami
     networks:
       - traefik-net
       - gmc-sh-net
