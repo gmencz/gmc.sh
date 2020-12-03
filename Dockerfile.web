@@ -4,12 +4,12 @@ WORKDIR /usr/src/gmc.sh
 COPY ./package*.json ./
 RUN npm install
 COPY ./lerna.json ./lerna.json
-COPY ./src/core-api ./src/core-api
+COPY ./src/web ./src/web
 COPY ./src/shared ./src/shared
 RUN npm run clean-install
-WORKDIR /usr/src/gmc.sh/src/core-api
+WORKDIR /usr/src/gmc.sh/src/web
+RUN npm run build
 
-ENV NODE_ENV=production
-EXPOSE 80
+EXPOSE 3000
 
 CMD [ "npm", "run", "start" ]

@@ -48,6 +48,29 @@ services:
       - ./flyway/docker-flyway.config:/flyway/conf/flyway.config
     depends_on:
       - db
+  next-app:
+    container_name: "app.gmc.sh"
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    networks:
+      - gmc-sh-net
+  next-app-reverse-proxy:
+    build: ./docker/nginx
+    container_name: "app.gmc.sh-reverse-proxy"
+    networks:
+      - traefik-net
+      - gmc-sh-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.next-app-reverse-proxy.rule=Host(`app.gmc.sh`)"
+      - "traefik.http.routers.next-app-reverse-proxy.entrypoints=websecure"
+      - "traefik.http.routers.next-app-reverse-proxy.service=next-app-reverse-proxy-service"
+      - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.server.port=80"
+      - "traefik.http.routers.next-app-reverse-proxy.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+      - "traefik.docker.network=core_traefik-net"
 
 networks:
   traefik-net:
