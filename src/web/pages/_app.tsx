@@ -5,6 +5,11 @@ import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('../mocks')
+}
+
 const queryCache = new QueryCache()
 
 function MyApp({ Component, pageProps }: AppProps) {
