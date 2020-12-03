@@ -25,24 +25,26 @@ type WithAuthServerSidePropsOptions = {
 }
 
 export type AuthenticatedPageProps = {
-  user: V1ApiTypes.MeResponse
+  user: V1ApiTypes.MeResponse & { isLoggedIn: boolean }
+  isLoggedIn: boolean
 }
 
 const withAuthServerSideProps = <T>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
-    user: V1ApiTypes.MeResponse | null,
+    user?: V1ApiTypes.MeResponse,
   ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = {},
 ): GetServerSideProps => async ctx => {
-  let loggedInUser: V1ApiTypes.MeResponse | null = null
+  let loggedInUser: V1ApiTypes.MeResponse | Record<string, string> = {}
   try {
     loggedInUser = await getLoggedInUser(ctx.req.headers.cookie || '')
   } catch {
-    loggedInUser = null
+    loggedInUser = {}
   }
 
-  if (options.authenticatedPage && !loggedInUser) {
+  const isLoggedIn = !!loggedInUser.id
+  if (options.authenticatedPage && !isLoggedIn) {
     ctx.res.statusCode = 302
     ctx.res.setHeader('Location', '/sign-in')
   }
@@ -50,15 +52,18 @@ const withAuthServerSideProps = <T>(
   if (getServerSidePropsFunc) {
     return {
       props: {
-        user: loggedInUser,
-        ...((await getServerSidePropsFunc(ctx, loggedInUser)) || {}),
+        user: { ...loggedInUser, isLoggedIn },
+        ...((await getServerSidePropsFunc(
+          ctx,
+          isLoggedIn ? (loggedInUser as V1ApiTypes.MeResponse) : undefined,
+        )) || {}),
       },
     }
   }
 
   return {
     props: {
-      user: loggedInUser,
+      user: { ...loggedInUser, isLoggedIn },
     },
   }
 }
