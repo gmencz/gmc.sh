@@ -13,7 +13,9 @@ import {
 //   await queryCache.prefetchQuery(meKey, () => user)
 
 //   return {
-//     dehydratedState: dehydrate(queryCache),
+//     props: {
+//       dehydratedState: dehydrate(queryCache),
+//     }
 //   }
 // })
 
@@ -72,7 +74,7 @@ function Home({ user }: AuthenticatedPageProps) {
           </svg>
         </div>
         <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
-          <Header isAuthenticated={user.isLoggedIn} />
+          <Header isAuthenticated={!!user} />
           <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-24 sm:px-6 lg:mt-32">
             <div className="lg:grid lg:grid-cols-12 lg:gap-8">
               <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
