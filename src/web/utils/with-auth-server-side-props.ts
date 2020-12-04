@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
 import { V1ApiTypes } from '@gmcsh/shared'
 import { getLoggedInUser } from './api/get-logged-in-user'
 
@@ -54,7 +54,8 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
           destination: '/sign-in',
           permanent: false,
         },
-      } as unknown) as { props: { user: null } }
+        // We have to trick the TS compiler here.
+      } as unknown) as { props: T['props'] & DefaultWithAuthServerSideProps }
     }
 
     if (getServerSidePropsFunc) {
