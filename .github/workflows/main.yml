@@ -21,10 +21,15 @@ jobs:
         run: npm run clean-install
 
       - name: Build the stack
-        run: docker-compose -f docker-compose.test.yml up -d
+        run: |
+          docker-compose -f docker-compose.test.yml up -d db_test
+          docker-compose -f docker-compose.test.yml up flyway_test
+
+      - name: Check types
+        run: npm run check-types
       
       - name: Lint
         run: npm run lint
-      
-      - name: Check types
-        run: npm run check-types
+
+      - name: Test
+        run: npm run test
