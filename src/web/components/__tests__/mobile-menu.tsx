@@ -49,7 +49,7 @@ describe('MobileMenu', () => {
       isLoggedIn: true,
     }
 
-    render(<Home user={mockedUser} isLoggedIn={mockedUser.isLoggedIn} />)
+    render(<Home user={mockedUser} />)
     openMenu()
 
     // Just click on some element on the page that's not in the mobile menu.

@@ -7,6 +7,8 @@
     "bootstrap": "npx lerna bootstrap",
     "dev": "lerna run dev --stream",
     "test": "lerna run test --stream",
+    "lint": "lerna run lint --stream",
+    "check-types": "lerna run check-types --stream",
     "pre-commit": "lerna run --concurrency 1 --stream pre-commit --since HEAD --exclude-dependents"
   },
   "devDependencies": {

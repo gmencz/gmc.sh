@@ -23,3 +23,6 @@ jobs:
 
       - name: Install packages deps
         run: npm run clean-install
+
+      - name: Build the stack
+        run: docker-compose up -d
