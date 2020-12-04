@@ -3,7 +3,7 @@ import {
   withAuthServerSideProps,
 } from '../utils/with-auth-server-side-props'
 
-export const getServerSideProps = withAuthServerSideProps(null, {
+export const getServerSideProps = withAuthServerSideProps(undefined, {
   authenticatedPage: true,
 })
 

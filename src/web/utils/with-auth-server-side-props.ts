@@ -61,15 +61,20 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     if (getServerSidePropsFunc) {
       return {
         props: {
-          user: loggedInUser,
-          ...((await getServerSidePropsFunc(ctx, loggedInUser)).props || {}),
+          user: loggedInUser as V1ApiTypes.MeResponse,
+          ...((
+            await getServerSidePropsFunc(
+              ctx,
+              loggedInUser as V1ApiTypes.MeResponse,
+            )
+          ).props || {}),
         },
       }
     }
 
     return {
       props: {
-        user: loggedInUser,
+        user: loggedInUser as V1ApiTypes.MeResponse,
       },
     }
   }
