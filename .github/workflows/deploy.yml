@@ -46,6 +46,17 @@ jobs:
           registry: docker.pkg.github.com
           dockerfile: Dockerfile.web
           tags: latest
+
+      - name: Publish Next app docker image to Github Package Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: gmencz/gmc.sh/app.gmc.sh
+          username: ${{ secrets.GH_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          dockerfile: ./docker/nginx/Dockerfile
+          tags: latest
+
   deploy:
     name: Deploy Core API and Next app
     runs-on: ubuntu-latest
