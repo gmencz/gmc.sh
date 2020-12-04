@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:lts
 
 WORKDIR /usr/src/gmc.sh
 COPY ./package*.json ./
@@ -6,6 +6,7 @@ RUN npm install
 COPY ./lerna.json ./lerna.json
 COPY ./src/core-api ./src/core-api
 COPY ./src/shared ./src/shared
+
 RUN npm run clean-install
 WORKDIR /usr/src/gmc.sh/src/core-api
 

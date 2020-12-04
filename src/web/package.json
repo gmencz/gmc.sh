@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test:ci": "jest --ci --bail",
     "build": "next build",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@gmcsh/shared": "^1.0.0",
