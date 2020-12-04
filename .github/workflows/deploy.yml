@@ -47,7 +47,7 @@ jobs:
           dockerfile: Dockerfile.web
           tags: latest
 
-      - name: Publish Next app docker image to Github Package Registry
+      - name: Publish Next app reverse proxy docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: gmencz/gmc.sh/app.gmc.sh
