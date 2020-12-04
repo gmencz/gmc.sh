@@ -3,9 +3,7 @@ version: "3.8"
 services:
   core-api:
     container_name: "api.gmc.sh"
-    build:
-      context: .
-      dockerfile: Dockerfile.api
+    image: docker.pkg.github.com/gmencz/gmc.sh/api.gmc.sh:latest
     networks:
       - traefik-net
       - gmc-sh-net
@@ -50,9 +48,7 @@ services:
       - db
   next-app:
     container_name: "app.gmc.sh"
-    build:
-      context: .
-      dockerfile: Dockerfile.web
+    image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh:latest
     networks:
       - gmc-sh-net
   next-app-reverse-proxy:
