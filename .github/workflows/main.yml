@@ -9,7 +9,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Use Node
+      - name: Setup Node
         uses: actions/setup-node@v1
         with:
           node-version: '14'
@@ -23,13 +23,13 @@ jobs:
       - name: Create environment files for stack
         uses: SpicyPizza/create-envfile@v1
         with:
-          directory: ./docker/db
           envkey_POSTGRES_USER: ${{ secrets.POSTGRES_ACTION_USER }}
           envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_ACTION_PASSWORD }}
           envkey_POSTGRES_DB: ${{ secrets.POSTGRES_ACTION_DB }}
+          directory: ./docker/db
 
       - name: Build the stack
-        run: docker-compose up -d
+        run: ls ./docker/db && docker-compose up -d
       
       - name: Lint
         run: npm run lint
