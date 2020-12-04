@@ -9,6 +9,7 @@ services:
       - gmc-sh-net
     env_file:
       - ./src/core-api/.env
+      - ./src/core-api/prisma/.env
     labels:
       # Explicitly tell Traefik to expose this container
       - "traefik.enable=true"
@@ -52,7 +53,7 @@ services:
     networks:
       - gmc-sh-net
   next-app-reverse-proxy:
-    build: ./docker/nginx
+    image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh-reverse-proxy:latest
     container_name: "app.gmc.sh-reverse-proxy"
     networks:
       - traefik-net
