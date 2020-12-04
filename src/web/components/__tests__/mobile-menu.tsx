@@ -14,45 +14,47 @@ function openMenu() {
   screen.getByRole('menu')
 }
 
-test('closes menu when close menu button is clicked', async () => {
-  // We have to render the header and not the mobile menu because
-  // the button to open the mobile menu is on the header.
-  render(<Header isAuthenticated={false} />)
-  openMenu()
+describe('MobileMenu', () => {
+  test('closes menu when close menu button is clicked', async () => {
+    // We have to render the header and not the mobile menu because
+    // the button to open the mobile menu is on the header.
+    render(<Header isAuthenticated={false} />)
+    openMenu()
 
-  const closeMenuButton = screen.getByText(/close main menu/i)
-  userEvent.click(closeMenuButton)
+    const closeMenuButton = screen.getByText(/close main menu/i)
+    userEvent.click(closeMenuButton)
 
-  await waitForElementToBeRemoved(() => screen.getByRole('menu'))
-})
-
-test('closes menu when escape key is pressed', async () => {
-  render(<Header isAuthenticated={false} />)
-  openMenu()
-
-  fireEvent.keyDown(document.body, {
-    key: 'Escape',
-    keyCode: 27,
-    which: 27,
+    await waitForElementToBeRemoved(() => screen.getByRole('menu'))
   })
 
-  await waitForElementToBeRemoved(() => screen.getByRole('menu'))
-})
+  test('closes menu when escape key is pressed', async () => {
+    render(<Header isAuthenticated={false} />)
+    openMenu()
 
-test('closes menu when clicked/tapped outside', async () => {
-  const mockedUser = {
-    id: '1',
-    username: 'test',
-    email: 'test@example.com',
-    createdAt: new Date(),
-    isLoggedIn: true,
-  }
+    fireEvent.keyDown(document.body, {
+      key: 'Escape',
+      keyCode: 27,
+      which: 27,
+    })
 
-  render(<Home user={mockedUser} isLoggedIn={mockedUser.isLoggedIn} />)
-  openMenu()
+    await waitForElementToBeRemoved(() => screen.getByRole('menu'))
+  })
 
-  // Just click on some element on the page that's not in the mobile menu.
-  const emailSubscriptionInput = screen.getByLabelText(/email/i)
-  userEvent.click(emailSubscriptionInput)
-  await waitForElementToBeRemoved(() => screen.getByRole('menu'))
+  test('closes menu when clicked/tapped outside', async () => {
+    const mockedUser = {
+      id: '1',
+      username: 'test',
+      email: 'test@example.com',
+      createdAt: new Date(),
+      isLoggedIn: true,
+    }
+
+    render(<Home user={mockedUser} isLoggedIn={mockedUser.isLoggedIn} />)
+    openMenu()
+
+    // Just click on some element on the page that's not in the mobile menu.
+    const emailSubscriptionInput = screen.getByLabelText(/email/i)
+    userEvent.click(emailSubscriptionInput)
+    await waitForElementToBeRemoved(() => screen.getByRole('menu'))
+  })
 })

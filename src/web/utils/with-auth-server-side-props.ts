@@ -1,70 +1,76 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { GetServerSidePropsContext } from 'next'
 import { V1ApiTypes } from '@gmcsh/shared'
-import { API_ENDPOINT } from './constants'
-import { ApiError } from './api-error'
+import { getLoggedInUser } from './api/get-logged-in-user'
 
-async function getLoggedInUser(
-  sessionCookie: string,
-): Promise<V1ApiTypes.MeResponse> {
-  const response = await fetch(`${API_ENDPOINT}/v1/auth/me`, {
-    headers: {
-      cookie: sessionCookie,
-    },
-  })
+type AsyncReturnType<T extends (...args: any) => any> = T extends (
+  ...args: any
+) => Promise<infer U>
+  ? U
+  : T extends (...args: any) => infer U
+  ? U
+  : any
 
-  const data = await response.json()
-  if (response.status >= 400 && response.status < 600) {
-    throw new ApiError(response.status, data as V1ApiTypes.ErrorResponse)
-  }
-
-  return data as V1ApiTypes.MeResponse
-}
+export type InferWithAuthServerSideProps<
+  T extends (...args: any) => Promise<{ props: any }>
+> = AsyncReturnType<T>['props']
 
 type WithAuthServerSidePropsOptions = {
   authenticatedPage?: boolean
 }
 
 export type AuthenticatedPageProps = {
-  user: V1ApiTypes.MeResponse & { isLoggedIn: boolean }
-  isLoggedIn: boolean
+  user: V1ApiTypes.MeResponse
 }
 
-const withAuthServerSideProps = <T>(
+type EmptyProps = {
+  props: Record<string, unknown>
+}
+
+type DefaultWithAuthServerSideProps = {
+  user: V1ApiTypes.MeResponse
+}
+
+function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
     user?: V1ApiTypes.MeResponse,
   ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = {},
-): GetServerSideProps => async ctx => {
-  let loggedInUser: V1ApiTypes.MeResponse | Record<string, string> = {}
-  try {
-    loggedInUser = await getLoggedInUser(ctx.req.headers.cookie || '')
-  } catch {
-    loggedInUser = {}
-  }
+) {
+  return async function getMergedServerSideProps(
+    ctx: GetServerSidePropsContext,
+  ): Promise<{ props: T['props'] & DefaultWithAuthServerSideProps }> {
+    let loggedInUser: V1ApiTypes.MeResponse | null = null
+    try {
+      loggedInUser = await getLoggedInUser(ctx.req.headers.cookie || '')
+    } catch {
+      loggedInUser = null
+    }
 
-  const isLoggedIn = !!loggedInUser.id
-  if (options.authenticatedPage && !isLoggedIn) {
-    ctx.res.statusCode = 302
-    ctx.res.setHeader('Location', '/sign-in')
-  }
+    if (options.authenticatedPage && !loggedInUser) {
+      return ({
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
+      } as unknown) as { props: { user: null } }
+    }
 
-  if (getServerSidePropsFunc) {
+    if (getServerSidePropsFunc) {
+      return {
+        props: {
+          user: loggedInUser,
+          ...((await getServerSidePropsFunc(ctx, loggedInUser)).props || {}),
+        },
+      }
+    }
+
     return {
       props: {
-        user: { ...loggedInUser, isLoggedIn },
-        ...((await getServerSidePropsFunc(
-          ctx,
-          isLoggedIn ? (loggedInUser as V1ApiTypes.MeResponse) : undefined,
-        )) || {}),
+        user: loggedInUser,
       },
     }
-  }
-
-  return {
-    props: {
-      user: { ...loggedInUser, isLoggedIn },
-    },
   }
 }
 

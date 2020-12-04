@@ -29,79 +29,81 @@ function renderSignIn() {
   }
 }
 
-beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation()
-})
+describe('SignInForm', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation()
+  })
 
-test('redirects user to /app after successful login', async () => {
-  const { usernameInput, passwordInput, signInButton } = renderSignIn()
+  test('redirects user to /app after successful login', async () => {
+    const { usernameInput, passwordInput, signInButton } = renderSignIn()
 
-  server.use(
-    rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
-      const mockedUser: V1ApiTypes.MeResponse = {
-        id: '1',
-        username: 'test',
-        email: 'test@example.com',
-        createdAt: new Date(),
-      }
+    server.use(
+      rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
+        const mockedUser: V1ApiTypes.MeResponse = {
+          id: '1',
+          username: 'test',
+          email: 'test@example.com',
+          createdAt: new Date(),
+        }
 
-      return res(
-        ctx.status(200),
-        ctx.json({
-          ...mockedUser,
-        }),
-      )
-    }),
-  )
+        return res(
+          ctx.status(200),
+          ctx.json({
+            ...mockedUser,
+          }),
+        )
+      }),
+    )
 
-  userEvent.type(usernameInput, 'invaliduser')
-  userEvent.type(passwordInput, 'invalidpassword')
-  userEvent.click(signInButton)
+    userEvent.type(usernameInput, 'invaliduser')
+    userEvent.type(passwordInput, 'invalidpassword')
+    userEvent.click(signInButton)
 
-  await waitFor(() => screen.getByText(/loading.../i))
-  await waitForElementToBeRemoved(() => screen.getByText(/loading.../i))
+    await waitFor(() => screen.getByText(/loading.../i))
+    await waitForElementToBeRemoved(() => screen.getByText(/loading.../i))
 
-  expect(mockRouter.push).toHaveBeenCalled()
-  expect(mockRouter.push).toHaveBeenCalledTimes(1)
-  expect(mockRouter.push).toHaveBeenCalledWith('/app')
-})
+    expect(mockRouter.push).toHaveBeenCalled()
+    expect(mockRouter.push).toHaveBeenCalledTimes(1)
+    expect(mockRouter.push).toHaveBeenCalledWith('/app')
+  })
 
-test('displays error to user if credentials fails client side validation', async () => {
-  const { usernameInput, passwordInput, signInButton } = renderSignIn()
+  test('displays error to user if credentials fails client side validation', async () => {
+    const { usernameInput, passwordInput, signInButton } = renderSignIn()
 
-  userEvent.type(usernameInput, 'test')
-  userEvent.type(passwordInput, '123')
-  userEvent.click(signInButton)
+    userEvent.type(usernameInput, 'test')
+    userEvent.type(passwordInput, '123')
+    userEvent.click(signInButton)
 
-  await waitFor(() =>
-    screen.getByText('Your password must be at least 6 characters long.'),
-  )
-})
+    await waitFor(() =>
+      screen.getByText('Your password must be at least 6 characters long.'),
+    )
+  })
 
-test('displays error to user if provided credentials are invalid', async () => {
-  const { usernameInput, passwordInput, signInButton } = renderSignIn()
+  test('displays error to user if provided credentials are invalid', async () => {
+    const { usernameInput, passwordInput, signInButton } = renderSignIn()
 
-  const apiErrorMessage =
-    'Wrong username or password, please check your spelling.'
+    const apiErrorMessage =
+      'Wrong username or password, please check your spelling.'
 
-  server.use(
-    rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
-      return res(
-        ctx.status(401),
-        ctx.json({
-          info: {},
-          message: apiErrorMessage,
-        }),
-      )
-    }),
-  )
+    server.use(
+      rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
+        return res(
+          ctx.status(401),
+          ctx.json({
+            info: {},
+            message: apiErrorMessage,
+          }),
+        )
+      }),
+    )
 
-  userEvent.type(usernameInput, 'invaliduser')
-  userEvent.type(passwordInput, 'invalidpassword')
-  userEvent.click(signInButton)
+    userEvent.type(usernameInput, 'invaliduser')
+    userEvent.type(passwordInput, 'invalidpassword')
+    userEvent.click(signInButton)
 
-  await waitFor(() => screen.getByText(/loading.../i))
-  await waitForElementToBeRemoved(() => screen.getByText(/loading.../i))
+    await waitFor(() => screen.getByText(/loading.../i))
+    await waitForElementToBeRemoved(() => screen.getByText(/loading.../i))
 
-  screen.getByText(apiErrorMessage)
+    screen.getByText(apiErrorMessage)
+  })
 })
