@@ -17,17 +17,3 @@ services:
       - ./flyway/docker-flyway.config:/flyway/conf/flyway.config
     depends_on:
       - db
-  flyway_test:
-    image: flyway/flyway:7.2
-    env_file:
-      - ./docker/db/.env.test
-    command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
-    volumes:
-      - ./flyway/sql_versions:/flyway/sql
-      - ./flyway/docker-flyway-test.config:/flyway/conf/flyway.config
-  db_test:
-    image: postgres:13.0-alpine
-    env_file:
-      - ./docker/db/.env.test
-    ports:
-      - 6544:5432
