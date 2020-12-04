@@ -29,7 +29,7 @@ jobs:
           directory: ./docker/db
 
       - name: Build the stack
-        run: ls ./docker/db && docker-compose up -d
+        run: ls -a ./docker/db
       
       - name: Lint
         run: npm run lint
