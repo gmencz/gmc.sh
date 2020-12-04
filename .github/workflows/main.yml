@@ -20,16 +20,8 @@ jobs:
       - name: Install packages deps
         run: npm run clean-install
 
-      - name: Create environment files for stack
-        uses: SpicyPizza/create-envfile@v1
-        with:
-          envkey_POSTGRES_USER: ${{ secrets.POSTGRES_ACTION_USER }}
-          envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_ACTION_PASSWORD }}
-          envkey_POSTGRES_DB: ${{ secrets.POSTGRES_ACTION_DB }}
-          directory: ./docker/db
-
       - name: Build the stack
-        run: ls -a ./docker/db
+        run: docker-compose -f docker-compose.test.yml up -d
       
       - name: Lint
         run: npm run lint
