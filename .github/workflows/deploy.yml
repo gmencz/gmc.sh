@@ -46,3 +46,9 @@ jobs:
           registry: docker.pkg.github.com
           dockerfile: Dockerfile.web
           tags: latest
+  # deploy:
+  #   name: Deploy Core API and Next app
+  #   runs-on: ubuntu-latest
+  #   needs: [publish-core-api, publish-next-app]
+  #   steps:
+  #     - 
