@@ -29,6 +29,14 @@ test('appends props returned by custom getServerSideProps function to final getS
     }
   })({ req: { headers: { cookie: '' } } } as GetServerSidePropsContext)
 
-  expect(result.props.id).toBe(10)
-  expect(result.props.user).toMatchObject(mockedUser)
+  expect(result.props).toMatchInlineSnapshot(`
+    Object {
+      "id": 10,
+      "user": Object {
+        "email": "test@example.com",
+        "id": "1",
+        "username": "test",
+      },
+    }
+  `)
 })

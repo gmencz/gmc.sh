@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { V1ApiTypes } from '@gmcsh/shared'
 import { getLoggedInUser } from './api/get-logged-in-user'
 
