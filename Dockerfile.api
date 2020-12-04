@@ -7,8 +7,6 @@ COPY ./lerna.json ./lerna.json
 COPY ./src/core-api ./src/core-api
 COPY ./src/shared ./src/shared
 
-RUN apt-get install -y autoconf libtool
-
 RUN npm run clean-install
 WORKDIR /usr/src/gmc.sh/src/core-api
 

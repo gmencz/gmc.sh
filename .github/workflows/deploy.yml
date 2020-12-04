@@ -4,8 +4,8 @@ on:
     branches-ignore:
       - main
 jobs:
-  deploy:
-    name: Deploy core API and Next app
+  publish-core-api:
+    name: Publish core API
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -24,4 +24,25 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
           dockerfile: Dockerfile.api
+          tags: latest
+  publish-next-app:
+    name: Publish Next app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+          
+      - name: Publish Next app docker image to Github Package Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: gmencz/gmc.sh/app.gmc.sh
+          username: ${{ secrets.GH_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          dockerfile: Dockerfile.web
           tags: latest
