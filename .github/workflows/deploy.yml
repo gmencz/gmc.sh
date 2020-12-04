@@ -8,7 +8,14 @@ jobs:
     name: Deploy core API and Next app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+          
       - name: Publish core API docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
