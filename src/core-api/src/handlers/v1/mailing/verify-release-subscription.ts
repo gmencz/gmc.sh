@@ -2,6 +2,8 @@ import { V1ApiTypes } from '@gmcsh/shared'
 import { joinMailingListBody } from '@gmcsh/shared/src/types/core-api/v1'
 import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
+import jwt from 'jsonwebtoken'
+import { promisify } from 'util'
 import { FRONTEND_ENDPOINT } from 'utils/constants'
 import { handleValidationError } from 'utils/handle-validation-error'
 import { transactionalEmailsClient } from 'utils/sendinblue-api'
@@ -23,7 +25,20 @@ const verifyReleaseSubscription: RouteHandler<{
   }
 
   const { listId, subscriberEmail } = request.body
-  const confirmationLink = `${FRONTEND_ENDPOINT}/verify/release-subscription?listId=${listId}&subscriberEmail=${subscriberEmail}`
+
+  const token = await new Promise((res, rej) => {
+    jwt.sign(
+      { listId, subscriberEmail },
+      process.env.VERIFICATIONS_JWT_SECRET as string,
+      { expiresIn: '24h' },
+      (err, encoded) => {
+        if (err) rej(err)
+        res(encoded)
+      },
+    )
+  })
+
+  const confirmationLink = `${FRONTEND_ENDPOINT}/verify/release-subscription?token=${token}`
 
   try {
     await transactionalEmailsClient.sendTransacEmail({
@@ -36,6 +51,7 @@ const verifyReleaseSubscription: RouteHandler<{
           <p>To complete your sign up to get notified when gmc.sh is out, please verify your email:<p>
           <a href=${confirmationLink}>${confirmationLink}</a>
           <br>
+          <p>The link expires in 24 hours.</p>
           <p>Thank you, Gmc.sh Team
         </body>
       </html>`,

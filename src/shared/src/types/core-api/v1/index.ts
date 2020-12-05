@@ -1,4 +1,5 @@
 import { Type } from '@sinclair/typebox'
+import { type } from 'os'
 
 type User = {
   id: string
@@ -77,6 +78,10 @@ export const joinMailingListBody = Type.Object({
     maxLength: 255,
     format: 'email',
   }),
+})
+
+export const confirmJoinMailingListBody = Type.Object({
+  token: Type.String(),
 })
 
 export interface JoinMailingListResponse {
