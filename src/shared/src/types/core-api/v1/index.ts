@@ -70,6 +70,15 @@ export const registerBody = Type.Object({
   }),
 })
 
-export const joinMailingListQuerystring = Type.Object({
+export const joinMailingListBody = Type.Object({
   listId: Type.Number(),
+  subscriberEmail: Type.String({
+    minLength: 1,
+    maxLength: 255,
+    format: 'email',
+  }),
 })
+
+export interface JoinMailingListResponse {
+  subscriberEmail: string
+}
