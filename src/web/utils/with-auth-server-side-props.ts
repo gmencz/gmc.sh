@@ -2,6 +2,7 @@
 import { GetServerSidePropsContext } from 'next'
 import { V1ApiTypes } from '@gmcsh/shared'
 import { getLoggedInUser } from './api/get-logged-in-user'
+import parseCookies from 'next-cookies'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (
   ...args: any
@@ -41,9 +42,14 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   return async function getMergedServerSideProps(
     ctx: GetServerSidePropsContext,
   ): Promise<{ props: T['props'] & DefaultWithAuthServerSideProps }> {
+    const cookies = parseCookies(ctx)
+    const sessionCookie = cookies.__session
+
     let loggedInUser: V1ApiTypes.MeResponse | null = null
     try {
-      loggedInUser = await getLoggedInUser(ctx.req.headers.cookie || '')
+      if (sessionCookie) {
+        loggedInUser = await getLoggedInUser(ctx.req.headers.cookie as string)
+      }
     } catch {
       loggedInUser = null
     }

@@ -18,9 +18,6 @@ function build(options: BuildOptions = {}): FastifyInstance {
     options.disableLogger ? {} : { logger: { prettyPrint: true } },
   )
 
-  // Decorators
-  server.decorateRequest('user', null)
-
   // Plugins
   server.register(cors, {
     origin:
