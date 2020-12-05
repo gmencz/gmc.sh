@@ -1,24 +1,16 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import { nanoid as uniqueId } from 'nanoid'
 import { hash } from 'argon2'
 import { PrismaClientKnownRequestError, User } from '@prisma/client'
-import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
+import { registerBody } from '@gmcsh/shared/src/types/core-api/v1'
 import { handleValidationError } from 'utils/handle-validation-error'
 import { db } from 'utils/db'
-
-const registerBody = Type.Object({
-  username: Type.String({ minLength: 1, maxLength: 255 }),
-  email: Type.String({ minLength: 1, maxLength: 255, format: 'email' }),
-  password: Type.String({
-    minLength: 6,
-    maxLength: 255,
-  }),
-})
+import { V1ApiTypes } from '@gmcsh/shared'
 
 const register: RouteHandler<{
   Body: Static<typeof registerBody>
-  Reply: ApiTypes.ErrorResponse | ApiTypes.RegisterResponse
+  Reply: V1ApiTypes.ErrorResponse | V1ApiTypes.RegisterResponse
 }> = async (request, reply): Promise<void> => {
   // Validate request body
   if (request.validationError) {

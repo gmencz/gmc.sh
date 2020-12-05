@@ -1,12 +1,8 @@
-import { Static, Type } from '@sinclair/typebox'
+import { Static } from '@sinclair/typebox'
 import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
 import { RouteHandler } from 'fastify'
 import { db } from 'utils/db'
-
-const queryUrlsQuerystring = Type.Object({
-  cursor: Type.Optional(Type.String()),
-  take: Type.Integer({ default: 10 }),
-})
+import { queryUrlsQuerystring } from '@gmcsh/shared/src/types/core-api/v1'
 
 const queryUrls: RouteHandler<{
   Querystring: Static<typeof queryUrlsQuerystring>
@@ -38,5 +34,5 @@ const queryUrls: RouteHandler<{
   })
 }
 
-export { queryUrls, queryUrlsQuerystring }
+export { queryUrls }
 export * from './url'

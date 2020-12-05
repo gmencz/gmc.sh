@@ -1,17 +1,10 @@
 import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
-import { Static, Type } from '@sinclair/typebox'
+import { signinBody } from '@gmcsh/shared/src/types/core-api/v1'
+import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import { verify } from 'argon2'
 import { db } from 'utils/db'
 import { handleValidationError } from 'utils/handle-validation-error'
-
-const signinBody = Type.Object({
-  username: Type.String({ minLength: 1, maxLength: 255 }),
-  password: Type.String({
-    minLength: 6,
-    maxLength: 255,
-  }),
-})
 
 const signin: RouteHandler<{
   Body: Static<typeof signinBody>
@@ -69,4 +62,4 @@ const signin: RouteHandler<{
   })
 }
 
-export { signin, signinBody }
+export { signin }

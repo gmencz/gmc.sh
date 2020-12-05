@@ -1,11 +1,8 @@
 import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
-import { Static, Type } from '@sinclair/typebox'
+import { queryUrlParams } from '@gmcsh/shared/src/types/core-api/v1'
+import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import { db } from 'utils/db'
-
-const queryUrlParams = Type.Object({
-  urlId: Type.String({ maxLength: 255 }),
-})
 
 const queryUrl: RouteHandler<{
   Params: Static<typeof queryUrlParams>
@@ -37,4 +34,4 @@ const queryUrl: RouteHandler<{
   })
 }
 
-export { queryUrl, queryUrlParams }
+export { queryUrl }
