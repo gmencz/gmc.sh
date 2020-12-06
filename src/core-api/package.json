@@ -11,10 +11,11 @@
     "check-types": "tsc --noEmit",
     "format": "pretty-quick",
     "generate:prisma": "npx prisma generate",
-    "start": "mkdir -p dist/core-api && npm run gen-secret-key && tsc && cross-env NODE_ENV=production node -r ./tsconfig-paths-bootstrap.js dist/core-api/src/index.js",
+    "start": "mkdir -p dist/core-api && npm run gen-prod-secret-key && tsc && cross-env NODE_ENV=production node -r ./tsconfig-paths-bootstrap.js dist/core-api/src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon",
     "prettier": "prettier --write '**/*.{ts,js,json,md,graphql}'",
-    "gen-secret-key": "./node_modules/.bin/secure-session-gen-key > ./dist/core-api/session-secret-key"
+    "gen-prod-secret-key": "./node_modules/.bin/secure-session-gen-key > ./dist/core-api/session-secret-key",
+    "gen-secret-key": "./node_modules/.bin/secure-session-gen-key > ./session-secret-key"
   },
   "keywords": [],
   "author": "",

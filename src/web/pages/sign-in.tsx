@@ -3,12 +3,27 @@ import Image from 'next/image'
 import { Fragment } from 'react'
 import Link from 'next/link'
 import SignInForm from '../components/sign-in-form'
+import { seoDefaults } from 'utils/seo-defaults'
 
 function SignIn() {
   return (
     <Fragment>
       <Head>
         <title>Gmc.sh • Sign in to your account</title>
+        <meta name="description" content={seoDefaults.description} />
+        <meta name="image" content={seoDefaults.image} />
+        <meta name="keywords" content={seoDefaults.keywords} />
+
+        <meta property="og:url" content={`https://app.gmc.sh/sign-in`} />
+        <meta property="og:title" content="Gmc.sh • Sign in to your account" />
+        <meta property="og:description" content={seoDefaults.description} />
+        <meta property="og:image" content={seoDefaults.image} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content="gmencz" />
+        <meta name="twitter:title" content="Gmc.sh • Sign in to your account" />
+        <meta name="twitter:description" content={seoDefaults.description} />
+        <meta name="twitter:image" content={seoDefaults.image} />
       </Head>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">

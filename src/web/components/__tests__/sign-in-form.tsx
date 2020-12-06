@@ -7,9 +7,9 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
-} from '../../test/next-testing-utils'
-import { server, rest } from '../../test/server'
-import { API_ENDPOINT } from '../../utils/constants'
+} from 'test/next-testing-utils'
+import { server, rest } from 'test/server'
+import { API_ENDPOINT } from 'utils/constants'
 
 function renderSignIn() {
   render(<SignInForm />)

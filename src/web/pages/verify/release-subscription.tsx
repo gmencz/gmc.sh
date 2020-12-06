@@ -1,6 +1,7 @@
 import { V1ApiTypes } from '@gmcsh/shared'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
+import { seoDefaults } from 'utils/seo-defaults'
 import Header from '../../components/header'
 import { betterFetch } from '../../utils/better-fetch'
 import { API_ENDPOINT } from '../../utils/constants'
@@ -51,12 +52,31 @@ function VerifyReleaseSubscription({
   data,
   error,
 }: VerifyReleaseSubscriptionProps) {
+  const pageTitle = data
+    ? 'Thank you for subscribing!'
+    : 'Oops, something went wrong!'
+
   return (
     <>
       <Head>
-        <title>
-          {data ? 'Thank you for subscribing!' : 'Oops, something went wrong!'}
-        </title>
+        <title>{pageTitle}</title>
+        <meta name="description" content={seoDefaults.description} />
+        <meta name="image" content={seoDefaults.image} />
+        <meta name="keywords" content={seoDefaults.keywords} />
+
+        <meta
+          property="og:url"
+          content={`https://app.gmc.sh/verify/release-subscription`}
+        />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={seoDefaults.description} />
+        <meta property="og:image" content={seoDefaults.image} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content="gmencz" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={seoDefaults.description} />
+        <meta name="twitter:image" content={seoDefaults.image} />
       </Head>
       <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
         <Header isAuthenticated={false} />
