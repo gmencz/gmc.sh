@@ -3,13 +3,12 @@ import { RouteHandler } from 'fastify'
 import { nanoid as uniqueId } from 'nanoid'
 import { hash } from 'argon2'
 import { PrismaClientKnownRequestError, User } from '@prisma/client'
-import { registerBody } from '@gmcsh/shared/src/types/core-api/v1'
 import { handleValidationError } from 'utils/handle-validation-error'
 import { db } from 'utils/db'
 import { V1ApiTypes } from '@gmcsh/shared'
 
 const register: RouteHandler<{
-  Body: Static<typeof registerBody>
+  Body: Static<typeof V1ApiTypes['registerBody']>
   Reply: V1ApiTypes.ErrorResponse | V1ApiTypes.RegisterResponse
 }> = async (request, reply): Promise<void> => {
   // Validate request body
@@ -90,4 +89,4 @@ const register: RouteHandler<{
   })
 }
 
-export { register, registerBody }
+export { register }

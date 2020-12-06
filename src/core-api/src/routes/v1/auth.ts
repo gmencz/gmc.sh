@@ -1,5 +1,4 @@
 import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
-import { registerBody, signinBody } from '@gmcsh/shared/src/types/core-api/v1'
 import { FastifyPluginCallback } from 'fastify'
 import { me } from 'handlers/v1/auth/me'
 import { register } from 'handlers/v1/auth/register'
@@ -9,14 +8,17 @@ import { isAuthenticatedHook } from 'hooks/is-authenticated'
 const authRoutes: FastifyPluginCallback = (instance, _, next) => {
   instance.post(
     '/register',
-    { schema: { body: registerBody }, attachValidation: true },
+    {
+      schema: { body: ApiTypes['registerBody'] },
+      attachValidation: true,
+    },
     register,
   )
 
   instance.post(
     '/sign-in',
     {
-      schema: { body: signinBody },
+      schema: { body: ApiTypes['signinBody'] },
       attachValidation: true,
     },
     signin,

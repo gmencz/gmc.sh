@@ -1,5 +1,4 @@
 import { V1ApiTypes } from '@gmcsh/shared'
-import { joinMailingListBody } from '@gmcsh/shared/src/types/core-api/v1'
 import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import jwt from 'jsonwebtoken'
@@ -8,7 +7,7 @@ import { handleValidationError } from 'utils/handle-validation-error'
 import { contactsClient, transactionalEmailsClient } from 'utils/sendinblue-api'
 
 const verifyReleaseSubscription: RouteHandler<{
-  Body: Static<typeof joinMailingListBody>
+  Body: Static<typeof V1ApiTypes['joinMailingListBody']>
   Reply: V1ApiTypes.ErrorResponse | V1ApiTypes.JoinMailingListResponse
 }> = async (request, reply) => {
   if (request.validationError) {

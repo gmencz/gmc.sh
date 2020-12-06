@@ -2,10 +2,9 @@ import { Static } from '@sinclair/typebox'
 import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
 import { RouteHandler } from 'fastify'
 import { db } from 'utils/db'
-import { queryUrlsQuerystring } from '@gmcsh/shared/src/types/core-api/v1'
 
 const queryUrls: RouteHandler<{
-  Querystring: Static<typeof queryUrlsQuerystring>
+  Querystring: Static<typeof ApiTypes['queryUrlsQuerystring']>
   Reply: ApiTypes.ErrorResponse | ApiTypes.QueryUrlsResponse
 }> = async (request, reply) => {
   const urls = await db.url.findMany({

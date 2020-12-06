@@ -1,8 +1,4 @@
 import { V1ApiTypes } from '@gmcsh/shared'
-import {
-  confirmJoinMailingListBody,
-  joinMailingListBody,
-} from '@gmcsh/shared/src/types/core-api/v1'
 import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import jwt from 'jsonwebtoken'
@@ -10,7 +6,7 @@ import { handleValidationError } from 'utils/handle-validation-error'
 import { contactsClient } from 'utils/sendinblue-api'
 
 const joinMailingList: RouteHandler<{
-  Body: Static<typeof confirmJoinMailingListBody>
+  Body: Static<typeof V1ApiTypes['confirmJoinMailingListBody']>
   Reply: V1ApiTypes.ErrorResponse | V1ApiTypes.JoinMailingListResponse
 }> = async (request, reply) => {
   if (request.validationError) {
@@ -27,7 +23,7 @@ const joinMailingList: RouteHandler<{
 
   const { token } = request.body
 
-  let decodedToken: Static<typeof joinMailingListBody>
+  let decodedToken: Static<typeof V1ApiTypes['joinMailingListBody']>
   try {
     decodedToken = await new Promise((res, rej) => {
       jwt.verify(
@@ -35,7 +31,7 @@ const joinMailingList: RouteHandler<{
         process.env.VERIFICATIONS_JWT_SECRET as string,
         (error, decoded) => {
           if (error) rej(error)
-          res(decoded as Static<typeof joinMailingListBody>)
+          res(decoded as Static<typeof V1ApiTypes['joinMailingListBody']>)
         },
       )
     })

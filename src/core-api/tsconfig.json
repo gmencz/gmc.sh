@@ -20,8 +20,15 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
-    "paths": {}
+    "baseUrl": "..",
+    "paths": {
+      "handlers/*": ["./core-api/src/handlers/*"],
+      "hooks/*": ["./core-api/src/hooks/*"],
+      "routes/*": ["./core-api/src/routes/*"],
+      "utils/*": ["./core-api/src/utils/*"],
+      "test/*": ["./core-api/src/test/*"],
+      "@gmcsh/*": ["./*/src"]
+    }
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts"]

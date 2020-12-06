@@ -1,5 +1,4 @@
-import { V1ApiTypes as ApiTypes } from '@gmcsh/shared'
-import { signinBody } from '@gmcsh/shared/src/types/core-api/v1'
+import { V1ApiTypes as ApiTypes, V1ApiTypes } from '@gmcsh/shared'
 import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import { verify } from 'argon2'
@@ -7,7 +6,7 @@ import { db } from 'utils/db'
 import { handleValidationError } from 'utils/handle-validation-error'
 
 const signin: RouteHandler<{
-  Body: Static<typeof signinBody>
+  Body: Static<typeof V1ApiTypes['signinBody']>
   Reply: ApiTypes.LoginResponse | ApiTypes.ErrorResponse
 }> = async (request, reply): Promise<void> => {
   if (request.validationError) {

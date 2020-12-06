@@ -7,7 +7,6 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "declaration": false,
-    "composite": false,
     "removeComments": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
@@ -23,7 +22,10 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "rootDir": "src",
-    "baseUrl": "./src"
+    "baseUrl": "..",
+    "paths": {
+      "@gmcsh/*": ["./*/src"]
+    }
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts"]
