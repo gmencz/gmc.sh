@@ -14,6 +14,7 @@ function ErrorAlert({ isOpen, onClose, children }: ErrorAlertProps) {
     <div className="rounded-md max-w-md bg-red-50 p-4 fixed bottom-5 left-5 z-10">
       <div className="flex">
         <button className="flex-shrink-0 self-start" onClick={onClose}>
+          <span className="sr-only">Dismiss</span>
           <svg
             className="h-5 w-5 text-red-400 hover:text-red-500 transition-colors"
             xmlns="http://www.w3.org/2000/svg"
