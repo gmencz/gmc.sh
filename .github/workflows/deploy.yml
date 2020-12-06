@@ -75,7 +75,7 @@ jobs:
           envs: GITHUB_USERNAME, GITHUB_TOKEN, APP_FULL_PATH, SERVER_PASSWORD
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            sudo -S <<< "$SERVER_PASSWORD" echo "$GITHUB_TOKEN" | sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
+            echo "$GITHUB_TOKEN" | sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
             cd $APP_FULL_PATH
-            sudo -S <<< "$SERVER_PASSWORD" docker-compose -f docker-compose.prod.yml pull core-api next-app next-app-reverse-proxy
-            sudo -S <<< "$SERVER_PASSWORD" docker-compose -f docker-compose.prod.yml up -d --force-recreate --build core-api next-app next-app-reverse-proxy
+            sudo docker-compose -f docker-compose.prod.yml pull core-api next-app next-app-reverse-proxy
+            sudo docker-compose -f docker-compose.prod.yml up -d --force-recreate --build core-api next-app next-app-reverse-proxy
