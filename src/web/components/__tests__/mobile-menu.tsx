@@ -3,7 +3,7 @@ import {
   render,
   screen,
   waitForElementToBeRemoved,
-} from '../../test/next-testing-utils'
+} from 'test/next-testing-utils'
 import Header from '../header'
 import userEvent from '@testing-library/user-event'
 import Home from '../../pages'

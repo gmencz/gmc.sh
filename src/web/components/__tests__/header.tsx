@@ -1,4 +1,4 @@
-import { render, screen } from '../../test/next-testing-utils'
+import { render, screen } from 'test/next-testing-utils'
 import Header from '../header'
 
 describe('Header', () => {

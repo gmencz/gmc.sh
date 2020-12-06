@@ -17,6 +17,11 @@
     "strictFunctionTypes": false,
     "baseUrl": "..",
     "paths": {
+      "components/*": ["./web/components/*"],
+      "hooks/*": ["./web/hooks/*"],
+      "api/*": ["./web/utils/api/*"],
+      "utils/*": ["./web/utils/*"],
+      "test/*": ["./web/test/*"],
       "@gmcsh/*": ["./*/src"]
     }
   },

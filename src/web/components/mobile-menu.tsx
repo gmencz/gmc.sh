@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Transition } from '@headlessui/react'
 import Link from 'next/link'
-import { useDialog } from '../hooks/use-dialog'
+import { useDialog } from 'hooks/use-dialog'
 
 type MobileMenuProps = {
   isOpen: boolean

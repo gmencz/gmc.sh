@@ -5,8 +5,8 @@ import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { QueryStatus, useMutation } from 'react-query'
 import * as yup from 'yup'
-import { ApiError } from '../utils/api-error'
-import { signIn, SignInInputs } from '../utils/api/sign-in'
+import { ApiError } from 'utils/api-error'
+import { signIn, SignInInputs } from 'api/sign-in'
 
 const schema = yup.object().shape({
   username: yup.string().required('Please enter your username.'),
