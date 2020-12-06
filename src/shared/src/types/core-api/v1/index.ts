@@ -1,3 +1,5 @@
+import { Type } from '@sinclair/typebox'
+
 type User = {
   id: string
   username: string
@@ -40,4 +42,47 @@ export interface QueryUrlsResponse {
 
 export interface QueryUrlResponse {
   url: Url
+}
+
+export const queryUrlsQuerystring = Type.Object({
+  cursor: Type.Optional(Type.String()),
+  take: Type.Integer({ default: 10 }),
+})
+
+export const queryUrlParams = Type.Object({
+  urlId: Type.String({ maxLength: 255 }),
+})
+
+export const signinBody = Type.Object({
+  username: Type.String({ minLength: 1, maxLength: 255 }),
+  password: Type.String({
+    minLength: 6,
+    maxLength: 255,
+  }),
+})
+
+export const registerBody = Type.Object({
+  username: Type.String({ minLength: 1, maxLength: 255 }),
+  email: Type.String({ minLength: 1, maxLength: 255, format: 'email' }),
+  password: Type.String({
+    minLength: 6,
+    maxLength: 255,
+  }),
+})
+
+export const joinMailingListBody = Type.Object({
+  listId: Type.Number(),
+  subscriberEmail: Type.String({
+    minLength: 1,
+    maxLength: 255,
+    format: 'email',
+  }),
+})
+
+export const confirmJoinMailingListBody = Type.Object({
+  token: Type.String(),
+})
+
+export interface JoinMailingListResponse {
+  subscriberEmail: string
 }

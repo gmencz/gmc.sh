@@ -3,11 +3,11 @@ import { ApiError } from '../api-error'
 import { API_ENDPOINT } from '../constants'
 
 async function getLoggedInUser(
-  sessionCookie: string,
+  cookies: string,
 ): Promise<V1ApiTypes.MeResponse> {
   const response = await fetch(`${API_ENDPOINT}/v1/auth/me`, {
     headers: {
-      cookie: sessionCookie,
+      cookie: cookies,
     },
   })
 

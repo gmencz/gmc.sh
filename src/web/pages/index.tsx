@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import Header from '../components/header'
+import SubscribeToReleaseForm from '../components/subscribe-to-release-form'
 import {
   AuthenticatedPageProps,
   withAuthServerSideProps,
@@ -100,25 +101,7 @@ function Home({ user }: AuthenticatedPageProps) {
                   <p className="text-base font-medium text-gray-900">
                     Sign up to get notified when it’s ready.
                   </p>
-                  <form action="#" method="POST" className="mt-3 sm:flex">
-                    <label htmlFor="email" className="sr-only">
-                      Email
-                    </label>
-                    <input
-                      type="text"
-                      name="email"
-                      id="email"
-                      className="block w-full py-3 text-base rounded-md placeholder-gray-500 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:flex-1 border-gray-300"
-                      placeholder="Enter your email"
-                    />
-                    <button
-                      type="submit"
-                      disabled
-                      className="mt-3 w-full px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:flex-shrink-0 sm:inline-flex sm:items-center sm:w-auto disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      Notify me
-                    </button>
-                  </form>
+                  <SubscribeToReleaseForm />
                   <p className="mt-3 text-sm text-gray-500">
                     We care about the protection of your data. Read our{' '}
                     <Link href="/legal/privacy-policy">
