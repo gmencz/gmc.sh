@@ -52,6 +52,7 @@ services:
     image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh:latest
     networks:
       - gmc-sh-net
+      - traefik-net
   next-app-reverse-proxy:
     image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh-reverse-proxy:latest
     container_name: "app.gmc.sh-reverse-proxy"
