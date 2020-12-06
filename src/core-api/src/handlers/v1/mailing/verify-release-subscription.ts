@@ -3,10 +3,9 @@ import { joinMailingListBody } from '@gmcsh/shared/src/types/core-api/v1'
 import { Static } from '@sinclair/typebox'
 import { RouteHandler } from 'fastify'
 import jwt from 'jsonwebtoken'
-import { promisify } from 'util'
 import { FRONTEND_ENDPOINT } from 'utils/constants'
 import { handleValidationError } from 'utils/handle-validation-error'
-import { transactionalEmailsClient } from 'utils/sendinblue-api'
+import { contactsClient, transactionalEmailsClient } from 'utils/sendinblue-api'
 
 const verifyReleaseSubscription: RouteHandler<{
   Body: Static<typeof joinMailingListBody>
@@ -25,6 +24,30 @@ const verifyReleaseSubscription: RouteHandler<{
   }
 
   const { listId, subscriberEmail } = request.body
+
+  try {
+    const { body: contact } = await contactsClient.getContactInfo(
+      subscriberEmail,
+    )
+    if (contact.listIds.includes(listId)) {
+      return reply.status(400).send({
+        message: `You're already subscribed to the app release mailing list and will be notified when gmc.sh is out!`,
+        info: {
+          listId,
+          subscriberEmail,
+        },
+      })
+    }
+  } catch (error) {
+    if (error.statusCode !== 404) {
+      return reply.status(error.statusCode || 400).send({
+        message: error.response.body.message,
+        info: {
+          ...error.response.body,
+        },
+      })
+    }
+  }
 
   const token = await new Promise((res, rej) => {
     jwt.sign(

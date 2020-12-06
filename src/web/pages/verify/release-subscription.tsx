@@ -1,6 +1,6 @@
 import { V1ApiTypes } from '@gmcsh/shared'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import Image from 'next/image'
+import Head from 'next/head'
 import Header from '../../components/header'
 import { betterFetch } from '../../utils/better-fetch'
 import { API_ENDPOINT } from '../../utils/constants'
@@ -51,13 +51,16 @@ function VerifyReleaseSubscription({
   data,
   error,
 }: VerifyReleaseSubscriptionProps) {
-  console.log(data, error)
-
   return (
     <>
+      <Head>
+        <title>
+          {data ? 'Thank you for subscribing!' : 'Oops, something went wrong!'}
+        </title>
+      </Head>
       <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
         <Header isAuthenticated={false} />
-        <div className="relative py-16 bg-white overflow-hidden min-h-full">
+        <div className="relative py-16 bg-white overflow-hidden min-h-full mt-20">
           <div className="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
             <div
               className="relative h-full text-lg max-w-prose mx-auto"
@@ -168,13 +171,17 @@ function VerifyReleaseSubscription({
                   App release subscription
                 </span>
                 <span className="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                  Thank you for subscribing
+                  {data
+                    ? 'Thank you for subscribing!'
+                    : 'Oops, something went wrong!'}
                 </span>
               </h1>
-              <p className="mt-8 text-xl text-gray-500 leading-8">
-                You have subscribed to our app release mailing list with the
-                email {data?.subscriberEmail} and we will notify you when the
-                app is out!
+              <p className="mt-8 text-center text-xl text-gray-500 leading-8">
+                {data
+                  ? `You have subscribed to our app release mailing list with the
+                email ${data.subscriberEmail} and we will notify you when the
+                app is out!`
+                  : error?.message || ''}
               </p>
             </div>
           </div>

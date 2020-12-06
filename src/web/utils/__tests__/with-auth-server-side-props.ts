@@ -3,6 +3,17 @@ import { server, rest } from '../../test/server'
 import { API_ENDPOINT } from '../constants'
 import { withAuthServerSideProps } from '../with-auth-server-side-props'
 
+jest.mock('next-cookies', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({
+    __session: 'mockedSession',
+  })),
+}))
+
+afterAll(() => {
+  jest.resetAllMocks()
+})
+
 test('appends props returned by custom getServerSideProps function to final getServerSideProps', async () => {
   const mockedUser = {
     id: '1',
@@ -27,7 +38,9 @@ test('appends props returned by custom getServerSideProps function to final getS
         id: 10,
       },
     }
-  })({ req: { headers: { cookie: '' } } } as GetServerSidePropsContext)
+  })({
+    req: { headers: { cookie: '__session=123' } },
+  } as GetServerSidePropsContext)
 
   expect(result.props).toMatchInlineSnapshot(`
     Object {
