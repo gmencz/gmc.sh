@@ -1,4 +1,5 @@
 import { V1ApiTypes } from '@gmcsh/shared'
+import jwt from 'jsonwebtoken'
 import { createTestContext } from 'test/create-test-context'
 import { contactsClient, transactionalEmailsClient } from 'utils/sendinblue-api'
 
@@ -37,6 +38,9 @@ test(`returns a 200 if verification email was successfully sent to the user's em
   transactionalEmailsClient.sendTransacEmail = jest.fn().mockResolvedValueOnce({
     body: { messageId: '1' },
   })
+  ;(jwt.sign as any) = jest
+    .fn()
+    .mockImplementationOnce((_token, _secret, _opts, cb) => cb(null, '123'))
 
   const response = await ctx.server.inject({
     method: 'POST',
@@ -50,4 +54,6 @@ test(`returns a 200 if verification email was successfully sent to the user's em
   const body = JSON.parse(response.body) as V1ApiTypes.JoinMailingListResponse
   expect(response.statusCode).toBe(200)
   expect(body.subscriberEmail).toBe(testEmail)
+  expect(jwt.sign).toHaveBeenCalled()
+  expect(jwt.sign).toHaveBeenCalledTimes(1)
 })
