@@ -13,9 +13,7 @@
     "generate:prisma": "npx prisma generate",
     "start": "tsc && cross-env NODE_ENV=production node -r ./tsconfig-paths-bootstrap.js dist/core-api/src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon",
-    "prettier": "prettier --write '**/*.{ts,js,json,md,graphql}'",
-    "gen-prod-secret-key": "./node_modules/.bin/secure-session-gen-key > ./dist/core-api/session-secret-key",
-    "gen-secret-key": "./node_modules/.bin/secure-session-gen-key > ./session-secret-key"
+    "prettier": "prettier --write '**/*.{ts,js,json,md,graphql}'"
   },
   "keywords": [],
   "author": "",
