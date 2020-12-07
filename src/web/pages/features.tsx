@@ -23,7 +23,7 @@ function Features({ user }: FeaturesProps) {
         <meta name="image" content={seoDefaults.image} />
         <meta name="keywords" content={seoDefaults.keywords} />
 
-        <meta property="og:url" content={`https://app.gmc.sh/`} />
+        <meta property="og:url" content={`https://app.gmc.sh/features`} />
         <meta property="og:title" content="Gmc.sh • Features" />
         <meta
           property="og:description"
