@@ -9,13 +9,14 @@ else
 fi
 
 echo "Pulling latest images from Github Package Registry"
-sudo docker-compose -f docker-compose.prod-apps.yml --project-name=$BG_NEW pull core-api next-app next-app-reverse-proxy
+sudo docker-compose -f docker-compose.prod-apps.yml --project-name=$BG_NEW pull
+sudo docker-compose -f docker-compose.prod-apps.yml --project-name=$BG_NEW build --no-cache
 sleep 2s
 echo "Starting "$BG_NEW" containers"
-sudo docker-compose -f docker-compose.prod-apps.yml --project-name=$BG_NEW up -d --force-recreate --build core-api next-app next-app-reverse-proxy
+sudo docker-compose -f docker-compose.prod-apps.yml --project-name=$BG_NEW up -d --force-recreate
 
 echo "Waiting..."
-sleep 60s
+sleep 20s
 
 echo "Stopping "$BG_OLD" containers"
 sudo docker-compose -f docker-compose.prod-apps.yml --project-name=$BG_OLD stop
