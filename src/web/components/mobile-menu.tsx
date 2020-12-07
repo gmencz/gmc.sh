@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Transition } from '@headlessui/react'
 import Link from 'next/link'
 import { useDialog } from 'hooks/use-dialog'
+import ActiveLink from './active-link'
 
 type MobileMenuProps = {
   isOpen: boolean
@@ -70,41 +71,35 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 aria-labelledby="main-menu"
               >
                 <div className="px-2 pt-2 pb-3 space-y-1" role="none">
-                  <Link href="/why-gmc-sh">
-                    <a
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                      role="menuitem"
-                    >
-                      Why Gmc.sh?
-                    </a>
-                  </Link>
-
-                  <Link href="/features">
+                  <ActiveLink
+                    activeClassName="text-indigo-500"
+                    href="/features"
+                  >
                     <a
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                       role="menuitem"
                     >
                       Features
                     </a>
-                  </Link>
+                  </ActiveLink>
 
-                  <Link href="/pricing">
+                  <ActiveLink activeClassName="text-indigo-500" href="/pricing">
                     <a
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                       role="menuitem"
                     >
                       Pricing
                     </a>
-                  </Link>
+                  </ActiveLink>
 
-                  <Link href="/blog">
+                  <ActiveLink activeClassName="text-indigo-500" href="/blog">
                     <a
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                       role="menuitem"
                     >
                       Blog
                     </a>
-                  </Link>
+                  </ActiveLink>
                 </div>
                 <div role="none">
                   <Link href="/sign-in">

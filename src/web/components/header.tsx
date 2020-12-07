@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
+import ActiveLink from './active-link'
 import MobileMenu from './mobile-menu'
 
 type HeaderProps = {
@@ -13,12 +14,12 @@ function Header({ isAuthenticated }: HeaderProps) {
   return (
     <Fragment>
       <nav
-        className="relative max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6"
+        className="relative max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 z-10"
         aria-label="Global"
       >
         <div className="flex items-center flex-1">
           <div className="flex items-center justify-between w-full md:w-auto">
-            <Link href="/">
+            <ActiveLink activeClassName="text-indigo-500" href="/">
               <a>
                 <span className="sr-only">Gmc.sh logo</span>
                 <Image
@@ -30,7 +31,7 @@ function Header({ isAuthenticated }: HeaderProps) {
                   priority
                 />
               </a>
-            </Link>
+            </ActiveLink>
             <div className="-mr-2 flex items-center md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -59,29 +60,23 @@ function Header({ isAuthenticated }: HeaderProps) {
             </div>
           </div>
           <div className="hidden md:block md:ml-10 md:space-x-10">
-            <Link href="/why-gmc-sh">
-              <a className="font-medium text-gray-500 hover:text-gray-900">
-                Why Gmc.sh?
-              </a>
-            </Link>
-
-            <Link href="/features">
+            <ActiveLink activeClassName="text-indigo-500" href="/features">
               <a className="font-medium text-gray-500 hover:text-gray-900">
                 Features
               </a>
-            </Link>
+            </ActiveLink>
 
-            <Link href="/pricing">
+            <ActiveLink activeClassName="text-indigo-500" href="/pricing">
               <a className="font-medium text-gray-500 hover:text-gray-900">
                 Pricing
               </a>
-            </Link>
+            </ActiveLink>
 
-            <Link href="/blog">
+            <ActiveLink activeClassName="text-indigo-500" href="/blog">
               <a className="font-medium text-gray-500 hover:text-gray-900">
                 Blog
               </a>
-            </Link>
+            </ActiveLink>
           </div>
         </div>
         {isAuthenticated ? (

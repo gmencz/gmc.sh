@@ -1,4 +1,5 @@
-import { render, screen } from 'test/next-testing-utils'
+import { RouterContext } from 'next/dist/next-server/lib/router-context'
+import { mockRouter, render, screen } from 'test/next-testing-utils'
 import Header from '../header'
 
 describe('Header', () => {
@@ -10,7 +11,11 @@ describe('Header', () => {
     expect(screen.queryByText(authenticatedText)).not.toBeInTheDocument()
     screen.getByText(unauthenticatedText)
 
-    rerender(<Header isAuthenticated />)
+    rerender(
+      <RouterContext.Provider value={mockRouter}>
+        <Header isAuthenticated />
+      </RouterContext.Provider>,
+    )
     expect(screen.queryByText(unauthenticatedText)).not.toBeInTheDocument()
     screen.getByText(authenticatedText)
   })
