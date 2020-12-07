@@ -11,7 +11,6 @@ if (process.env.NODE_ENV === 'test') {
 import fastify, { FastifyInstance } from 'fastify'
 import cors from 'fastify-cors'
 import session from 'fastify-secure-session'
-import { readFileSync } from 'fs'
 import { v1Routes } from 'routes/v1'
 
 type BuildOptions = {
@@ -34,9 +33,8 @@ function build(options: BuildOptions = {}): FastifyInstance {
 
   server.register(session, {
     cookieName: '__session',
-    key: readFileSync(
-      join(__dirname, '..', process.env.SESSION_SECRET_PATH as string),
-    ),
+    secret: process.env.SESSION_SECRET as string,
+    salt: process.env.SESSION_SALT as string,
     cookie: {
       expires: addWeeks(new Date(), 2),
       maxAge: 60 * 60 * 24 * 14,
