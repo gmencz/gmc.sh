@@ -77,5 +77,4 @@ jobs:
           script: |
             echo "$GITHUB_TOKEN" | sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
             cd $APP_FULL_PATH
-            sudo docker-compose -f docker-compose.prod.yml pull core-api next-app next-app-reverse-proxy
-            sudo docker-compose -f docker-compose.prod.yml up -d --force-recreate --build core-api next-app next-app-reverse-proxy
+            sudo ./deployment.sh
