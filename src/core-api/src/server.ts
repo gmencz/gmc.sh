@@ -1,12 +1,17 @@
 import { addWeeks } from 'date-fns'
+import { join } from 'path'
 import { config as configureEnv } from 'dotenv'
-configureEnv()
+
+if (process.env.NODE_ENV === 'test') {
+  configureEnv({ path: join(__dirname, '..', '.env.test') })
+} else {
+  configureEnv()
+}
 
 import fastify, { FastifyInstance } from 'fastify'
 import cors from 'fastify-cors'
 import session from 'fastify-secure-session'
 import { readFileSync } from 'fs'
-import { join } from 'path'
 import { v1Routes } from 'routes/v1'
 
 type BuildOptions = {
