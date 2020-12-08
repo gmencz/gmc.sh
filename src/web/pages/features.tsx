@@ -1,3 +1,4 @@
+import Footer from 'components/footer'
 import Header from 'components/header'
 import Head from 'next/head'
 import { Fragment } from 'react'
@@ -359,7 +360,10 @@ function Features({ user }: FeaturesProps) {
 
             <div className="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
               <div className="relative">
-                <h3 className="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
+                <h3
+                  id="security"
+                  className="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl"
+                >
                   Rest assured with secure links
                 </h3>
                 <p className="mt-3 text-lg text-gray-500">
@@ -541,6 +545,7 @@ function Features({ user }: FeaturesProps) {
           </div>
         </div>
       </div>
+      <Footer />
     </Fragment>
   )
 }
