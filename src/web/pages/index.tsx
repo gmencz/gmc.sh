@@ -44,7 +44,7 @@ function Home({ user }: AuthenticatedPageProps) {
         <meta name="twitter:description" content={seoDefaults.description} />
         <meta name="twitter:image" content={seoDefaults.image} />
       </Head>
-      <div className="relative bg-white overflow-hidden">
+      <div className="relative bg-gray-50 overflow-hidden">
         <div
           className="hidden lg:block lg:absolute lg:inset-0"
           aria-hidden="true"
@@ -184,7 +184,6 @@ function Home({ user }: AuthenticatedPageProps) {
           </main>
         </div>
       </div>
-      <div className="border-t border-gray-200"></div>
       <Footer />
     </Fragment>
   )

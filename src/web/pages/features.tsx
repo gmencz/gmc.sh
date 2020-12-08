@@ -160,7 +160,7 @@ function Features({ user }: FeaturesProps) {
                 </dl>
               </div>
 
-              <div className="mt-10 -mx-4 relative lg:mt-0" aria-hidden="true">
+              <div className="mt-10 relative" aria-hidden="true">
                 <svg
                   className="absolute left-1/2 transform -translate-x-1/2 translate-y-16 lg:hidden"
                   width="784"
@@ -313,7 +313,7 @@ function Features({ user }: FeaturesProps) {
                   </dl>
                 </div>
 
-                <div className="mt-10 -mx-4 relative lg:mt-0 lg:col-start-1">
+                <div className="mt-10 relative lg:mt-0 lg:col-start-1">
                   <img
                     className="relative mx-auto"
                     width="440"
@@ -400,7 +400,7 @@ function Features({ user }: FeaturesProps) {
                 </dl>
               </div>
 
-              <div className="mt-10 -mx-4 relative lg:mt-0" aria-hidden="true">
+              <div className="mt-10 relative lg:mt-0" aria-hidden="true">
                 <img
                   className="relative mx-auto"
                   width="460"
@@ -448,7 +448,7 @@ function Features({ user }: FeaturesProps) {
                   </dl>
                 </div>
 
-                <div className="mt-10 -mx-4 relative lg:mt-0 lg:col-start-1">
+                <div className="mt-10 relative lg:mt-0 lg:col-start-1">
                   <img
                     className="relative mx-auto"
                     width="440"
@@ -533,7 +533,7 @@ function Features({ user }: FeaturesProps) {
                 </dl>
               </div>
 
-              <div className="mt-10 -mx-4 relative lg:mt-0" aria-hidden="true">
+              <div className="mt-10 relative lg:mt-0 md:m-0" aria-hidden="true">
                 <img
                   className="relative mx-auto"
                   width="450"
