@@ -177,15 +177,16 @@ function Footer({ bgClass }: FooterProps) {
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
                   <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
-                    Resources
+                    Contact
                   </h3>
                   <ul className="mt-4 space-y-4">
                     <li>
-                      <Link href="/blog">
-                        <a className="text-base text-gray-500 hover:text-gray-900">
-                          Blog
-                        </a>
-                      </Link>
+                      <a
+                        href="mailto:info@gmc.sh"
+                        className="text-base text-gray-500 hover:text-gray-900"
+                      >
+                        Email us
+                      </a>
                     </li>
                   </ul>
                 </div>

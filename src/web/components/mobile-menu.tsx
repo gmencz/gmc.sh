@@ -91,15 +91,6 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       Pricing
                     </a>
                   </ActiveLink>
-
-                  <ActiveLink activeClassName="text-indigo-500" href="/blog">
-                    <a
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                      role="menuitem"
-                    >
-                      Blog
-                    </a>
-                  </ActiveLink>
                 </div>
                 <div role="none">
                   <Link href="/sign-in">
