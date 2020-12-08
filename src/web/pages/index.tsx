@@ -1,3 +1,4 @@
+import Footer from 'components/footer'
 import Header from 'components/header'
 import SubscribeToReleaseForm from 'components/subscribe-to-release-form'
 import Head from 'next/head'
@@ -183,6 +184,8 @@ function Home({ user }: AuthenticatedPageProps) {
           </main>
         </div>
       </div>
+      <div className="border-t border-gray-200"></div>
+      <Footer />
     </Fragment>
   )
 }
