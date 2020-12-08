@@ -71,12 +71,6 @@ function Header({ isAuthenticated }: HeaderProps) {
                 Pricing
               </a>
             </ActiveLink>
-
-            <ActiveLink activeClassName="text-indigo-500" href="/blog">
-              <a className="font-medium text-gray-500 hover:text-gray-900">
-                Blog
-              </a>
-            </ActiveLink>
           </div>
         </div>
         {isAuthenticated ? (
