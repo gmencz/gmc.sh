@@ -1,11 +1,20 @@
 import Footer from 'components/footer'
 import Header from 'components/header'
 import Head from 'next/head'
-import Link from 'next/link'
 import { Fragment } from 'react'
 import { seoDefaults } from 'utils/seo-defaults'
+import {
+  InferWithAuthServerSideProps,
+  withAuthServerSideProps,
+} from 'utils/with-auth-server-side-props'
 
-function PrivacyPolicy() {
+export const getServerSideProps = withAuthServerSideProps()
+
+type PrivacyPolicyProps = InferWithAuthServerSideProps<
+  typeof getServerSideProps
+>
+
+function PrivacyPolicy({ user }: PrivacyPolicyProps) {
   return (
     <Fragment>
       <Head>
@@ -39,7 +48,7 @@ function PrivacyPolicy() {
       </Head>
       <div className="pb-16 bg-gray-50 overflow-hidden lg:pb-24">
         <div className="relative pt-6 pb-16 sm:pb-24 lg:pb-32">
-          <Header isAuthenticated={false} />
+          <Header isAuthenticated={!!user} />
           <div className="relative py-16 bg-gray-50 overflow-hidden">
             <div className="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
               <div
