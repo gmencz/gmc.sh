@@ -26,6 +26,10 @@ services:
       - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
       - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
       - "traefik.docker.network=core_traefik-net"
+      - "traefik.http.services.core-api-service.loadbalancer.sticky=true"
+      - "traefik.http.services.core-api-service.loadbalancer.sticky.cookie.name=__session"
+      - "traefik.http.services.core-api-service.loadbalancer.sticky.cookie.secure=true"
+      - "traefik.http.services.core-api-service.loadbalancer.sticky.cookie.httpOnly=true"
   next-app:
     image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh:latest
     networks:
@@ -40,8 +44,8 @@ services:
       - "traefik.http.routers.next-app-reverse-proxy.rule=Host(`app.gmc.sh`)"
       - "traefik.http.routers.next-app-reverse-proxy.entrypoints=websecure"
       - "traefik.http.routers.next-app-reverse-proxy.service=next-app-reverse-proxy-service"
-      - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky=true"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.server.port=80"
+      - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky=true"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky.cookie.name=__session"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky.cookie.secure=true"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky.cookie.httpOnly=true"
