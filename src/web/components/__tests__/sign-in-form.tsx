@@ -20,8 +20,6 @@ function renderSignIn() {
     name: /sign in/i,
   }) as HTMLButtonElement
 
-  expect(signInButton).toBeDisabled()
-
   return {
     usernameInput,
     passwordInput,
