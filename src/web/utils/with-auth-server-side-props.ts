@@ -43,6 +43,9 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     ctx: GetServerSidePropsContext,
   ): Promise<{ props: T['props'] & DefaultWithAuthServerSideProps }> {
     const cookies = parseCookies(ctx)
+    console.log(ctx.req)
+    console.log(cookies)
+
     const sessionCookie = cookies.__session
 
     let loggedInUser: V1ApiTypes.MeResponse | null = null
