@@ -42,6 +42,7 @@ function build(options: BuildOptions = {}): FastifyInstance {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
+      domain: process.env.NODE_ENV === 'production' ? 'gmc.sh' : 'localhost',
     },
   })
 
