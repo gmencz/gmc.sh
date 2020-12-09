@@ -40,6 +40,7 @@ services:
       - "traefik.http.routers.next-app-reverse-proxy.rule=Host(`app.gmc.sh`)"
       - "traefik.http.routers.next-app-reverse-proxy.entrypoints=websecure"
       - "traefik.http.routers.next-app-reverse-proxy.service=next-app-reverse-proxy-service"
+      - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky=true"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.server.port=80"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky.cookie.name=__session"
       - "traefik.http.services.next-app-reverse-proxy-service.loadbalancer.sticky.cookie.secure=true"
