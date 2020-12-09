@@ -5,6 +5,10 @@ const me: RouteHandler<{
   Reply: ApiTypes.ErrorResponse | ApiTypes.MeResponse
 }> = async (request, reply) => {
   const user: ApiTypes.MeResponse = request.session.get('data').user
+  console.log(request.session.get('data'))
+
+  console.log(user)
+
   return reply.send({
     ...user,
   })
