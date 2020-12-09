@@ -37,6 +37,18 @@ function App({ user }: AppProps) {
       </Head>
       <div className="bg-gray-50 min-h-screen flex">
         <div className="p-4 flex flex-col items-center text-center max-w-lg mx-auto justify-center">
+          <div className="mb-4">
+            <Link href="/">
+              <a>
+                <Image
+                  src="/logo.svg"
+                  alt="Gmc.sh logo"
+                  width="70px"
+                  height="70px"
+                />
+              </a>
+            </Link>
+          </div>
           <h3 className="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
             Hi {user.username}.
           </h3>
