@@ -19,10 +19,9 @@ jobs:
       - name: Publish core API docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: gmencz/gmc.sh/api.gmc.sh
-          username: ${{ secrets.GH_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+          name: ${{ secrets.DOCKER_USERNAME }}/gmc.sh/api.gmc.sh
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile.api
           tags: latest
   publish-next-app:
@@ -40,20 +39,18 @@ jobs:
       - name: Publish Next app docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: gmencz/gmc.sh/app.gmc.sh
-          username: ${{ secrets.GH_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+          name: ${{ secrets.DOCKER_USERNAME }}/gmc.sh/app.gmc.sh
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile.web
           tags: latest
 
       - name: Publish Next app reverse proxy docker image to Github Package Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: gmencz/gmc.sh/app.gmc.sh-reverse-proxy
-          username: ${{ secrets.GH_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+          name: ${{ secrets.DOCKER_USERNAME }}/gmc.sh/app.gmc.sh-reverse-proxy
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: Dockerfile.nginx
           tags: latest
 
@@ -65,16 +62,16 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         env:
-          GITHUB_USERNAME: ${{ secrets.GH_USERNAME }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           APP_FULL_PATH: ${{ secrets.APP_FULL_PATH }}
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          envs: GITHUB_USERNAME, GITHUB_TOKEN, APP_FULL_PATH, SERVER_PASSWORD
+          envs: DOCKER_USERNAME, DOCKER_PASSWORD, APP_FULL_PATH, SERVER_PASSWORD
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            echo "$GITHUB_TOKEN" | sudo docker login docker.pkg.github.com -u $GITHUB_USERNAME --password-stdin
+            echo "$DOCKER_PASSWORD" | sudo docker login -u $DOCKER_USERNAME --password-stdin
             cd $APP_FULL_PATH
             sudo ./deployment.sh
