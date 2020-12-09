@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   core-api:
-    image: docker.pkg.github.com/gmencz/gmc.sh/api.gmc.sh:latest
+    image: gabrielmendezco/api.gmc.sh:latest
     networks:
       - traefik-net
       - gmc-sh-api-net
@@ -28,11 +28,11 @@ services:
       - "traefik.docker.network=core_traefik-net"
       - "traefik.http.services.core-api-service.loadbalancer.sticky=true"
   next-app:
-    image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh:latest
+    image: gabrielmendezco/app.gmc.sh:latest
     networks:
       - gmc-sh-web-net
   next-app-reverse-proxy:
-    image: docker.pkg.github.com/gmencz/gmc.sh/app.gmc.sh-reverse-proxy:latest
+    image: gabrielmendezco/app.gmc.sh-reverse-proxy
     networks:
       - traefik-net
       - gmc-sh-web-net
