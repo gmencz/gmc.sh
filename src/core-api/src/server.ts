@@ -31,8 +31,6 @@ function build(options: BuildOptions = {}): FastifyInstance {
     credentials: true,
   })
 
-  console.log(process.env.SESSION_SECRET)
-
   server.register(session, {
     cookieName: '__session',
     secret: process.env.SESSION_SECRET as string,
