@@ -44,7 +44,7 @@ function CreateAccountForm() {
     <Fragment>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="name" className="sr-only">
+          <label htmlFor="username" className="sr-only">
             Username
           </label>
           <input
@@ -63,7 +63,7 @@ function CreateAccountForm() {
         </div>
 
         <div>
-          <label htmlFor="mobile-or-email" className="sr-only">
+          <label htmlFor="email" className="sr-only">
             Email
           </label>
           <input

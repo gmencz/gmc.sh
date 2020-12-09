@@ -42,7 +42,7 @@ function CreateAccount() {
               Or{' '}
               <Link href="/sign-in">
                 <a className="font-medium text-indigo-600 hover:text-indigo-500">
-                  sign in to your account
+                  sign in
                 </a>
               </Link>
             </p>
