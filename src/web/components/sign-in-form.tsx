@@ -163,7 +163,7 @@ function SignInForm() {
         <ErrorAlert isOpen={!!error} onClose={() => reset()}>
           <Fragment>
             <h3 className="text-sm font-medium text-red-800">
-              There was an error creating your account
+              There was an error signing in
             </h3>
             <div className="mt-2 text-sm text-red-700">
               <p>{error.error.message}</p>
