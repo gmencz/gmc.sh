@@ -157,7 +157,9 @@ function CreateAccountForm() {
       >
         <Fragment>
           <h3 className="text-sm font-medium text-red-800">
-            There were {arraifyedErrorFields.length} errors with your submission
+            {arraifyedErrorFields.length > 1
+              ? `There were ${arraifyedErrorFields.length} errors with your submission`
+              : `There was ${arraifyedErrorFields.length} error with your submission`}
           </h3>
           <div className="mt-2 text-sm text-red-700">
             <ul className="list-disc pl-5 space-y-1">
