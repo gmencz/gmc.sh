@@ -1,99 +1,110 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import Link from 'next/link'
+import { createAccount, CreateAccountInputs } from 'api/create-account'
 import { useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
 import { QueryStatus, useMutation } from 'react-query'
-import * as yup from 'yup'
 import { ApiError } from 'utils/api-error'
-import { signIn, SignInInputs } from 'api/sign-in'
+import * as yup from 'yup'
 import ErrorAlert from './error-alert'
 
 const schema = yup.object().shape({
-  username: yup.string().required('Your username is required.'),
+  username: yup.string().required('Username is required.'),
+  email: yup.string().required('Email is required.').email('Invalid email.'),
   password: yup
     .string()
-    .required('Your password is required.')
+    .required('Password is required.')
     .min(6, 'Your password must be at least 6 characters long.'),
 })
 
-function SignInForm() {
+function CreateAccountForm() {
   const router = useRouter()
-  const [signInToApp, { error, status, reset }] = useMutation(signIn, {
+  const [create, { error, status, reset }] = useMutation(createAccount, {
     onSuccess: () => {
       router.push('/app')
     },
   })
 
-  const { register, handleSubmit, errors, clearErrors } = useForm<SignInInputs>(
-    {
-      resolver: yupResolver(schema),
-    },
-  )
+  const {
+    register,
+    handleSubmit,
+    errors,
+    clearErrors,
+  } = useForm<CreateAccountInputs>({
+    resolver: yupResolver(schema),
+  })
 
-  const onSubmit = ({ username, password }: SignInInputs) => {
-    signInToApp({ username, password })
+  const onSubmit = ({ username, email, password }: CreateAccountInputs) => {
+    create({ username, email, password })
   }
 
   const arraifyedErrorFields = Object.keys(errors)
 
   return (
     <Fragment>
-      <form className="mt-8 space-y-5" onSubmit={handleSubmit(onSubmit)}>
-        <input type="hidden" name="remember" value="true" />
-        <div className="rounded-md shadow-sm -space-y-px">
-          <div>
-            <label htmlFor="username" className="sr-only">
-              Username
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="username"
-              className={
-                !!errors.username
-                  ? 'appearance-none rounded-none relative block w-full px-3 py-2 border border-red-300 placeholder-red-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm'
-                  : 'appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-              }
-              placeholder="Username"
-              ref={register}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              className={
-                !!errors.password
-                  ? 'appearance-none rounded-none relative block w-full px-3 py-2 border border-red-300 placeholder-red-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm'
-                  : 'appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm'
-              }
-              placeholder="Password"
-              ref={register}
-            />
-          </div>
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <label htmlFor="username" className="sr-only">
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            autoComplete="username"
+            placeholder="Username"
+            ref={register}
+            className={
+              !!errors.username
+                ? `block w-full shadow-sm focus:ring-red-300 focus:border-red-300 sm:text-sm border-red-300 text-red-900 placeholder-red-300 rounded-md`
+                : `block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md`
+            }
+          />
         </div>
-        <div className="flex items-center justify-between">
-          <div className="text-sm">
-            <Link href="/forgot-password">
-              <a className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
-              </a>
-            </Link>
-          </div>
+
+        <div>
+          <label htmlFor="email" className="sr-only">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            autoComplete="email"
+            placeholder="Email"
+            ref={register}
+            className={
+              !!errors.email
+                ? `block w-full shadow-sm focus:ring-red-300 focus:border-red-300 sm:text-sm border-red-300 text-red-900 placeholder-red-300 rounded-md`
+                : `block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md`
+            }
+          />
+        </div>
+
+        <div>
+          <label htmlFor="password" className="sr-only">
+            Password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            autoComplete="current-password"
+            ref={register}
+            className={
+              !!errors.password
+                ? `block w-full shadow-sm focus:ring-red-300 focus:border-red-300 sm:text-sm border-red-300 text-red-900 placeholder-red-300 rounded-md`
+                : `block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md`
+            }
+          />
         </div>
 
         <div>
           <button
             disabled={status === QueryStatus.Loading}
             type="submit"
-            className="group relative w-full flex disabled:cursor-not-allowed disabled:opacity-60 justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="disabled:cursor-not-allowed disabled:opacity-60 relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <span className="absolute left-0 inset-y-0 flex items-center pl-3">
               <svg
@@ -110,7 +121,7 @@ function SignInForm() {
                 />
               </svg>
             </span>
-            Sign in
+            Create account
             {status === QueryStatus.Loading && (
               <Fragment>
                 <span className="sr-only">loading...</span>
@@ -175,4 +186,4 @@ function SignInForm() {
   )
 }
 
-export default SignInForm
+export default CreateAccountForm

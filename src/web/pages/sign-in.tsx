@@ -45,12 +45,11 @@ function SignIn() {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
-              <a
-                href="#"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                start your 14-day free trial
-              </a>
+              <Link href="/create-account">
+                <a className="font-medium text-indigo-600 hover:text-indigo-500">
+                  create an account for free
+                </a>
+              </Link>
             </p>
           </div>
           <SignInForm />
