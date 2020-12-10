@@ -5,7 +5,6 @@ const isAuthenticatedHook: preValidationHookHandler = async (
   request,
   reply,
 ) => {
-  reply.log.info(request.cookies)
   const sessionData = request.session.get('data')
   if (!sessionData) {
     reply.status(401).send({

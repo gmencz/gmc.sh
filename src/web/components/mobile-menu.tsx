@@ -37,7 +37,6 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     alt="Gmc.sh logo"
                     width="55px"
                     height="50px"
-                    priority
                   />
                 </div>
                 <div className="-mr-2">
