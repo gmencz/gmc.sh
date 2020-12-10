@@ -6,6 +6,12 @@ type User = {
   email: string
   createdAt: Date
   password: string
+  name: string | null
+  bio: string | null
+  location: string | null
+  publicEmail: string | null
+  website: string | null
+  twitterUsername: string | null
 }
 
 type Url = {
@@ -38,6 +44,7 @@ export interface QueryUrlsResponse {
   urls: Pick<Url, 'id' | 'createdAt' | 'target' | 'timesVisited' | 'url'>[]
   cursor: string | null
   take: number
+  total: number
 }
 
 export interface QueryUrlResponse {

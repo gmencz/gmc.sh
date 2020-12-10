@@ -7,6 +7,7 @@ const queryUrls: RouteHandler<{
   Querystring: Static<typeof ApiTypes['queryUrlsQuerystring']>
   Reply: ApiTypes.ErrorResponse | ApiTypes.QueryUrlsResponse
 }> = async (request, reply) => {
+  const totalUrls = await db.url.count()
   const urls = await db.url.findMany({
     where: {
       userId: request.session.get('data').user.id,
@@ -30,6 +31,7 @@ const queryUrls: RouteHandler<{
     urls,
     cursor: request.query.cursor || null,
     take: request.query.take,
+    total: totalUrls,
   })
 }
 

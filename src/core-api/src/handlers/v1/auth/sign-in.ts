@@ -45,6 +45,12 @@ const signin: RouteHandler<{
     username: user.username,
     createdAt: user.createdAt,
     email: user.email,
+    name: user.name,
+    bio: user.bio,
+    location: user.location,
+    publicEmail: user.publicEmail,
+    twitterUsername: user.twitterUsername,
+    website: user.website,
   }
 
   request.session.set('data', {

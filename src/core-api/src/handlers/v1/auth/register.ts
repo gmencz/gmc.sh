@@ -41,6 +41,12 @@ const register: RouteHandler<{
         username: true,
         email: true,
         createdAt: true,
+        name: true,
+        bio: true,
+        location: true,
+        publicEmail: true,
+        twitterUsername: true,
+        website: true,
       },
     })
   } catch (error) {
@@ -73,6 +79,12 @@ const register: RouteHandler<{
     username: user.username,
     createdAt: user.createdAt,
     email: user.email,
+    name: user.name,
+    bio: user.bio,
+    location: user.location,
+    publicEmail: user.publicEmail,
+    twitterUsername: user.twitterUsername,
+    website: user.website,
   }
 
   request.session.set('data', {

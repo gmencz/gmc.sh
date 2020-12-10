@@ -10,18 +10,6 @@ import {
   withAuthServerSideProps,
 } from '../utils/with-auth-server-side-props'
 
-// export const getServerSideProps = withAuthServerSideProps(async (ctx, user) => {
-//   const queryCache = new QueryCache()
-
-//   await queryCache.prefetchQuery(meKey, () => user)
-
-//   return {
-//     props: {
-//       dehydratedState: dehydrate(queryCache),
-//     }
-//   }
-// })
-
 export const getServerSideProps = withAuthServerSideProps()
 
 function Home({ user }: AuthenticatedPageProps) {

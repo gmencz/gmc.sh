@@ -15,9 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </Hydrate>
       </ReactQueryCacheProvider>
-      {process.env.NODE_ENV === 'development' && (
-        <ReactQueryDevtools initialIsOpen />
-      )}
+      <ReactQueryDevtools />
     </Fragment>
   )
 }

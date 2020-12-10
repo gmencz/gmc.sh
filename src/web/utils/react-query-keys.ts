@@ -1,3 +1,3 @@
-const meKey = 'me'
+const currentUserLinksKey = 'currentUserLinks'
 
-export { meKey }
+export { currentUserLinksKey }

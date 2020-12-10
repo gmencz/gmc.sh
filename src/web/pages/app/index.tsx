@@ -2,15 +2,34 @@ import AccountProfile from 'components/app/account-profile'
 import Navbar from 'components/app/navbar/index'
 import Head from 'next/head'
 import { Fragment } from 'react'
+import { QueryCache, useQuery } from 'react-query'
 import { seoDefaults } from 'utils/seo-defaults'
+import { currentUserLinksKey } from 'utils/react-query-keys'
+import { dehydrate } from 'react-query/hydration'
 import {
   InferWithAuthServerSideProps,
   withAuthServerSideProps,
 } from 'utils/with-auth-server-side-props'
+import { getCurrentUserLinks } from 'api/get-current-user-links'
 
-export const getServerSideProps = withAuthServerSideProps(undefined, {
-  authenticatedPage: true,
-})
+export const getServerSideProps = withAuthServerSideProps(
+  async ctx => {
+    const queryCache = new QueryCache()
+
+    await queryCache.prefetchQuery(currentUserLinksKey, () =>
+      getCurrentUserLinks(ctx.req.headers.cookie as string),
+    )
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryCache),
+      },
+    }
+  },
+  {
+    authenticatedPage: true,
+  },
+)
 
 type AppProps = InferWithAuthServerSideProps<typeof getServerSideProps>
 
@@ -44,7 +63,7 @@ function App({ user }: AppProps) {
       ></div>
       <div className="relative min-h-screen flex flex-col">
         {/* <!-- Navbar --> */}
-        <Navbar />
+        <Navbar user={user} />
 
         {/* <!-- 3 column wrapper --> */}
         <div className="flex-grow w-full max-w-7xl mx-auto xl:px-8 lg:flex">
