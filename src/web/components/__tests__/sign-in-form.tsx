@@ -42,6 +42,12 @@ describe('SignInForm', () => {
           username: 'test',
           email: 'test@example.com',
           createdAt: new Date(),
+          bio: null,
+          location: null,
+          name: null,
+          publicEmail: null,
+          twitterUsername: null,
+          website: null,
         }
 
         return res(

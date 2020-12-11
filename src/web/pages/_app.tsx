@@ -14,8 +14,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps} />
         </Hydrate>
+        <ReactQueryDevtools initialIsOpen />
       </ReactQueryCacheProvider>
-      <ReactQueryDevtools />
     </Fragment>
   )
 }
