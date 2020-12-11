@@ -2,23 +2,22 @@ import AccountProfile from 'components/app/account-profile'
 import Navbar from 'components/app/navbar/index'
 import Head from 'next/head'
 import { Fragment } from 'react'
-import { QueryCache, useQuery } from 'react-query'
+import { QueryCache } from 'react-query'
 import { seoDefaults } from 'utils/seo-defaults'
-import { currentUserLinksKey } from 'utils/react-query-keys'
+import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { dehydrate } from 'react-query/hydration'
-import {
-  InferWithAuthServerSideProps,
-  withAuthServerSideProps,
-} from 'utils/with-auth-server-side-props'
+import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
 import { getCurrentUserLinks } from 'api/get-current-user-links'
 
 export const getServerSideProps = withAuthServerSideProps(
-  async ctx => {
+  async (ctx, user) => {
     const queryCache = new QueryCache()
 
     await queryCache.prefetchQuery(currentUserLinksKey, () =>
       getCurrentUserLinks(ctx.req.headers.cookie as string),
     )
+
+    queryCache.setQueryData(meKey, user)
 
     return {
       props: {
@@ -31,9 +30,7 @@ export const getServerSideProps = withAuthServerSideProps(
   },
 )
 
-type AppProps = InferWithAuthServerSideProps<typeof getServerSideProps>
-
-function App({ user }: AppProps) {
+function App() {
   return (
     <Fragment>
       <Head>
@@ -63,14 +60,14 @@ function App({ user }: AppProps) {
       ></div>
       <div className="relative min-h-screen flex flex-col">
         {/* <!-- Navbar --> */}
-        <Navbar user={user} />
+        <Navbar />
 
         {/* <!-- 3 column wrapper --> */}
         <div className="flex-grow w-full max-w-7xl mx-auto xl:px-8 lg:flex">
           {/* <!-- Left sidebar & main wrapper --> */}
           <div className="flex-1 min-w-0 bg-white xl:flex">
             {/* <!-- Account profile --> */}
-            <AccountProfile user={user} />
+            <AccountProfile />
           </div>
         </div>
       </div>

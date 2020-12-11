@@ -1,3 +1,4 @@
 const currentUserLinksKey = 'currentUserLinks'
+const meKey = 'me'
 
-export { currentUserLinksKey }
+export { currentUserLinksKey, meKey }

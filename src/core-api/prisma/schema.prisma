@@ -19,6 +19,7 @@ model User {
   publicEmail     String?
   website         String?
   twitterUsername String?
+  profilePicture  String   @default("https://gmcsh.blob.core.windows.net/profile-pictures/default_profile_picture.png")
   Url             Url[]
 }
 

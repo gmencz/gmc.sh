@@ -1,4 +1,3 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { useState } from 'react'
 import NavbarLinks from './links'
 import NavbarLogo from './logo'
@@ -6,11 +5,7 @@ import NavbarMobileMenu from './mobile-menu'
 import NavbarMobileMenuButton from './mobile-menu-button'
 import NavbarSearch from './search'
 
-type NavbarProps = {
-  user: V1ApiTypes.MeResponse
-}
-
-function Navbar({ user }: NavbarProps) {
+function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (

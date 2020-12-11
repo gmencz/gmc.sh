@@ -47,6 +47,7 @@ const register: RouteHandler<{
         publicEmail: true,
         twitterUsername: true,
         website: true,
+        profilePicture: true,
       },
     })
   } catch (error) {
@@ -85,6 +86,7 @@ const register: RouteHandler<{
     publicEmail: user.publicEmail,
     twitterUsername: user.twitterUsername,
     website: user.website,
+    profilePicture: user.profilePicture,
   }
 
   request.session.set('data', {

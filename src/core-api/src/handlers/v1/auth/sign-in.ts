@@ -51,6 +51,7 @@ const signin: RouteHandler<{
     publicEmail: user.publicEmail,
     twitterUsername: user.twitterUsername,
     website: user.website,
+    profilePicture: user.profilePicture,
   }
 
   request.session.set('data', {

@@ -12,6 +12,7 @@ type User = {
   publicEmail: string | null
   website: string | null
   twitterUsername: string | null
+  profilePicture: string
 }
 
 type Url = {

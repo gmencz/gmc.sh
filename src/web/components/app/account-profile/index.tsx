@@ -2,12 +2,8 @@ import { V1ApiTypes } from '@gmcsh/shared'
 import { getCurrentUserLinks } from 'api/get-current-user-links'
 import { format } from 'date-fns'
 import { useQuery } from 'react-query'
-import { currentUserLinksKey } from 'utils/react-query-keys'
+import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { Detail, DetailDescription, DetailTerm } from './detail'
-
-type AccountProfileProps = {
-  user: V1ApiTypes.MeResponse
-}
 
 function userHasPublicDetails(user: V1ApiTypes.MeResponse) {
   return (
@@ -18,9 +14,10 @@ function userHasPublicDetails(user: V1ApiTypes.MeResponse) {
   )
 }
 
-function AccountProfile({ user }: AccountProfileProps) {
-  const hasPublicDetails = userHasPublicDetails(user)
-  const { data } = useQuery(currentUserLinksKey, getCurrentUserLinks)
+function AccountProfile() {
+  const { data: me } = useQuery<V1ApiTypes.MeResponse>(meKey)
+  const hasPublicDetails = userHasPublicDetails(me as V1ApiTypes.MeResponse)
+  const { data: links } = useQuery(currentUserLinksKey, getCurrentUserLinks)
 
   return (
     <div className="xl:flex-shrink-0 xl:w-64 xl:border-r xl:border-gray-200 bg-white">
@@ -33,22 +30,26 @@ function AccountProfile({ user }: AccountProfileProps) {
                 <div className="flex-shrink-0 h-12 w-12">
                   <img
                     className="h-12 w-12 rounded-full"
-                    src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&h=256&q=80"
+                    src={me?.profilePicture}
                     alt=""
                   />
                 </div>
                 <div className="space-y-1">
                   <div className="text-base font-medium text-gray-900">
-                    {user.username}
+                    {me?.username}
                   </div>
                   <span className="text-sm text-gray-500 group-hover:text-gray-900 font-medium">
-                    Joined {format(new Date(user.createdAt), 'MMMM y')}
+                    Joined{' '}
+                    {format(
+                      new Date((me?.createdAt as unknown) as string),
+                      'MMMM y',
+                    )}
                   </span>
                 </div>
               </div>
               <div className="flex flex-col space-y-4">
                 <div className="space-y-1">
-                  {user.name && (
+                  {me?.name && (
                     <span className="text-base font-medium text-gray-900">
                       Gabriel Méndez
                     </span>
@@ -59,7 +60,7 @@ function AccountProfile({ user }: AccountProfileProps) {
                 </div>
                 {hasPublicDetails && (
                   <dl className="space-y-2">
-                    {user.location && (
+                    {me?.location && (
                       <Detail>
                         <DetailTerm>
                           <span className="sr-only">Location</span>
@@ -72,10 +73,10 @@ function AccountProfile({ user }: AccountProfileProps) {
                             <path d="M12 0c-4.198 0-8 3.403-8 7.602 0 6.243 6.377 6.903 8 16.398 1.623-9.495 8-10.155 8-16.398 0-4.199-3.801-7.602-8-7.602zm0 11c-1.657 0-3-1.343-3-3s1.342-3 3-3 3 1.343 3 3-1.343 3-3 3z" />
                           </svg>
                         </DetailTerm>
-                        <DetailDescription>{user.location}</DetailDescription>
+                        <DetailDescription>{me?.location}</DetailDescription>
                       </Detail>
                     )}
-                    {user.publicEmail && (
+                    {me?.publicEmail && (
                       <Detail>
                         <DetailTerm>
                           <span className="sr-only">Contact email</span>
@@ -89,13 +90,13 @@ function AccountProfile({ user }: AccountProfileProps) {
                           </svg>
                         </DetailTerm>
                         <DetailDescription>
-                          <a href={`mailto:${user.publicEmail}`}>
-                            {user.publicEmail}
+                          <a href={`mailto:${me?.publicEmail}`}>
+                            {me?.publicEmail}
                           </a>
                         </DetailDescription>
                       </Detail>
                     )}
-                    {user.website && (
+                    {me?.website && (
                       <Detail>
                         <DetailTerm>
                           <span className="sr-only">Website</span>
@@ -109,11 +110,11 @@ function AccountProfile({ user }: AccountProfileProps) {
                           </svg>
                         </DetailTerm>
                         <DetailDescription>
-                          <a href={user.website}>{user.website}</a>
+                          <a href={me?.website}>{me?.website}</a>
                         </DetailDescription>
                       </Detail>
                     )}
-                    {user.twitterUsername && (
+                    {me?.twitterUsername && (
                       <Detail>
                         <DetailTerm>
                           <span className="sr-only">Twitter username</span>
@@ -130,7 +131,7 @@ function AccountProfile({ user }: AccountProfileProps) {
                           <a
                             href={`https://twitter.com/${user.twitterUsername}`}
                           >
-                            {user.twitterUsername}
+                            {me?.twitterUsername}
                           </a>
                         </DetailDescription>
                       </Detail>
@@ -160,7 +161,7 @@ function AccountProfile({ user }: AccountProfileProps) {
                       <path d="M7.092 5.099l1.439-.205-.439-3.083-1.44.204.44 3.084zm-2.211 3.445l.205-1.44-3.084-.44-.205 1.441 3.084.439zm-.494-5.163l-1.03 1.03 2.203 2.204 1.029-1.03-2.202-2.204zm12.541 15.565l-1.439.205.438 3.083 1.441-.204-.44-3.084zm2.21-3.446l-.206 1.441 3.085.439.205-1.44-3.084-.44zm.495 5.163l1.028-1.029-2.204-2.204-1.027 1.03 2.203 2.203zm2.64-18.904c2.344 2.346 2.344 6.149.001 8.494l-3.896 3.896-1.417-1.417 3.895-3.895c1.562-1.562 1.562-4.101 0-5.662-1.562-1.562-4.101-1.562-5.662 0l-3.894 3.895-1.416-1.416 3.895-3.895c2.344-2.345 6.147-2.345 8.494 0zm-8.138 16.631l-3.852 3.851c-2.344 2.347-6.146 2.345-8.494.001-2.344-2.346-2.345-6.149 0-8.494l3.854-3.851 1.414 1.415-3.851 3.851c-1.562 1.562-1.562 4.102-.001 5.663 1.563 1.561 4.102 1.561 5.664-.001l3.85-3.851 1.416 1.416z" />
                     </svg>
                   </DetailTerm>
-                  <DetailDescription>{data?.total} Links</DetailDescription>
+                  <DetailDescription>{links?.total} Links</DetailDescription>
                 </Detail>
               </dl>
             </div>

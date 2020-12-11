@@ -1,8 +1,12 @@
+import { V1ApiTypes } from '@gmcsh/shared'
 import { Transition } from '@headlessui/react'
 import { useDialog } from 'hooks/use-dialog'
 import { useState } from 'react'
+import { useQuery } from 'react-query'
+import { meKey } from 'utils/react-query-keys'
 
 function NavbarProfileDropdown() {
+  const { data: me } = useQuery<V1ApiTypes.MeResponse>(meKey)
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const { ref: dropdownRef } = useDialog({
     isOpen: showProfileDropdown,
@@ -21,7 +25,7 @@ function NavbarProfileDropdown() {
           <span className="sr-only">Open user menu</span>
           <img
             className="h-8 w-8 rounded-full"
-            src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&h=256&q=80"
+            src={me?.profilePicture}
             alt=""
           />
         </button>
