@@ -5,7 +5,7 @@ import { API_ENDPOINT } from '../constants'
 async function getLoggedInUser(
   cookies: string,
 ): Promise<V1ApiTypes.MeResponse> {
-  const response = await fetch(`${API_ENDPOINT}/v1/auth/me`, {
+  const response = await fetch(`${API_ENDPOINT}/v1/me`, {
     headers: {
       cookie: cookies,
     },
