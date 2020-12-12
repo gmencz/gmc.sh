@@ -22,7 +22,7 @@ test('appends props returned by custom getServerSideProps function to final getS
   }
 
   server.use(
-    rest.get(`${API_ENDPOINT}/v1/auth/me`, (_req, res, ctx) => {
+    rest.get(`${API_ENDPOINT}/v1/me`, (_req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({

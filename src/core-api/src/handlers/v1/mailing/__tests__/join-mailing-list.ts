@@ -4,6 +4,9 @@ import jwt from 'jsonwebtoken'
 import { createTestContext } from 'test/create-test-context'
 import { contactsClient } from 'utils/sendinblue-api'
 
+jest.mock('@azure/cognitiveservices-computervision')
+jest.mock('@azure/ms-rest-js')
+
 const ctx = createTestContext()
 
 const testListId = 1
@@ -42,11 +45,9 @@ test('adds contact to mailing list if the contact already exists', async () => {
       } as Static<typeof V1ApiTypes['joinMailingListBody']>),
     )
 
-  contactsClient.createContact = jest
-    .fn()
-    .mockRejectedValueOnce({
-      response: { body: { code: 'duplicate_parameter' } },
-    })
+  contactsClient.createContact = jest.fn().mockRejectedValueOnce({
+    response: { body: { code: 'duplicate_parameter' } },
+  })
 
   contactsClient.addContactToList = jest
     .fn()
