@@ -15,6 +15,7 @@ export const handlers = [
       publicEmail: null,
       twitterUsername: null,
       website: null,
+      profilePicture: '',
     }
 
     return res(

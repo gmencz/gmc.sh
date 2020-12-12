@@ -48,6 +48,7 @@ describe('SignInForm', () => {
           publicEmail: null,
           twitterUsername: null,
           website: null,
+          profilePicture: '',
         }
 
         return res(

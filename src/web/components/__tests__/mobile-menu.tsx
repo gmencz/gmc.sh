@@ -52,6 +52,7 @@ describe('MobileMenu', () => {
       publicEmail: null,
       twitterUsername: null,
       website: null,
+      profilePicture: '',
     }
 
     render(<Home user={mockedUser} />)

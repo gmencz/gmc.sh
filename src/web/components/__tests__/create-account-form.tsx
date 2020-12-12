@@ -37,6 +37,7 @@ describe('CreateAccountForm', () => {
             publicEmail: null,
             twitterUsername: null,
             website: null,
+            profilePicture: '',
           },
         }
 
