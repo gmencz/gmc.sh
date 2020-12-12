@@ -1,10 +1,12 @@
 import { ComputerVisionClient } from '@azure/cognitiveservices-computervision'
 import { ApiKeyCredentials } from '@azure/ms-rest-js'
 
-const contentModeratorKey = process.env.AZURE_COGNITIVE_SERVICES_KEY as string
+const contentModeratorKey =
+  process.env.AZURE_COGNITIVE_SERVICES_KEY || '<contentModeratorKey>'
 
-const contentModeratorEndpoint = process.env
-  .AZURE_COGNITIVE_SERVICES_ENDPOINT as string
+const contentModeratorEndpoint =
+  process.env.AZURE_COGNITIVE_SERVICES_ENDPOINT ||
+  '<azureCognitiveServicesEndpoint>'
 
 const computerVisionClient = new ComputerVisionClient(
   new ApiKeyCredentials({
