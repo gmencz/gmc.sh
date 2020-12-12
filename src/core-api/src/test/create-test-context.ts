@@ -2,6 +2,16 @@ import { FastifyInstance } from 'fastify'
 import { build } from '../server'
 import { db } from 'utils/db'
 
+jest.mock('@azure/cognitiveservices-computervision')
+jest.mock('@azure/ms-rest-js')
+jest.mock('@azure/storage-blob', () => ({
+  BlobServiceClient: {
+    fromConnectionString: () => ({
+      getContainerClient: () => ({}),
+    }),
+  },
+}))
+
 type Context = {
   server: FastifyInstance
 }
