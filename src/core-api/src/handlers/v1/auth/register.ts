@@ -26,7 +26,7 @@ const register: RouteHandler<{
 
   const { email, username, password } = request.body
   const hashedPassword = await hash(password)
-  let user: Omit<User, 'password'>
+  let user: Omit<User, 'password' | 'updatedProfilePictureAt'>
 
   try {
     user = await db.user.create({

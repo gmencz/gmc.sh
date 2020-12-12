@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === 'test') {
 import fastify, { FastifyInstance } from 'fastify'
 import cors from 'fastify-cors'
 import session from 'fastify-secure-session'
+import multer from 'fastify-multer'
 import { v1Routes } from 'routes/v1'
 
 type BuildOptions = {
@@ -45,6 +46,8 @@ function build(options: BuildOptions = {}): FastifyInstance {
       domain: process.env.NODE_ENV === 'production' ? 'gmc.sh' : 'localhost',
     },
   })
+
+  server.register(multer.contentParser)
 
   // Routes
   server.register(v1Routes, { prefix: '/v1' })
