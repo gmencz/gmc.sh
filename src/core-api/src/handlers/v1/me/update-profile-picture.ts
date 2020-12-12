@@ -78,7 +78,7 @@ const updateProfilePicture: RouteHandler<{
       id: user.id,
     },
     data: {
-      profilePicture: `https://gmcsh.blob.core.windows.net/profile-pictures/${blobName}`,
+      profilePicture: `https://cdn.gmc.sh/profile-pictures/${blobName}`,
       updatedProfilePictureAt: new Date(),
     },
     select: {

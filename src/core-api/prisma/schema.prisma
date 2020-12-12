@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Url {
+  id           String   @id
+  url          String   @unique
+  target       String
+  createdAt    DateTime @default(now())
+  userId       String?
+  timesVisited Int      @default(0)
+  User         User?    @relation(fields: [userId], references: [id])
+}
+
 model User {
   id                      String    @id
   username                String    @unique
@@ -19,7 +29,7 @@ model User {
   publicEmail             String?
   website                 String?
   twitterUsername         String?
-  profilePicture          String    @default("https://gmcsh.blob.core.windows.net/profile-pictures/default_profile_picture.png")
+  profilePicture          String    @default("https://cdn.gmc.sh/profile-pictures/default_profile_picture.png")
   updatedProfilePictureAt DateTime?
   Url                     Url[]
 }
@@ -37,14 +47,4 @@ model flyway_schema_history {
   success        Boolean
 
   @@index([success], name: "flyway_schema_history_s_idx")
-}
-
-model Url {
-  id           String   @id
-  url          String   @unique
-  target       String
-  createdAt    DateTime @default(now())
-  userId       String?
-  timesVisited Int      @default(0)
-  User         User?    @relation(fields: [userId], references: [id])
 }
