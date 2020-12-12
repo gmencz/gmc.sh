@@ -5,6 +5,7 @@ import { QueryStatus, useMutation } from 'react-query'
 import { appQueryCache } from 'pages/_app'
 import { ApiError } from 'utils/api-error'
 import { meKey } from 'utils/react-query-keys'
+import Image from 'next/image'
 
 type ProfilePictureProps = {
   profilePictureUrl: string
@@ -69,11 +70,16 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
             </svg>
           </div>
         ) : (
-          <img
-            className="h-12 w-12 rounded-full object-cover"
-            src={profilePictureUrl}
-            alt="Profile"
-          />
+          <div className="h-12 w-12">
+            <Image
+              className="rounded-full object-cover"
+              src={profilePictureUrl}
+              alt="Profile"
+              height="100%"
+              width="100%"
+              priority
+            />
+          </div>
         )}
       </label>
       <input

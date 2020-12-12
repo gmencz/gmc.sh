@@ -1,6 +1,8 @@
 import { V1ApiTypes } from '@gmcsh/shared'
 import { Transition } from '@headlessui/react'
 import { useDialog } from 'hooks/use-dialog'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { meKey } from 'utils/react-query-keys'
@@ -24,11 +26,16 @@ function NavbarProfileDropdown() {
           onClick={() => setShowProfileDropdown(true)}
         >
           <span className="sr-only">Open user menu</span>
-          <img
-            className="h-8 w-8 rounded-full object-cover"
-            src={me?.profilePicture}
-            alt=""
-          />
+          <div className="h-8 w-8">
+            <Image
+              className="rounded-full object-cover"
+              src={me?.profilePicture as string}
+              alt="Profile"
+              height="100%"
+              width="100%"
+              priority
+            />
+          </div>
         </button>
       </div>
 
@@ -45,32 +52,30 @@ function NavbarProfileDropdown() {
           {ref => (
             <div
               ref={ref}
-              className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
+              className="origin-top-right flex flex-col items-start absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="user-menu"
             >
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                role="menuitem"
-              >
-                View Profile
-              </a>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                role="menuitem"
-              >
-                Settings
-              </a>
-              <a
-                href="#"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                role="menuitem"
-              >
+              <Link href="/app/profile">
+                <a
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  View Profile
+                </a>
+              </Link>
+              <Link href="/app/settings">
+                <a
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  role="menuitem"
+                >
+                  Settings
+                </a>
+              </Link>
+              <button className="block text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 Logout
-              </a>
+              </button>
             </div>
           )}
         </Transition>
