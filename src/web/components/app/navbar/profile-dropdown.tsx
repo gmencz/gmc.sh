@@ -7,6 +7,7 @@ import { meKey } from 'utils/react-query-keys'
 
 function NavbarProfileDropdown() {
   const { data: me } = useQuery<V1ApiTypes.MeResponse>(meKey)
+
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const { ref: dropdownRef } = useDialog({
     isOpen: showProfileDropdown,
@@ -24,7 +25,7 @@ function NavbarProfileDropdown() {
         >
           <span className="sr-only">Open user menu</span>
           <img
-            className="h-8 w-8 rounded-full"
+            className="h-8 w-8 rounded-full object-cover"
             src={me?.profilePicture}
             alt=""
           />

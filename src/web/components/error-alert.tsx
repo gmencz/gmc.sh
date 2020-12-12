@@ -11,7 +11,7 @@ function ErrorAlert({ isOpen, onClose, children }: ErrorAlertProps) {
   }
 
   return (
-    <div className="rounded-md max-w-md bg-red-50 p-4 fixed bottom-5 left-5 z-10">
+    <div className="rounded-md max-w-md bg-red-50 p-4 fixed top-5 right-5 z-10">
       <div className="flex">
         <button className="flex-shrink-0 self-start" onClick={onClose}>
           <span className="sr-only">Dismiss</span>

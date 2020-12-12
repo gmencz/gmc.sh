@@ -15,6 +15,7 @@ module.exports = {
     '^api(.*)$': resolve(__dirname, './utils/api/$1'),
     '^utils(.*)$': resolve(__dirname, './utils/$1'),
     '^test(.*)$': resolve(__dirname, './test/$1'),
+    '^pages(.*)$': resolve(__dirname, './pages/$1'),
     '^@gmcsh(.*)$': resolve(__dirname, '../$1/src'),
   },
 }

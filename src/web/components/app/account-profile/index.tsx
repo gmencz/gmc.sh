@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { useQuery } from 'react-query'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { Detail, DetailDescription, DetailTerm } from './detail'
+import ProfilePicture from './picture'
 
 function userHasPublicDetails(user: V1ApiTypes.MeResponse) {
   return (
@@ -28,10 +29,8 @@ function AccountProfile() {
               {/* <!-- Profile --> */}
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0 h-12 w-12">
-                  <img
-                    className="h-12 w-12 rounded-full"
-                    src={me?.profilePicture}
-                    alt=""
+                  <ProfilePicture
+                    profilePictureUrl={me?.profilePicture as string}
                   />
                 </div>
                 <div className="space-y-1">
@@ -129,7 +128,7 @@ function AccountProfile() {
                         </DetailTerm>
                         <DetailDescription>
                           <a
-                            href={`https://twitter.com/${user.twitterUsername}`}
+                            href={`https://twitter.com/${me?.twitterUsername}`}
                           >
                             {me?.twitterUsername}
                           </a>

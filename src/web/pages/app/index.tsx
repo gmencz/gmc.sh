@@ -2,12 +2,14 @@ import AccountProfile from 'components/app/account-profile'
 import Navbar from 'components/app/navbar/index'
 import Head from 'next/head'
 import { Fragment } from 'react'
-import { QueryCache } from 'react-query'
+import { QueryCache, useMutation } from 'react-query'
 import { seoDefaults } from 'utils/seo-defaults'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { dehydrate } from 'react-query/hydration'
 import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
 import { getCurrentUserLinks } from 'api/get-current-user-links'
+import { updateProfilePicture } from 'api/update-profile-picture'
+import { appQueryCache } from 'pages/_app'
 
 export const getServerSideProps = withAuthServerSideProps(
   async (ctx, user) => {
@@ -31,6 +33,12 @@ export const getServerSideProps = withAuthServerSideProps(
 )
 
 function App() {
+  const updateProfilePictureMutation = useMutation(updateProfilePicture, {
+    onSuccess: data => {
+      appQueryCache.setQueryData(meKey, data)
+    },
+  })
+
   return (
     <Fragment>
       <Head>

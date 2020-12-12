@@ -22,6 +22,7 @@
       "api/*": ["./web/utils/api/*"],
       "utils/*": ["./web/utils/*"],
       "test/*": ["./web/test/*"],
+      "pages/*": ["./web/pages/*"],
       "@gmcsh/*": ["./*/src"]
     }
   },

@@ -19,11 +19,11 @@ const updateProfilePicture: RouteHandler<{
 
   if (dbUser?.updatedProfilePictureAt) {
     const hasToWait =
-      differenceInMinutes(new Date(), dbUser.updatedProfilePictureAt) < 5
+      differenceInMinutes(new Date(), dbUser.updatedProfilePictureAt) < 3
 
     if (hasToWait) {
       return reply.status(409).send({
-        message: `You can only update your profile picture once every 5 minutes.`,
+        message: `You can only update your profile picture once every 3 minutes.`,
         info: {},
       })
     }
@@ -97,8 +97,30 @@ const updateProfilePicture: RouteHandler<{
     },
   })
 
+  const safeUser = {
+    id: updatedUser.id,
+    username: updatedUser.username,
+    createdAt: updatedUser.createdAt,
+    email: updatedUser.email,
+    name: updatedUser.name,
+    bio: updatedUser.bio,
+    location: updatedUser.location,
+    publicEmail: updatedUser.publicEmail,
+    twitterUsername: updatedUser.twitterUsername,
+    website: updatedUser.website,
+    profilePicture: updatedUser.profilePicture,
+  }
+
+  const sessionData = request.session.get('data')
+  request.session.set('data', {
+    ...sessionData,
+    user: {
+      ...safeUser,
+    },
+  })
+
   return reply.send({
-    ...updatedUser,
+    ...safeUser,
   })
 }
 

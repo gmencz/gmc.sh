@@ -5,12 +5,12 @@ import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
-const queryCache = new QueryCache()
+export const appQueryCache = new QueryCache()
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Fragment>
-      <ReactQueryCacheProvider queryCache={queryCache}>
+      <ReactQueryCacheProvider queryCache={appQueryCache}>
         <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps} />
         </Hydrate>
