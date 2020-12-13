@@ -2,6 +2,8 @@ import { FastifyInstance } from 'fastify'
 import { build } from '../server'
 import { db } from 'utils/db'
 
+// Stop azure from trying to reach our azure services
+// when building our server.
 jest.mock('@azure/cognitiveservices-computervision')
 jest.mock('@azure/ms-rest-js')
 jest.mock('@azure/storage-blob', () => ({

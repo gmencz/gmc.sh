@@ -27,6 +27,7 @@
       "routes/*": ["./core-api/src/routes/*"],
       "utils/*": ["./core-api/src/utils/*"],
       "test/*": ["./core-api/src/test/*"],
+      "assets/*": ["./core-api/src/assets/*"],
       "@gmcsh/*": ["./*/src"]
     }
   },
