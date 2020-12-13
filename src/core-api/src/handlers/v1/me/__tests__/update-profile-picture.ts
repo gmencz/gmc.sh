@@ -19,7 +19,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   // This is to ignore the profile picture updates limit
-  // and reset the profile picture
+  // and reset the profile picture to its default value.
   await db.user.update({
     where: { id: userId },
     data: {
@@ -36,9 +36,10 @@ profilePicturesClient.getBlockBlobClient = jest.fn().mockReturnValue({
   upload: uploadToAzureStorage,
 })
 
+const testImageFilename = 'test_image.jpg'
+
 test('updates user profile picture', async () => {
-  const imageFilename = 'test_image.jpg'
-  const imageStream = file(imageFilename)
+  const imageStream = file(testImageFilename)
 
   const chunks: Buffer[] = []
   let imageBuffer: Buffer | null = null
@@ -75,7 +76,7 @@ test('updates user profile picture', async () => {
   })
 
   const body = JSON.parse(response.body)
-  const cdnBlobName = `${userId}${extname(imageFilename)}`
+  const cdnBlobName = `${userId}${extname(testImageFilename)}`
 
   // Ensure that the right user was updated and the new profile picture
   // is set to image's url in our cdn.
@@ -104,5 +105,139 @@ test('updates user profile picture', async () => {
   expect(uploadToAzureStorage).toHaveBeenCalledWith(
     imageBuffer,
     ((imageBuffer as unknown) as Buffer).length,
+  )
+})
+
+test('returns a 409 if user tries to update their profile picture without waiting 5 minutes', async () => {
+  await db.user.update({
+    where: { id: userId },
+    data: {
+      updatedProfilePictureAt: new Date(),
+    },
+  })
+
+  const imageStream = file(testImageFilename)
+  const formData = new FormData()
+  formData.append('newProfilePicture', imageStream)
+
+  computerVisionClient.analyzeImageInStream = jest.fn().mockResolvedValueOnce({
+    adult: {
+      isAdultContent: false,
+      isGoryContent: false,
+      isRacyContent: false,
+    },
+  })
+
+  const response = await ctx.server.inject({
+    method: 'POST',
+    url: '/v1/me/update-profile-picture',
+    headers: {
+      'content-type': `multipart/form-data; boundary=${formData.getBoundary()}`,
+    },
+    payload: formData,
+    cookies: {
+      __session: sessionCookie,
+    },
+  })
+
+  const body = JSON.parse(response.body)
+
+  expect(response.statusCode).toBe(409)
+  expect(body.message).toMatch(
+    /you can only update your profile picture once every 5 minutes/i,
+  )
+})
+
+test('returns a 415 if user sends an unsupported image type', async () => {
+  const imageStream = file('svg_test_image.svg')
+  const formData = new FormData()
+  formData.append('newProfilePicture', imageStream)
+
+  computerVisionClient.analyzeImageInStream = jest.fn().mockResolvedValueOnce({
+    adult: {
+      isAdultContent: false,
+      isGoryContent: false,
+      isRacyContent: false,
+    },
+  })
+
+  const response = await ctx.server.inject({
+    method: 'POST',
+    url: '/v1/me/update-profile-picture',
+    headers: {
+      'content-type': `multipart/form-data; boundary=${formData.getBoundary()}`,
+    },
+    payload: formData,
+    cookies: {
+      __session: sessionCookie,
+    },
+  })
+
+  const body = JSON.parse(response.body)
+  expect(response.statusCode).toBe(415)
+  expect(body.message).toMatch(
+    /unsupported image type, supported types are jpg, jpeg, png, gif and jfif/i,
+  )
+})
+
+test(`returns 422 if azure content moderation AI detects an inappropiate image`, async () => {
+  const imageStream = file(testImageFilename)
+  const formData = new FormData()
+  formData.append('newProfilePicture', imageStream)
+
+  computerVisionClient.analyzeImageInStream = jest.fn().mockResolvedValueOnce({
+    adult: {
+      isAdultContent: true,
+      isGoryContent: false,
+      isRacyContent: false,
+    },
+  })
+
+  const response = await ctx.server.inject({
+    method: 'POST',
+    url: '/v1/me/update-profile-picture',
+    headers: {
+      'content-type': `multipart/form-data; boundary=${formData.getBoundary()}`,
+    },
+    payload: formData,
+    cookies: {
+      __session: sessionCookie,
+    },
+  })
+
+  const body = JSON.parse(response.body)
+  expect(response.statusCode).toBe(422)
+  expect(body.message).toMatch(/inappropiate image/i)
+})
+
+test(`profile pictures can't be larger than 1MB`, async () => {
+  const imageStream = file('large_test_image.jpg')
+  const formData = new FormData()
+  formData.append('newProfilePicture', imageStream)
+
+  computerVisionClient.analyzeImageInStream = jest.fn().mockResolvedValueOnce({
+    adult: {
+      isAdultContent: false,
+      isGoryContent: false,
+      isRacyContent: false,
+    },
+  })
+
+  const response = await ctx.server.inject({
+    method: 'POST',
+    url: '/v1/me/update-profile-picture',
+    headers: {
+      'content-type': `multipart/form-data; boundary=${formData.getBoundary()}`,
+    },
+    payload: formData,
+    cookies: {
+      __session: sessionCookie,
+    },
+  })
+
+  const body = JSON.parse(response.body)
+  expect(response.statusCode).toBe(413)
+  expect(body.message).toMatch(
+    /image is too large, maximum supported size is 1mb/i,
   )
 })

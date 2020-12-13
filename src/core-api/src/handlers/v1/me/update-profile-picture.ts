@@ -19,7 +19,7 @@ const updateProfilePicture: RouteHandler<{
 
   if (dbUser?.updatedProfilePictureAt) {
     const hasToWait =
-      differenceInMinutes(new Date(), dbUser.updatedProfilePictureAt) < 3
+      differenceInMinutes(new Date(), dbUser.updatedProfilePictureAt) < 5
 
     if (hasToWait) {
       return reply.status(409).send({
