@@ -11,7 +11,7 @@ function SuccessAlert({ isOpen, onClose, children }: SuccessAlertProps) {
   }
 
   return (
-    <div className="rounded-md max-w-2xl bg-green-50 p-4 fixed top-5 left-5 z-10">
+    <div className="rounded-md max-w-2xl bg-green-50 p-4 fixed top-5 right-5 z-10">
       <div className="flex">
         <div className="flex-shrink-0">
           <svg

@@ -1,7 +1,10 @@
 import { addWeeks } from 'date-fns'
 import { config as configureEnv } from 'dotenv'
+import { join } from 'path'
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'test') {
+  configureEnv({ path: join(__dirname, '..', '.env.test') })
+} else {
   configureEnv()
 }
 

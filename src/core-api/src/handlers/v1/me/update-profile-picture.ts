@@ -23,7 +23,7 @@ const updateProfilePicture: RouteHandler<{
 
     if (hasToWait) {
       return reply.status(409).send({
-        message: `You can only update your profile picture once every 3 minutes.`,
+        message: `You can only update your profile picture once every 5 minutes.`,
         info: {},
       })
     }
