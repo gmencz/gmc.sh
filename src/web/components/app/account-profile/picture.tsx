@@ -75,6 +75,8 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
   const setNewProfilePicture = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    console.log(image)
+
     if (!image.croppedSrc || !image.file) {
       return
     }
@@ -96,6 +98,8 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
   const cropImage = async (crop: Crop) => {
     if (imageRef.current && crop.width && crop.height) {
       const croppedImageUrl = await getCroppedImg(imageRef.current, crop)
+      console.log(croppedImageUrl)
+
       setImage(data => ({ ...data, croppedSrc: croppedImageUrl as string }))
     }
   }
@@ -105,13 +109,14 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
   return (
     <Fragment>
       <label
-        htmlFor="new-profile-picture"
+        htmlFor="avatar"
         className={
           status === QueryStatus.Loading
             ? 'cursor-not-allowed'
             : 'cursor-pointer'
         }
       >
+        <span className="sr-only">Avatar</span>
         <div className="h-12 w-12">
           <Image
             className="rounded-full object-cover"
@@ -124,7 +129,7 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
         </div>
       </label>
       <input
-        id="new-profile-picture"
+        id="avatar"
         type="file"
         accept=".gif,.jpg,.jpeg,.png,.jfif"
         className="hidden"
@@ -235,6 +240,7 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
                           <div
                             className="mt-5 overflow-y-auto pr-4"
                             style={{ maxHeight: '66vh' }}
+                            data-testid="crop-container"
                           >
                             <ImageCrop
                               src={image.src as string}

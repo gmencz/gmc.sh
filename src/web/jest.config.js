@@ -17,5 +17,6 @@ module.exports = {
     '^test(.*)$': resolve(__dirname, './test/$1'),
     '^pages(.*)$': resolve(__dirname, './pages/$1'),
     '^@gmcsh(.*)$': resolve(__dirname, '../$1/src'),
+    '\\.css$': resolve(__dirname, './test/tailwind-base-mock.js'),
   },
 }

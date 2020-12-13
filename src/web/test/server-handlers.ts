@@ -3,7 +3,7 @@ import { rest } from 'msw'
 import { API_ENDPOINT } from '../utils/constants'
 
 export const handlers = [
-  rest.get(`${API_ENDPOINT}/v1/auth/me`, (_req, res, ctx) => {
+  rest.get(`${API_ENDPOINT}/v1/me`, (_req, res, ctx) => {
     const mockedUser: V1ApiTypes.MeResponse = {
       id: '1',
       username: 'test',
@@ -15,7 +15,8 @@ export const handlers = [
       publicEmail: null,
       twitterUsername: null,
       website: null,
-      profilePicture: '',
+      profilePicture:
+        'https://cdn.gmc.sh/profile-pictures/default_profile_picture.png',
     }
 
     return res(
