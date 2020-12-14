@@ -5,7 +5,7 @@ import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   require('../mocks')
 }
 
