@@ -11,8 +11,10 @@
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx",
     "check-types": "tsc --noEmit",
     "cy:open": "cypress open",
-    "e2e": "start-test dev 3000 cy:open",
-    "pree2e": "rm -rf .nyc_output coverage .next || true"
+    "cy:run": "cypress run",
+    "test:e2e": "start-test dev 3000 cy:open",
+    "pretest:e2e": "rm -rf .nyc_output coverage .next || true",
+    "test:e2e:run": "start-test dev 3000 cy:run"
   },
   "dependencies": {
     "@gmcsh/shared": "^1.0.0",
