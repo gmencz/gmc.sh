@@ -50,12 +50,10 @@ function AccountProfile() {
                 <div className="space-y-1">
                   {me?.name && (
                     <span className="text-base font-medium text-gray-900">
-                      Gabriel Méndez
+                      {me.name}
                     </span>
                   )}
-                  <p className="text-sm text-gray-900">
-                    Gamer who likes to code stuff 💻
-                  </p>
+                  {me?.bio && <p className="text-sm text-gray-900">{me.bio}</p>}
                 </div>
                 {hasPublicDetails && (
                   <dl className="space-y-2">

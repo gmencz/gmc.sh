@@ -5,6 +5,10 @@ import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
+if (process.env.NODE_ENV !== 'production') {
+  require('../mocks')
+}
+
 export const appQueryCache = new QueryCache()
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -14,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps} />
         </Hydrate>
-        <ReactQueryDevtools initialIsOpen />
+        <ReactQueryDevtools />
       </ReactQueryCacheProvider>
     </Fragment>
   )
