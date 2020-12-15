@@ -3,7 +3,7 @@ import { createAccount, CreateAccountInputs } from 'api/create-account'
 import { useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
-import { QueryStatus, useMutation } from 'react-query'
+import { useMutation } from 'react-query'
 import { ApiError } from 'utils/api-error'
 import * as yup from 'yup'
 import ErrorAlert from './error-alert'
@@ -19,7 +19,7 @@ const schema = yup.object().shape({
 
 function CreateAccountForm() {
   const router = useRouter()
-  const [create, { error, status, reset }] = useMutation(createAccount, {
+  const { error, status, reset, mutate } = useMutation(createAccount, {
     onSuccess: () => {
       router.push('/app')
     },
@@ -35,7 +35,7 @@ function CreateAccountForm() {
   })
 
   const onSubmit = ({ username, email, password }: CreateAccountInputs) => {
-    create({ username, email, password })
+    mutate({ username, email, password })
   }
 
   const arraifyedErrorFields = Object.keys(errors)
@@ -102,7 +102,7 @@ function CreateAccountForm() {
 
         <div>
           <button
-            disabled={status === QueryStatus.Loading}
+            disabled={status === 'loading'}
             type="submit"
             className="disabled:cursor-not-allowed disabled:opacity-60 relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
@@ -122,7 +122,7 @@ function CreateAccountForm() {
               </svg>
             </span>
             Create account
-            {status === QueryStatus.Loading && (
+            {status === 'loading' && (
               <Fragment>
                 <span className="sr-only">loading...</span>
                 <svg

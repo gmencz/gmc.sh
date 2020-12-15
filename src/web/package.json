@@ -33,7 +33,7 @@
     "react-easy-crop": "^3.3.1",
     "react-hook-form": "^6.12.1",
     "react-image-crop": "^8.6.6",
-    "react-query": "^2.26.3",
+    "react-query": "^3.2.0",
     "react-query-devtools": "^2.6.3",
     "tailwindcss": "^2.0.1",
     "ts-custom-error": "^3.2.0",

@@ -1,8 +1,8 @@
 import { updateProfilePicture } from 'api/update-profile-picture'
 import ErrorAlert from 'components/error-alert'
 import { ChangeEvent, FormEvent, Fragment, useRef, useState } from 'react'
-import { QueryStatus, useMutation } from 'react-query'
-import { appQueryCache } from 'pages/_app'
+import { useMutation } from 'react-query'
+import { appQueryClient } from 'pages/_app'
 import { ApiError } from 'utils/api-error'
 import { meKey } from 'utils/react-query-keys'
 import ImageCrop, { Crop } from 'react-image-crop'
@@ -39,7 +39,10 @@ const initialImageState: CroppedImage = {
 function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
   const [image, setImage] = useState(initialImageState)
   const imageRef = useRef<HTMLImageElement | null>(null)
-  const resetImage = () => setImage(initialImageState)
+  const resetImage = () => {
+    setImage(initialImageState)
+    URL.revokeObjectURL(image.croppedSrc as string)
+  }
 
   const { ref: cropDialogRef } = useDialog({
     isOpen: !!image.src,
@@ -49,9 +52,9 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
     },
   })
 
-  const [mutate, { error, status, reset }] = useMutation(updateProfilePicture, {
+  const { error, status, reset, mutate } = useMutation(updateProfilePicture, {
     onSuccess: data => {
-      appQueryCache.setQueryData(meKey, data)
+      appQueryClient.setQueryData(meKey, data)
     },
     onSettled: resetImage,
   })
@@ -90,9 +93,7 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
     const formData = new FormData()
     formData.append('newProfilePicture', croppedImageFile)
 
-    mutate(formData).then(() => {
-      URL.revokeObjectURL(image.croppedSrc as string)
-    })
+    mutate(formData)
   }
 
   const cropImage = async (crop: Crop) => {
@@ -111,9 +112,7 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
       <label
         htmlFor="avatar"
         className={
-          status === QueryStatus.Loading
-            ? 'cursor-not-allowed'
-            : 'cursor-pointer'
+          status === 'loading' ? 'cursor-not-allowed' : 'cursor-pointer'
         }
       >
         <span className="sr-only">Avatar</span>
@@ -148,7 +147,7 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
           </Fragment>
         </ErrorAlert>
       )}
-      <SuccessAlert isOpen={status === QueryStatus.Success} onClose={reset}>
+      <SuccessAlert isOpen={status === 'success'} onClose={reset}>
         <p className="text-sm font-medium text-green-800">
           Your profile picture has been successfully updated.
         </p>
@@ -265,11 +264,11 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
                       <div className="mt-5 sm:mt-6">
                         <button
                           type="submit"
-                          disabled={status === QueryStatus.Loading}
+                          disabled={status === 'loading'}
                           className="disabled:cursor-not-allowed disabled:opacity-60 inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
                         >
                           Set new profile picture
-                          {status === QueryStatus.Loading && (
+                          {status === 'loading' && (
                             <Fragment>
                               <span className="sr-only">loading...</span>
                               <svg

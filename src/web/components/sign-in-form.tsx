@@ -19,7 +19,7 @@ const schema = yup.object().shape({
 
 function SignInForm() {
   const router = useRouter()
-  const [signInToApp, { error, status, reset }] = useMutation(signIn, {
+  const { error, status, reset, mutate } = useMutation(signIn, {
     onSuccess: () => {
       router.push('/app')
     },
@@ -32,7 +32,7 @@ function SignInForm() {
   )
 
   const onSubmit = ({ username, password }: SignInInputs) => {
-    signInToApp({ username, password })
+    mutate({ username, password })
   }
 
   const arraifyedErrorFields = Object.keys(errors)
@@ -91,7 +91,7 @@ function SignInForm() {
 
         <div>
           <button
-            disabled={status === QueryStatus.Loading}
+            disabled={status === 'loading'}
             type="submit"
             className="group relative w-full flex disabled:cursor-not-allowed disabled:opacity-60 justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
@@ -111,7 +111,7 @@ function SignInForm() {
               </svg>
             </span>
             Sign in
-            {status === QueryStatus.Loading && (
+            {status === 'loading' && (
               <Fragment>
                 <span className="sr-only">loading...</span>
                 <svg

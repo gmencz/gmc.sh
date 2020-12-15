@@ -4,7 +4,7 @@ import { NextRouter } from 'next/router'
 import '@testing-library/jest-dom'
 import { RouterContext } from 'next/dist/next-server/lib/router-context'
 import { ImageProps } from 'next/image'
-import { QueryCache, ReactQueryCacheProvider } from 'react-query'
+import { QueryClientProvider, QueryClient } from 'react-query'
 
 export const mockRouter: NextRouter = {
   basePath: '',
@@ -43,16 +43,16 @@ jest.mock('next/image', () => ({
   },
 }))
 
-const queryCache = new QueryCache()
+const queryClient = new QueryClient()
 
 const renderWithRouter = (component: ReactElement): RenderResult => {
   return render(
-    <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
       <RouterContext.Provider value={mockRouter}>
         {component}
       </RouterContext.Provider>
       ,
-    </ReactQueryCacheProvider>,
+    </QueryClientProvider>,
   )
 }
 

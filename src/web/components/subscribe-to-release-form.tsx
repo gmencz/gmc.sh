@@ -21,9 +21,7 @@ const schema = yup.object().shape({
 const SUBSCRIPTION_LIST_ID = 4
 
 function SubscribeToReleaseForm() {
-  const [subscribe, { error, status, reset, data }] = useMutation(
-    subscribeToRelease,
-  )
+  const { error, status, reset, data, mutate } = useMutation(subscribeToRelease)
 
   const { register, handleSubmit, errors, clearErrors } = useForm<
     Pick<SubscribeToReleaseInputs, 'subscriberEmail'>
@@ -34,7 +32,7 @@ function SubscribeToReleaseForm() {
   const onSubmit = ({
     subscriberEmail,
   }: Pick<SubscribeToReleaseInputs, 'subscriberEmail'>) => {
-    subscribe({ subscriberEmail, listId: SUBSCRIPTION_LIST_ID })
+    mutate({ subscriberEmail, listId: SUBSCRIPTION_LIST_ID })
   }
 
   return (
@@ -53,11 +51,11 @@ function SubscribeToReleaseForm() {
         />
         <button
           type="submit"
-          disabled={status === QueryStatus.Loading}
+          disabled={status === 'loading'}
           className="mt-3 w-full px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:flex-shrink-0 sm:inline-flex sm:items-center sm:w-auto disabled:opacity-30 disabled:cursor-not-allowed"
         >
           Notify me
-          {status === QueryStatus.Loading && (
+          {status === 'loading' && (
             <Fragment>
               <span className="sr-only">loading...</span>
               <svg
@@ -110,10 +108,7 @@ function SubscribeToReleaseForm() {
           </Fragment>
         </ErrorAlert>
       )}
-      <SuccessAlert
-        isOpen={status === QueryStatus.Success}
-        onClose={() => reset()}
-      >
+      <SuccessAlert isOpen={status === 'success'} onClose={() => reset()}>
         <p className="text-sm font-medium text-green-800">
           An email has been sent to{' '}
           <span className="italic">
