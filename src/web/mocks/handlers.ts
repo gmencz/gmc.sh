@@ -33,6 +33,15 @@ export const handlers = [
   rest.get(`${API_ENDPOINT}/v1/me`, (_req, res, ctx) => {
     return res(ctx.status(200), ctx.json(fakeUser))
   }),
+  rest.post(
+    `${API_ENDPOINT}/v1/me/update-profile-picture`,
+    (_req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ ...fakeUser, profilePicture: '/test_image.jpg' }),
+      )
+    },
+  ),
   rest.get(`${API_ENDPOINT}/v1/urls`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
