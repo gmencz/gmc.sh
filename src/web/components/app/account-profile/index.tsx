@@ -1,5 +1,4 @@
 import { V1ApiTypes } from '@gmcsh/shared'
-import { getCurrentUserLinks } from 'api/get-current-user-links'
 import { format } from 'date-fns'
 import { useQuery } from 'react-query'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
@@ -18,7 +17,9 @@ function userHasPublicDetails(user: V1ApiTypes.MeResponse) {
 function AccountProfile() {
   const { data: me } = useQuery<V1ApiTypes.MeResponse>(meKey)
   const hasPublicDetails = userHasPublicDetails(me as V1ApiTypes.MeResponse)
-  const { data: links } = useQuery(currentUserLinksKey, getCurrentUserLinks)
+  const { data: links } = useQuery<V1ApiTypes.QueryUrlsResponse>(
+    currentUserLinksKey,
+  )
 
   return (
     <div className="xl:flex-shrink-0 xl:w-64 xl:border-r xl:border-gray-200 bg-white">
