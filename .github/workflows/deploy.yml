@@ -18,6 +18,6 @@ jobs:
           -e POSTGRES_DB='${{ secrets.DB_NAME }}' \
           -e POSTGRES_USER='${{ secrets.DB_USER }}' \
           -e POSTGRES_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-          -v `pwd`/flyway/sql_versions:/flyway/sql
+          -v `pwd`/flyway/sql_versions:/flyway/sql \
           -v `pwd`/flyway:/flyway/conf \
           flyway/flyway migrate
