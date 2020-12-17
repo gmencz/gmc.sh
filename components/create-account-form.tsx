@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { createAccount, CreateAccountInputs } from 'api/create-account'
+import { createAccount, CreateAccountInputs } from 'utils/api/create-account'
 import { useRouter } from 'next/router'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'

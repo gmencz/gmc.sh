@@ -1,4 +1,3 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import userEvent from '@testing-library/user-event'
 import SignInForm from '../sign-in-form'
 import {
@@ -9,7 +8,8 @@ import {
   waitForElementToBeRemoved,
 } from 'test/next-testing-utils'
 import { server, rest } from 'test/server'
-import { API_ENDPOINT, APP_ENDPOINT } from 'utils/constants'
+import { APP_ENDPOINT } from 'utils/constants'
+import { SafeUser } from '@types'
 
 function renderSignIn() {
   render(<SignInForm />)
@@ -37,7 +37,7 @@ describe('SignInForm', () => {
 
     server.use(
       rest.post(APP_ENDPOINT + `/api/auth/sign-in`, (_req, res, ctx) => {
-        const mockedUser: V1ApiTypes.MeResponse = {
+        const mockedUser: SafeUser = {
           id: '1',
           username: 'test',
           email: 'test@example.com',
@@ -49,6 +49,7 @@ describe('SignInForm', () => {
           twitterUsername: null,
           website: null,
           profilePicture: '',
+          updatedProfilePictureAt: new Date(),
         }
 
         return res(

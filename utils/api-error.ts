@@ -1,10 +1,10 @@
-import { V1ApiTypes } from '@gmcsh/shared'
+import { ErrorData } from '@types'
 import { CustomError } from 'ts-custom-error'
 
 export class ApiError extends CustomError {
   constructor(
     public statusCode: number,
-    public error: V1ApiTypes.ErrorResponse,
+    public error: ErrorData,
     message?: string,
   ) {
     super(message)

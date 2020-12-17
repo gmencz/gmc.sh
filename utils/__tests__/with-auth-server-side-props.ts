@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
 import { server, rest } from '../../test/server'
-import { API_ENDPOINT, APP_ENDPOINT } from '../constants'
+import { APP_ENDPOINT } from '../constants'
 import { withAuthServerSideProps } from '../with-auth-server-side-props'
 
 jest.mock('next-cookies', () => ({

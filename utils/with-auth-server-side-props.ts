@@ -2,7 +2,7 @@
 import { GetServerSidePropsContext } from 'next'
 import { getLoggedInUser } from './api/get-logged-in-user'
 import parseCookies from 'next-cookies'
-import { User } from '@prisma/client'
+import { SafeUser } from '@types'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (
   ...args: any
@@ -21,7 +21,7 @@ type WithAuthServerSidePropsOptions = {
 }
 
 export type AuthenticatedPageProps = {
-  user: User
+  user: SafeUser
 }
 
 type EmptyProps = {
@@ -29,13 +29,13 @@ type EmptyProps = {
 }
 
 type DefaultWithAuthServerSideProps = {
-  user: User
+  user: SafeUser
 }
 
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
-    user?: User,
+    user?: SafeUser,
   ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = {},
 ) {
@@ -45,7 +45,7 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     const cookies = parseCookies(ctx)
     const sessionCookie = cookies.__session
 
-    let loggedInUser: User | null = null
+    let loggedInUser: SafeUser | null = null
     try {
       if (sessionCookie) {
         loggedInUser = await getLoggedInUser(ctx.req.headers.cookie as string)
@@ -67,16 +67,16 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     if (getServerSidePropsFunc) {
       return {
         props: {
-          user: loggedInUser as User,
-          ...((await getServerSidePropsFunc(ctx, loggedInUser as User)).props ||
-            {}),
+          user: loggedInUser as SafeUser,
+          ...((await getServerSidePropsFunc(ctx, loggedInUser as SafeUser))
+            .props || {}),
         },
       }
     }
 
     return {
       props: {
-        user: loggedInUser as User,
+        user: loggedInUser as SafeUser,
       },
     }
   }

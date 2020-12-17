@@ -7,6 +7,7 @@ import {
 import Header from '../header'
 import userEvent from '@testing-library/user-event'
 import Home from '../../pages'
+import { SafeUser } from '@types'
 
 function openMenu() {
   const openMenuButton = screen.getByText(/open main menu/i)
@@ -41,7 +42,7 @@ describe('MobileMenu', () => {
   })
 
   test('closes menu when clicked/tapped outside', async () => {
-    const mockedUser = {
+    const mockedUser: SafeUser = {
       id: '1',
       username: 'test',
       email: 'test@example.com',
@@ -53,6 +54,7 @@ describe('MobileMenu', () => {
       twitterUsername: null,
       website: null,
       profilePicture: '',
+      updatedProfilePictureAt: new Date(),
     }
 
     render(<Home user={mockedUser} />)

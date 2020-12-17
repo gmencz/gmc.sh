@@ -1,3 +1,4 @@
+import { JoinMailingListData } from '@types'
 import { APP_ENDPOINT } from 'utils/constants'
 import { ApiError } from '../api-error'
 import { betterFetch } from '../better-fetch'
@@ -11,7 +12,7 @@ async function subscribeToRelease({
   listId,
   subscriberEmail,
 }: SubscribeToReleaseInputs) {
-  const { data, error, statusCode } = await betterFetch(
+  const { data, error, statusCode } = await betterFetch<JoinMailingListData>(
     APP_ENDPOINT + '/api/mailing/verify-release-subscription',
     {
       method: 'POST',
