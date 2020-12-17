@@ -18,6 +18,7 @@ export const config = {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const allowedFileExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.jfif']
+  const updatesRateLimit = process.env.NODE_ENV === 'production' ? 60 : 1
 
   const user = req.session.get('user') as Pick<User, 'id'>
   const dbUser = await db.user.findUnique({
@@ -26,11 +27,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (dbUser?.updatedProfilePictureAt) {
     const hasToWait =
-      differenceInMinutes(new Date(), dbUser.updatedProfilePictureAt) < 5
+      differenceInMinutes(new Date(), dbUser.updatedProfilePictureAt) <
+      updatesRateLimit
 
     if (hasToWait) {
       return res.status(409).send({
-        message: `You can only update your profile picture once every 5 minutes.`,
+        message: `You can only update your profile picture once every ${updatesRateLimit} minutes.`,
         info: {},
       })
     }

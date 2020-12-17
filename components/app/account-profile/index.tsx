@@ -1,10 +1,11 @@
+import { SafeUser, UrlsQuery } from '@types'
 import { format } from 'date-fns'
 import { useQuery, useQueryClient } from 'react-query'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { Detail, DetailDescription, DetailTerm } from './detail'
 import ProfilePicture from './picture'
 
-function userHasPublicDetails(user: any) {
+function userHasPublicDetails(user: SafeUser) {
   return (
     !!user.location ||
     !!user.publicEmail ||
@@ -15,13 +16,16 @@ function userHasPublicDetails(user: any) {
 
 function AccountProfile() {
   const queryClient = useQueryClient()
-  const { data: me } = useQuery<any>(meKey, () =>
-    queryClient.getQueryData(meKey),
+
+  const { data: me } = useQuery(meKey, () =>
+    queryClient.getQueryData<SafeUser>(meKey),
   )
-  const { data: links } = useQuery<any>(currentUserLinksKey, () =>
-    queryClient.getQueryData(currentUserLinksKey),
+
+  const { data: links } = useQuery(currentUserLinksKey, () =>
+    queryClient.getQueryData<UrlsQuery>(currentUserLinksKey),
   )
-  const hasPublicDetails = userHasPublicDetails(me)
+
+  const hasPublicDetails = userHasPublicDetails(me as SafeUser)
 
   return (
     <div className="xl:flex-shrink-0 xl:w-64 xl:border-r xl:border-gray-200 bg-white">

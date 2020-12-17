@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react'
+import { SafeUser } from '@types'
 import { useDialog } from 'hooks/use-dialog'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,8 +9,8 @@ import { meKey } from 'utils/react-query-keys'
 
 function NavbarProfileDropdown() {
   const queryClient = useQueryClient()
-  const { data: me } = useQuery<any>(meKey, () =>
-    queryClient.getQueryData(meKey),
+  const { data: me } = useQuery(meKey, () =>
+    queryClient.getQueryData<SafeUser>(meKey),
   )
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)

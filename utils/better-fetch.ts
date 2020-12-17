@@ -1,3 +1,5 @@
+import { ErrorData } from '@types'
+
 type BetterFetchResponse<TData> =
   | SuccessfulFetchResponse<TData>
   | FailedFetchResponse
@@ -11,7 +13,7 @@ type SuccessfulFetchResponse<TData> = {
 type FailedFetchResponse = {
   data: null
   statusCode: number
-  error: any
+  error: ErrorData
 }
 
 async function betterFetch<TData>(

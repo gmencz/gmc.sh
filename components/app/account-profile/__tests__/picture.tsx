@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event'
+import { SafeUser } from '@types'
 import { render, screen, waitFor } from 'test/next-testing-utils'
 import { betterFetch } from 'utils/better-fetch'
 import { APP_ENDPOINT } from 'utils/constants'
@@ -18,7 +19,7 @@ describe('ProfilePicture', () => {
   const testImageName = 'test.png'
 
   test('uploading an image opens a modal to crop it', async () => {
-    const data = await betterFetch<any>(APP_ENDPOINT + `/api/me`)
+    const data = await betterFetch<SafeUser>(APP_ENDPOINT + `/api/me`)
 
     render(
       <ProfilePicture profilePictureUrl={data.data?.profilePicture || ''} />,

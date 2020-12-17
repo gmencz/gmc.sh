@@ -1,3 +1,4 @@
+import { ErrorData, JoinMailingListData } from '@types'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
 import { APP_ENDPOINT } from 'utils/constants'
@@ -6,8 +7,8 @@ import Header from '../../components/header'
 import { betterFetch } from '../../utils/better-fetch'
 
 type GetServerSidePropsResult = {
-  data: any
-  error: any
+  data: JoinMailingListData | null
+  error: ErrorData | null
 }
 
 export const getServerSideProps: GetServerSideProps<GetServerSidePropsResult> = async ctx => {
@@ -22,7 +23,7 @@ export const getServerSideProps: GetServerSideProps<GetServerSidePropsResult> = 
     }
   }
 
-  const { data, error } = await betterFetch(
+  const { data, error } = await betterFetch<JoinMailingListData>(
     `${APP_ENDPOINT}/api/mailing/join-list`,
     {
       method: 'POST',
