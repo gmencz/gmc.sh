@@ -18,11 +18,8 @@ jobs:
         with:
           node-version: '14'
         
-      - name: Install root deps
+      - name: Install deps
         uses: bahmutov/npm-install@v1
-
-      - name: Install packages deps
-        run: npm run clean-install
 
       - name: Build the stack
         run: |
@@ -39,7 +36,7 @@ jobs:
         run: npm run test:ci
       
       - name: Test E2E
-        run: npm run test:e2e
+        run: npm run test:e2e:run
 
         env:
           CI: true
