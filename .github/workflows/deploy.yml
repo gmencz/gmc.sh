@@ -2,7 +2,7 @@ name: Deploy
 on:
   push:
     branches:
-      - no-monorepo-vercel
+      - main
 jobs:
   migrate-prod-db:
     name: Migrate production database
