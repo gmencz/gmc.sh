@@ -4,11 +4,11 @@ services:
   flyway:
     image: flyway/flyway:7.2
     environment:
-      - POSTGRES_HOST=${{ secrets.DB_HOST }}
-      - POSTGRES_PORT=${{ secrets.DB_PORT }}
-      - POSTGRES_DB=${{ secrets.DB_NAME }}
-      - POSTGRES_USER=${{ secrets.DB_USER }}
-      - POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }}
+      - POSTGRES_HOST='${{ secrets.DB_HOST }}'
+      - POSTGRES_PORT='${{ secrets.DB_PORT }}'
+      - POSTGRES_DB='${{ secrets.DB_NAME }}'
+      - POSTGRES_USER='${{ secrets.DB_USER }}'
+      - POSTGRES_PASSWORD='${{ secrets.DB_PASSWORD }}'
     command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
     volumes:
       - ./flyway/sql_versions:/flyway/sql
