@@ -7,7 +7,7 @@ import { seoDefaults } from 'utils/seo-defaults'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { dehydrate } from 'react-query/hydration'
 import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
-import { getCurrentUserLinks } from 'api/get-current-user-links'
+import { getCurrentUserLinks } from 'utils/api/get-current-user-links'
 
 export const getServerSideProps = withAuthServerSideProps(
   async (ctx, user) => {

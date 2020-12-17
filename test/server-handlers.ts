@@ -1,10 +1,9 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { rest } from 'msw'
-import { API_ENDPOINT } from '../utils/constants'
+import { APP_ENDPOINT } from '../utils/constants'
 
 export const handlers = [
-  rest.get(`${API_ENDPOINT}/v1/me`, (_req, res, ctx) => {
-    const mockedUser: V1ApiTypes.MeResponse = {
+  rest.get(APP_ENDPOINT + '/api/me', (_req, res, ctx) => {
+    const mockedUser = {
       id: '1',
       username: 'test',
       email: 'test@example.com',

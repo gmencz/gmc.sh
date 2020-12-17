@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GetServerSidePropsContext } from 'next'
-import { V1ApiTypes } from '@gmcsh/shared'
 import { getLoggedInUser } from './api/get-logged-in-user'
 import parseCookies from 'next-cookies'
+import { User } from '@prisma/client'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (
   ...args: any
@@ -21,7 +21,7 @@ type WithAuthServerSidePropsOptions = {
 }
 
 export type AuthenticatedPageProps = {
-  user: V1ApiTypes.MeResponse
+  user: User
 }
 
 type EmptyProps = {
@@ -29,13 +29,13 @@ type EmptyProps = {
 }
 
 type DefaultWithAuthServerSideProps = {
-  user: V1ApiTypes.MeResponse
+  user: User
 }
 
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
-    user?: V1ApiTypes.MeResponse,
+    user?: User,
   ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = {},
 ) {
@@ -45,12 +45,12 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     const cookies = parseCookies(ctx)
     const sessionCookie = cookies.__session
 
-    let loggedInUser: V1ApiTypes.MeResponse | null = null
+    let loggedInUser: User | null = null
     try {
       if (sessionCookie) {
         loggedInUser = await getLoggedInUser(ctx.req.headers.cookie as string)
       }
-    } catch {
+    } catch (err) {
       loggedInUser = null
     }
 
@@ -67,20 +67,16 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     if (getServerSidePropsFunc) {
       return {
         props: {
-          user: loggedInUser as V1ApiTypes.MeResponse,
-          ...((
-            await getServerSidePropsFunc(
-              ctx,
-              loggedInUser as V1ApiTypes.MeResponse,
-            )
-          ).props || {}),
+          user: loggedInUser as User,
+          ...((await getServerSidePropsFunc(ctx, loggedInUser as User)).props ||
+            {}),
         },
       }
     }
 
     return {
       props: {
-        user: loggedInUser as V1ApiTypes.MeResponse,
+        user: loggedInUser as User,
       },
     }
   }

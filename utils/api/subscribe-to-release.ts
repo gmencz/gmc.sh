@@ -1,7 +1,6 @@
-import { V1ApiTypes } from '@gmcsh/shared'
+import { APP_ENDPOINT } from 'utils/constants'
 import { ApiError } from '../api-error'
 import { betterFetch } from '../better-fetch'
-import { API_ENDPOINT } from '../constants'
 
 export type SubscribeToReleaseInputs = {
   listId: number
@@ -12,12 +11,8 @@ async function subscribeToRelease({
   listId,
   subscriberEmail,
 }: SubscribeToReleaseInputs) {
-  const {
-    data,
-    error,
-    statusCode,
-  } = await betterFetch<V1ApiTypes.JoinMailingListResponse>(
-    `${API_ENDPOINT}/v1/mailing/verify-release-subscription`,
+  const { data, error, statusCode } = await betterFetch(
+    APP_ENDPOINT + '/api/mailing/verify-release-subscription',
     {
       method: 'POST',
       headers: {

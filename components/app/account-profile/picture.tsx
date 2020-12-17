@@ -1,4 +1,3 @@
-import { updateProfilePicture } from 'api/update-profile-picture'
 import ErrorAlert from 'components/error-alert'
 import { ChangeEvent, FormEvent, Fragment, useRef, useState } from 'react'
 import { useMutation } from 'react-query'
@@ -13,6 +12,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import { readFile } from 'utils/read-file'
 import { getCroppedImg } from 'utils/get-cropped-img'
 import SuccessAlert from 'components/success-alert'
+import { updateProfilePicture } from 'utils/api/update-profile-picture'
 
 type ProfilePictureProps = {
   profilePictureUrl: string
@@ -78,8 +78,6 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
   const setNewProfilePicture = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    console.log(image)
-
     if (!image.croppedSrc || !image.file) {
       return
     }
@@ -99,8 +97,6 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
   const cropImage = async (crop: Crop) => {
     if (imageRef.current && crop.width && crop.height) {
       const croppedImageUrl = await getCroppedImg(imageRef.current, crop)
-      console.log(croppedImageUrl)
-
       setImage(data => ({ ...data, croppedSrc: croppedImageUrl as string }))
     }
   }

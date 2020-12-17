@@ -1,5 +1,3 @@
-import { V1ApiTypes } from '@gmcsh/shared'
-
 type BetterFetchResponse<TData> =
   | SuccessfulFetchResponse<TData>
   | FailedFetchResponse
@@ -13,7 +11,7 @@ type SuccessfulFetchResponse<TData> = {
 type FailedFetchResponse = {
   data: null
   statusCode: number
-  error: V1ApiTypes.ErrorResponse
+  error: any
 }
 
 async function betterFetch<TData>(
@@ -26,7 +24,7 @@ async function betterFetch<TData>(
   if (response.status >= 400 && response.status < 600) {
     return {
       data: null,
-      error: data as V1ApiTypes.ErrorResponse,
+      error: data,
       statusCode: response.status,
     }
   }

@@ -1,7 +1,6 @@
 import { rest } from 'msw'
 import faker from 'faker'
-import { API_ENDPOINT } from 'utils/constants'
-import { V1ApiTypes } from '@gmcsh/shared'
+import { APP_ENDPOINT } from 'utils/constants'
 
 const fakeUser = {
   id: faker.random.uuid(),
@@ -19,8 +18,8 @@ const fakeUser = {
 }
 
 export const handlers = [
-  rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
-    const data: V1ApiTypes.LoginResponse = {
+  rest.post(APP_ENDPOINT + `/api/auth/sign-in`, (_req, res, ctx) => {
+    const data = {
       user: { ...fakeUser },
     }
 
@@ -30,11 +29,11 @@ export const handlers = [
       ctx.json(data),
     )
   }),
-  rest.get(`${API_ENDPOINT}/v1/me`, (_req, res, ctx) => {
+  rest.get(APP_ENDPOINT + `/api/me`, (_req, res, ctx) => {
     return res(ctx.status(200), ctx.json(fakeUser))
   }),
   rest.post(
-    `${API_ENDPOINT}/v1/me/update-profile-picture`,
+    APP_ENDPOINT + `/api/me/update-profile-picture`,
     (_req, res, ctx) => {
       return res(
         ctx.status(200),
@@ -42,7 +41,7 @@ export const handlers = [
       )
     },
   ),
-  rest.get(`${API_ENDPOINT}/v1/urls`, (_req, res, ctx) => {
+  rest.get(APP_ENDPOINT + `/api/urls`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

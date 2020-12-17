@@ -1,13 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
-import { QueryStatus, useMutation } from 'react-query'
+import { useMutation } from 'react-query'
 import * as yup from 'yup'
 import { ApiError } from 'utils/api-error'
 import {
   subscribeToRelease,
   SubscribeToReleaseInputs,
-} from 'api/subscribe-to-release'
+} from 'utils/api/subscribe-to-release'
 import ErrorAlert from './error-alert'
 import SuccessAlert from './success-alert'
 

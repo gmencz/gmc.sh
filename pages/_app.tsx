@@ -1,6 +1,5 @@
 import { AppProps } from 'next/app'
 import { Fragment } from 'react'
-import { ReactQueryDevtools } from 'react-query-devtools'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
@@ -18,7 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Hydrate state={pageProps.dehydratedState}>
           <Component {...pageProps} />
         </Hydrate>
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </QueryClientProvider>
     </Fragment>
   )

@@ -1,11 +1,10 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { ApiError } from 'utils/api-error'
 import { betterFetch } from 'utils/better-fetch'
-import { API_ENDPOINT } from 'utils/constants'
+import { APP_ENDPOINT } from 'utils/constants'
 
 async function updateProfilePicture(formData: FormData) {
-  const { data, error, statusCode } = await betterFetch<V1ApiTypes.MeResponse>(
-    `${API_ENDPOINT}/v1/me/update-profile-picture`,
+  const { data, error, statusCode } = await betterFetch(
+    APP_ENDPOINT + '/api/me/update-profile-picture',
     {
       method: 'POST',
       body: formData,

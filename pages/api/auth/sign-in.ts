@@ -25,15 +25,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...safeUser } = user
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   req.session.set('user', {
-    user: safeUser,
-    createdAt: new Date().toISOString(),
+    ...safeUser,
   })
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   await req.session.save()
 
   res.json({
@@ -42,5 +37,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default withIronSession(handler, {
-  password: '',
+  password: process.env.SESSION_PASSWORD as string,
+  cookieOptions: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'strict',
+  },
+  cookieName: '__session',
 })

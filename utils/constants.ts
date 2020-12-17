@@ -1,6 +1,4 @@
-const API_ENDPOINT =
+export const APP_ENDPOINT =
   process.env.NODE_ENV === 'production'
-    ? 'https://api.gmc.sh'
-    : 'http://localhost:4500'
-
-export { API_ENDPOINT }
+    ? 'https://app.gmc.sh'
+    : 'http://localhost:3000'

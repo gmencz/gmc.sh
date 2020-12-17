@@ -1,14 +1,13 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import Head from 'next/head'
+import { APP_ENDPOINT } from 'utils/constants'
 import { seoDefaults } from 'utils/seo-defaults'
 import Header from '../../components/header'
 import { betterFetch } from '../../utils/better-fetch'
-import { API_ENDPOINT } from '../../utils/constants'
 
 type GetServerSidePropsResult = {
-  data: V1ApiTypes.JoinMailingListResponse | null
-  error: V1ApiTypes.ErrorResponse | null
+  data: any
+  error: any
 }
 
 export const getServerSideProps: GetServerSideProps<GetServerSidePropsResult> = async ctx => {
@@ -23,8 +22,8 @@ export const getServerSideProps: GetServerSideProps<GetServerSidePropsResult> = 
     }
   }
 
-  const { data, error } = await betterFetch<V1ApiTypes.JoinMailingListResponse>(
-    `${API_ENDPOINT}/v1/mailing/join-list`,
+  const { data, error } = await betterFetch(
+    `${APP_ENDPOINT}/api/mailing/join-list`,
     {
       method: 'POST',
       headers: {

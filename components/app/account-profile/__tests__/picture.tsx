@@ -1,8 +1,7 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import userEvent from '@testing-library/user-event'
 import { render, screen, waitFor } from 'test/next-testing-utils'
 import { betterFetch } from 'utils/better-fetch'
-import { API_ENDPOINT } from 'utils/constants'
+import { APP_ENDPOINT } from 'utils/constants'
 import ProfilePicture from '../picture'
 
 function uploadNewProfilePicture(testImageName: string) {
@@ -19,9 +18,7 @@ describe('ProfilePicture', () => {
   const testImageName = 'test.png'
 
   test('uploading an image opens a modal to crop it', async () => {
-    const data = await betterFetch<V1ApiTypes.MeResponse>(
-      `${API_ENDPOINT}/v1/me`,
-    )
+    const data = await betterFetch<any>(APP_ENDPOINT + `/api/me`)
 
     render(
       <ProfilePicture profilePictureUrl={data.data?.profilePicture || ''} />,

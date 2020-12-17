@@ -1,22 +1,20 @@
-import { V1ApiTypes } from '@gmcsh/shared'
+import { APP_ENDPOINT } from 'utils/constants'
 import { ApiError } from '../api-error'
-import { API_ENDPOINT } from '../constants'
 
-async function getLoggedInUser(
-  cookies: string,
-): Promise<V1ApiTypes.MeResponse> {
-  const response = await fetch(`${API_ENDPOINT}/v1/me`, {
+async function getLoggedInUser(cookies: string) {
+  const response = await fetch(APP_ENDPOINT + '/api/me', {
     headers: {
       cookie: cookies,
     },
   })
 
   const data = await response.json()
+
   if (response.status >= 400 && response.status < 600) {
-    throw new ApiError(response.status, data as V1ApiTypes.ErrorResponse)
+    throw new ApiError(response.status, data)
   }
 
-  return data as V1ApiTypes.MeResponse
+  return data
 }
 
 export { getLoggedInUser }

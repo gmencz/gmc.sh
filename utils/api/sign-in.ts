@@ -1,6 +1,5 @@
-import { V1ApiTypes } from '@gmcsh/shared'
+import { APP_ENDPOINT } from 'utils/constants'
 import { ApiError } from '../api-error'
-import { API_ENDPOINT } from '../constants'
 
 export type SignInInputs = {
   username: string
@@ -8,7 +7,7 @@ export type SignInInputs = {
 }
 
 async function signIn({ username, password }: SignInInputs) {
-  const response = await fetch(`${API_ENDPOINT}/v1/auth/sign-in`, {
+  const response = await fetch(APP_ENDPOINT + '/api/auth/sign-in', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -23,10 +22,10 @@ async function signIn({ username, password }: SignInInputs) {
   const data = await response.json()
 
   if (response.status >= 400 && response.status < 600) {
-    throw new ApiError(response.status, data as V1ApiTypes.ErrorResponse)
+    throw new ApiError(response.status, data)
   }
 
-  return data as V1ApiTypes.LoginResponse
+  return data
 }
 
 export { signIn }

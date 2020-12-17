@@ -1,7 +1,6 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { ApiError } from 'utils/api-error'
 import { betterFetch } from 'utils/better-fetch'
-import { API_ENDPOINT } from 'utils/constants'
+import { APP_ENDPOINT } from 'utils/constants'
 
 export type CreateAccountInputs = {
   email: string
@@ -14,12 +13,8 @@ async function createAccount({
   username,
   password,
 }: CreateAccountInputs) {
-  const {
-    data,
-    error,
-    statusCode,
-  } = await betterFetch<V1ApiTypes.RegisterResponse>(
-    `${API_ENDPOINT}/v1/auth/register`,
+  const { data, error, statusCode } = await betterFetch(
+    APP_ENDPOINT + '/api/auth/register',
     {
       method: 'POST',
       headers: {

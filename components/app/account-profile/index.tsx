@@ -1,11 +1,10 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { format } from 'date-fns'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { Detail, DetailDescription, DetailTerm } from './detail'
 import ProfilePicture from './picture'
 
-function userHasPublicDetails(user: V1ApiTypes.MeResponse) {
+function userHasPublicDetails(user: any) {
   return (
     !!user.location ||
     !!user.publicEmail ||
@@ -15,11 +14,14 @@ function userHasPublicDetails(user: V1ApiTypes.MeResponse) {
 }
 
 function AccountProfile() {
-  const { data: me } = useQuery<V1ApiTypes.MeResponse>(meKey)
-  const hasPublicDetails = userHasPublicDetails(me as V1ApiTypes.MeResponse)
-  const { data: links } = useQuery<V1ApiTypes.QueryUrlsResponse>(
-    currentUserLinksKey,
+  const queryClient = useQueryClient()
+  const { data: me } = useQuery<any>(meKey, () =>
+    queryClient.getQueryData(meKey),
   )
+  const { data: links } = useQuery<any>(currentUserLinksKey, () =>
+    queryClient.getQueryData(currentUserLinksKey),
+  )
+  const hasPublicDetails = userHasPublicDetails(me)
 
   return (
     <div className="xl:flex-shrink-0 xl:w-64 xl:border-r xl:border-gray-200 bg-white">

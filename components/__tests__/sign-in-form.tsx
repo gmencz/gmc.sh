@@ -9,7 +9,7 @@ import {
   waitForElementToBeRemoved,
 } from 'test/next-testing-utils'
 import { server, rest } from 'test/server'
-import { API_ENDPOINT } from 'utils/constants'
+import { API_ENDPOINT, APP_ENDPOINT } from 'utils/constants'
 
 function renderSignIn() {
   render(<SignInForm />)
@@ -36,7 +36,7 @@ describe('SignInForm', () => {
     const { usernameInput, passwordInput, signInButton } = renderSignIn()
 
     server.use(
-      rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
+      rest.post(APP_ENDPOINT + `/api/auth/sign-in`, (_req, res, ctx) => {
         const mockedUser: V1ApiTypes.MeResponse = {
           id: '1',
           username: 'test',
@@ -91,7 +91,7 @@ describe('SignInForm', () => {
       'Wrong username or password, please check your spelling.'
 
     server.use(
-      rest.post(`${API_ENDPOINT}/v1/auth/sign-in`, (_req, res, ctx) => {
+      rest.post(APP_ENDPOINT + `/api/auth/sign-in`, (_req, res, ctx) => {
         return res(
           ctx.status(401),
           ctx.json({

@@ -8,7 +8,7 @@ import {
   within,
 } from 'test/next-testing-utils'
 import { server, rest } from 'test/server'
-import { API_ENDPOINT } from 'utils/constants'
+import { APP_ENDPOINT } from 'utils/constants'
 
 describe('SubscribeToReleaseForm', () => {
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe('SubscribeToReleaseForm', () => {
     const mockEmail = 'test@example.com'
     server.use(
       rest.post(
-        `${API_ENDPOINT}/v1/mailing/verify-release-subscription`,
+        APP_ENDPOINT + `/api/mailing/verify-release-subscription`,
         (_req, res, ctx) => {
           return res(
             ctx.json({
@@ -57,7 +57,7 @@ describe('SubscribeToReleaseForm', () => {
 
     server.use(
       rest.post(
-        `${API_ENDPOINT}/v1/mailing/verify-release-subscription`,
+        APP_ENDPOINT + `/api/mailing/verify-release-subscription`,
         (_req, res, ctx) => {
           return res(
             ctx.status(400),

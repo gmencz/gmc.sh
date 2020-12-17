@@ -1,14 +1,16 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import { Transition } from '@headlessui/react'
 import { useDialog } from 'hooks/use-dialog'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { meKey } from 'utils/react-query-keys'
 
 function NavbarProfileDropdown() {
-  const { data: me } = useQuery<V1ApiTypes.MeResponse>(meKey)
+  const queryClient = useQueryClient()
+  const { data: me } = useQuery<any>(meKey, () =>
+    queryClient.getQueryData(meKey),
+  )
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const { ref: dropdownRef } = useDialog({

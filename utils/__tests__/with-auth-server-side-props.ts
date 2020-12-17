@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
 import { server, rest } from '../../test/server'
-import { API_ENDPOINT } from '../constants'
+import { API_ENDPOINT, APP_ENDPOINT } from '../constants'
 import { withAuthServerSideProps } from '../with-auth-server-side-props'
 
 jest.mock('next-cookies', () => ({
@@ -22,7 +22,7 @@ test('appends props returned by custom getServerSideProps function to final getS
   }
 
   server.use(
-    rest.get(`${API_ENDPOINT}/v1/me`, (_req, res, ctx) => {
+    rest.get(APP_ENDPOINT + `/api/me`, (_req, res, ctx) => {
       return res(
         ctx.status(200),
         ctx.json({

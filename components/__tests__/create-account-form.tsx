@@ -1,4 +1,3 @@
-import { V1ApiTypes } from '@gmcsh/shared'
 import userEvent from '@testing-library/user-event'
 import CreateAccountForm from 'components/create-account-form'
 import {
@@ -9,7 +8,7 @@ import {
   waitForElementToBeRemoved,
 } from 'test/next-testing-utils'
 import { server, rest } from 'test/server'
-import { API_ENDPOINT } from 'utils/constants'
+import { APP_ENDPOINT } from 'utils/constants'
 
 describe('CreateAccountForm', () => {
   beforeEach(() => {
@@ -24,8 +23,8 @@ describe('CreateAccountForm', () => {
     }
 
     server.use(
-      rest.post(`${API_ENDPOINT}/v1/auth/register`, (_req, res, ctx) => {
-        const user: V1ApiTypes.RegisterResponse = {
+      rest.post(APP_ENDPOINT + `/api/auth/register`, (_req, res, ctx) => {
+        const user = {
           user: {
             id: 'test-1',
             username: fakeUser.username,
@@ -120,7 +119,7 @@ describe('CreateAccountForm', () => {
     }
 
     server.use(
-      rest.post(`${API_ENDPOINT}/v1/auth/register`, (_req, res, ctx) => {
+      rest.post(APP_ENDPOINT + `/api/auth/register`, (_req, res, ctx) => {
         return res(
           ctx.status(409),
           ctx.json({
