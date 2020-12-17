@@ -4,9 +4,9 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
-// if (process.env.NODE_ENV === 'development') {
-//   require('../mocks')
-// }
+if (process.env.NODE_ENV === 'development') {
+  require('../mocks')
+}
 
 export const appQueryClient = new QueryClient()
 
