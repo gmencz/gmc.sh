@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "esModuleInterop": true,
+    "lib": ["es5", "dom"],
+    "types": ["cypress"],
+    "baseUrl": ".",
+    "paths": {
+      "components/*": ["../components/*"],
+      "hooks/*": ["../hooks/*"],
+      "api/*": ["../utils/api/*"],
+      "utils/*": ["../utils/*"],
+      "test/*": ["../test/*"],
+      "pages/*": ["../pages/*"]
+    }
+  },
+  "include": ["**/*.ts"]
+}
