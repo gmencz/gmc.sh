@@ -43,7 +43,6 @@
     "react-image-crop": "^8.6.6",
     "react-query": "^3.3.0",
     "react-query-devtools": "^2.6.3",
-    "sib-api-v3-typescript": "^2.0.2",
     "tailwindcss": "^2.0.2",
     "ts-custom-error": "^3.2.0",
     "yup": "^0.32.8"
