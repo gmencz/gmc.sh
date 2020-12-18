@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as jwt from 'jsonwebtoken'
-import { contactsClient } from 'utils/sendinblue-api'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.body
@@ -48,35 +47,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     })
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { listId, subscriberEmail } = decodedToken
 
-  try {
-    await contactsClient.createContact({
-      email: subscriberEmail,
-    })
-  } catch (error) {
-    if (error.response.body.code !== 'duplicate_parameter') {
-      return res.status(error.statusCode || 400).send({
-        message: error.response.body.message,
-        info: {
-          ...error.response.body,
-        },
-      })
-    }
-  }
-
-  try {
-    await contactsClient.addContactToList(listId, {
-      emails: [subscriberEmail],
-    })
-  } catch (error) {
-    return res.status(error.statusCode || 400).send({
-      message: error.response.body.message,
-      info: {
-        ...error.response.body,
-      },
-    })
-  }
+  // Create contact and add it to mailing list
 
   return res.json({
     subscriberEmail,
