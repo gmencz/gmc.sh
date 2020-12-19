@@ -1,12 +1,35 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as jwt from 'jsonwebtoken'
+import { contactsClient, transactionalEmailsClient } from 'utils/sendinblue-api'
+import { APP_ENDPOINT } from 'utils/constants'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { listId, subscriberEmail } = req.body
 
-  // Check if user is subscribed already to the list
+  try {
+    const { body: contact } = await contactsClient.getContactInfo(
+      subscriberEmail,
+    )
+    if (contact.listIds.includes(listId)) {
+      return res.status(400).send({
+        message: `You're already subscribed to the app release mailing list and will be notified when gmc.sh is out!`,
+        info: {
+          listId,
+          subscriberEmail,
+        },
+      })
+    }
+  } catch (error) {
+    if (error.response.statusCode !== 404) {
+      return res.status(error.response.statusCode || 400).send({
+        message: error.response.body.message,
+        info: {
+          ...error.response.body,
+        },
+      })
+    }
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const token = await new Promise((res, rej) => {
     jwt.sign(
       { listId, subscriberEmail },
@@ -19,25 +42,34 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     )
   })
 
-  // const confirmationLink = `${APP_ENDPOINT}/verify/release-subscription?token=${token}`
+  const confirmationLink = `${APP_ENDPOINT}/verify/release-subscription?token=${token}`
 
-  // Send email with sendgrid maybe
-
-  // await transactionalEmailsClient.sendTransacEmail({
-  //   to: [{ email: subscriberEmail }],
-  //   sender: { email: 'info@gmc.sh', name: 'Gmc.sh' },
-  //   subject: '[Gmc.sh]: Please verify your subscription email',
-  //   htmlContent: `<html>
-  //     <body>
-  //       <p>Hi,</p>
-  //       <p>To complete your sign up to get notified when gmc.sh is out, please verify your email:<p>
-  //       <a href=${confirmationLink}>${confirmationLink}</a>
-  //       <br>
-  //       <p>The link expires in 24 hours.</p>
-  //       <p>Thank you, Gmc.sh Team
-  //     </body>
-  //   </html>`,
-  // })
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    await transactionalEmailsClient.sendTransacEmail({
+      to: [{ email: subscriberEmail, name: 'Gmc.sh' }],
+      sender: { email: 'info@gmc.sh', name: 'Gmc.sh' },
+      subject: '[Gmc.sh]: Please verify your subscription email',
+      htmlContent: `<html>
+        <body>
+          <p>Hi,</p>
+          <p>To complete your sign up to get notified when gmc.sh is out, please verify your email:<p>
+          <a href=${confirmationLink}>${confirmationLink}</a>
+          <br>
+          <p>The link expires in 24 hours.</p>
+          <p>Thank you, Gmc.sh Team
+        </body>
+      </html>`,
+    })
+  } catch (error) {
+    return res.status(error.response.statusCode || 400).send({
+      message: error.response.body.message,
+      info: {
+        ...error.response.body,
+      },
+    })
+  }
 
   return res.send({
     subscriberEmail,
