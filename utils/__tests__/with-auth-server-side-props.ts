@@ -1,36 +1,16 @@
-import { GetServerSidePropsContext } from 'next'
-import { server, rest } from '../../test/server'
-import { APP_ENDPOINT } from '../constants'
-import { withAuthServerSideProps } from '../with-auth-server-side-props'
-
-jest.mock('next-cookies', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({
-    __session: 'mockedSession',
-  })),
-}))
-
-afterAll(() => {
-  jest.resetAllMocks()
-})
+import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
+import createTestIronSession from 'test/create-test-iron-session'
 
 test('appends props returned by custom getServerSideProps function to final getServerSideProps', async () => {
-  const mockedUser = {
-    id: '1',
-    username: 'test',
-    email: 'test@example.com',
-  }
+  const { session, req } = await createTestIronSession()
 
-  server.use(
-    rest.get(APP_ENDPOINT + `/api/me`, (_req, res, ctx) => {
-      return res(
-        ctx.status(200),
-        ctx.json({
-          ...mockedUser,
-        }),
-      )
-    }),
-  )
+  session.set('user', {
+    id: '1',
+    email: 'test@example.com',
+    username: 'test',
+  })
+
+  await session.save()
 
   const result = await withAuthServerSideProps(async () => {
     return {
@@ -39,8 +19,8 @@ test('appends props returned by custom getServerSideProps function to final getS
       },
     }
   })({
-    req: { headers: { cookie: '__session=123' } },
-  } as GetServerSidePropsContext)
+    req,
+  })
 
   expect(result.props).toMatchInlineSnapshot(`
     Object {
