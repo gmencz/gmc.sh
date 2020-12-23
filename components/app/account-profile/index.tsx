@@ -1,6 +1,7 @@
-import { SafeUser, UrlsQuery } from '@types'
+import { SafeUser } from '@types'
 import { format } from 'date-fns'
 import { useQuery, useQueryClient } from 'react-query'
+import { getCurrentUserLinks } from 'utils/api/get-current-user-links'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
 import { Detail, DetailDescription, DetailTerm } from './detail'
 import ProfilePicture from './picture'
@@ -21,9 +22,7 @@ function AccountProfile() {
     queryClient.getQueryData<SafeUser>(meKey),
   )
 
-  const { data: links } = useQuery(currentUserLinksKey, () =>
-    queryClient.getQueryData<UrlsQuery>(currentUserLinksKey),
-  )
+  const { data: links } = useQuery(currentUserLinksKey, getCurrentUserLinks)
 
   const hasPublicDetails = userHasPublicDetails(me as SafeUser)
 

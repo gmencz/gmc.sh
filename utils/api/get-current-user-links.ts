@@ -1,14 +1,12 @@
+import { UrlsQuery } from '@types'
 import { ApiError } from 'utils/api-error'
 import { betterFetch } from 'utils/better-fetch'
 import { APP_ENDPOINT } from 'utils/constants'
 
-async function getCurrentUserLinks(forwardedCookieHeader: string) {
+async function getCurrentUserLinks() {
   const { data, error, statusCode } = await betterFetch(
     APP_ENDPOINT + '/api/urls',
     {
-      headers: {
-        cookie: forwardedCookieHeader,
-      },
       credentials: 'include',
     },
   )
@@ -17,7 +15,7 @@ async function getCurrentUserLinks(forwardedCookieHeader: string) {
     throw new ApiError(statusCode, error)
   }
 
-  return data
+  return data as UrlsQuery
 }
 
 export { getCurrentUserLinks }
