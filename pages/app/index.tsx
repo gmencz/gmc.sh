@@ -4,18 +4,13 @@ import Head from 'next/head'
 import { Fragment } from 'react'
 import { QueryClient } from 'react-query'
 import { seoDefaults } from 'utils/seo-defaults'
-import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
+import { meKey } from 'utils/react-query-keys'
 import { dehydrate } from 'react-query/hydration'
 import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
-import { getCurrentUserLinks } from 'utils/api/get-current-user-links'
 
 export const getServerSideProps = withAuthServerSideProps(
-  async (ctx, user) => {
+  async (_ctx, user) => {
     const queryCache = new QueryClient()
-
-    await queryCache.prefetchQuery(currentUserLinksKey, () =>
-      getCurrentUserLinks(ctx.req.headers.cookie as string),
-    )
 
     queryCache.setQueryData(meKey, user)
 

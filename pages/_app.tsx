@@ -4,7 +4,9 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 import 'tailwindcss/tailwind.css'
 
-if (process.env.NODE_ENV === 'development') {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+if (typeof window !== 'undefined' && window.Cypress) {
   require('../mocks')
 }
 
