@@ -1,13 +1,16 @@
-import { User } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 import { IncomingForm, Fields, Files } from 'formidable'
 import { differenceInMinutes } from 'date-fns'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { extname } from 'path'
 import { promises as fs } from 'fs'
-import { db } from 'utils/db'
 import { withIronSession } from 'next-iron-session'
 import { computerVisionClient } from 'utils/computer-vision-client'
 import { profilePicturesClient } from 'utils/profile-pictures-client'
+
+const db = new PrismaClient({
+  log: ['error', 'info', 'query', 'warn'],
+})
 
 // Disable default body parser
 export const config = {
