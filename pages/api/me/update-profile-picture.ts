@@ -7,6 +7,7 @@ import { promises as fs } from 'fs'
 import { withIronSession } from 'next-iron-session'
 import { computerVisionClient } from 'utils/computer-vision-client'
 import { profilePicturesClient } from 'utils/profile-pictures-client'
+import { catchHandler } from 'utils/catch-handler'
 
 const db = new PrismaClient({
   log: ['error', 'info', 'query', 'warn'],
@@ -114,7 +115,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   })
 }
 
-export default withIronSession(handler, {
+export default withIronSession(catchHandler(handler), {
   password: process.env.SESSION_PASSWORD as string,
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
