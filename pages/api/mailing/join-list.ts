@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as jwt from 'jsonwebtoken'
 import { contactsClient } from 'utils/sendinblue-api'
+import { catchHandler } from 'utils/catch-handler'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { token } = req.body
 
   let decodedToken: { listId: number; subscriberEmail: string }
@@ -84,3 +85,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     subscriberEmail,
   })
 }
+
+export default catchHandler(handler)

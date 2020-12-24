@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import * as jwt from 'jsonwebtoken'
 import { contactsClient, transactionalEmailsClient } from 'utils/sendinblue-api'
 import { APP_ENDPOINT } from 'utils/constants'
+import { catchHandler } from 'utils/catch-handler'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { listId, subscriberEmail } = req.body
 
   try {
@@ -75,3 +76,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     subscriberEmail,
   })
 }
+
+export default catchHandler(handler)

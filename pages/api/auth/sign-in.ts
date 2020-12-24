@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { verify } from 'argon2'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withIronSession } from 'next-iron-session'
+import { catchHandler } from 'utils/catch-handler'
 
 const db = new PrismaClient({
   log: ['error', 'info', 'query', 'warn'],
@@ -40,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   })
 }
 
-export default withIronSession(handler, {
+export default withIronSession(catchHandler(handler), {
   password: process.env.SESSION_PASSWORD as string,
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
