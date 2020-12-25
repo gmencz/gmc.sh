@@ -1,18 +1,11 @@
-import {
-  PrismaClient,
-  PrismaClientKnownRequestError,
-  User,
-} from '@prisma/client'
+import { PrismaClientKnownRequestError, User } from '@prisma/client'
 import { hash } from 'argon2'
 import { nanoid as uniqueId } from 'nanoid'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withIronSession } from 'next-iron-session'
 import { catchHandler } from 'utils/catch-handler'
+import db from 'utils/db'
 import { ironSessionCookieOptions } from 'utils/iron-session-cookie'
-
-const db = new PrismaClient({
-  log: ['error', 'info', 'query', 'warn'],
-})
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, username, password } = req.body

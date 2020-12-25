@@ -1,12 +1,9 @@
-import { PrismaClient, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withIronSession } from 'next-iron-session'
 import { catchHandler } from 'utils/catch-handler'
+import db from 'utils/db'
 import { ironSessionCookieOptions } from 'utils/iron-session-cookie'
-
-const db = new PrismaClient({
-  log: ['error', 'info', 'query', 'warn'],
-})
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = req.session.get('user') as Pick<User, 'id'>
