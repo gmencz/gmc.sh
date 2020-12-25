@@ -140,6 +140,11 @@ function SignInForm() {
           </button>
         </div>
       </form>
+      {status === 'success' && (
+        <p className="mt-8 text-center text-base font-extrabold text-gray-900 leading-8">
+          Opening app...
+        </p>
+      )}
       <ErrorAlert
         isOpen={arraifyedErrorFields.length > 0}
         onClose={() => clearErrors()}
