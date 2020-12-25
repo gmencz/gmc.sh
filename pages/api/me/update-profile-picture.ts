@@ -1,4 +1,3 @@
-import { PrismaClient, User } from '@prisma/client'
 import { IncomingForm, Fields, Files } from 'formidable'
 import { differenceInMinutes } from 'date-fns'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -8,10 +7,9 @@ import { withIronSession } from 'next-iron-session'
 import { computerVisionClient } from 'utils/computer-vision-client'
 import { profilePicturesClient } from 'utils/profile-pictures-client'
 import { catchHandler } from 'utils/catch-handler'
-
-const db = new PrismaClient({
-  log: ['error', 'info', 'query', 'warn'],
-})
+import { ironSessionCookieOptions } from 'utils/iron-session-cookie'
+import { User } from '@prisma/client'
+import db from 'utils/db'
 
 // Disable default body parser
 export const config = {
@@ -115,12 +113,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   })
 }
 
-export default withIronSession(catchHandler(handler), {
-  password: process.env.SESSION_PASSWORD as string,
-  cookieOptions: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: 'strict',
-  },
-  cookieName: '__session',
-})
+export default withIronSession(catchHandler(handler), ironSessionCookieOptions)

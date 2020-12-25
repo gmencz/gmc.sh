@@ -1,5 +1,6 @@
 import { SafeUser } from '@types'
 import { format } from 'date-fns'
+import { useRouter } from 'next/router'
 import { useQuery, useQueryClient } from 'react-query'
 import { getCurrentUserLinks } from 'utils/api/get-current-user-links'
 import { currentUserLinksKey, meKey } from 'utils/react-query-keys'
@@ -16,6 +17,7 @@ function userHasPublicDetails(user: SafeUser) {
 }
 
 function AccountProfile() {
+  const router = useRouter()
   const queryClient = useQueryClient()
 
   const { data: me } = useQuery(meKey, () =>
@@ -35,9 +37,7 @@ function AccountProfile() {
               {/* <!-- Profile --> */}
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0 h-12 w-12">
-                  <ProfilePicture
-                    profilePictureUrl={me?.profilePicture as string}
-                  />
+                  <ProfilePicture />
                 </div>
                 <div className="space-y-1">
                   <div className="text-base font-medium text-gray-900">
@@ -146,6 +146,7 @@ function AccountProfile() {
               <div className="flex flex-col sm:flex-row xl:flex-col">
                 <button
                   type="button"
+                  onClick={() => router.push('/app/profile')}
                   className="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 xl:w-full"
                 >
                   Edit Profile
