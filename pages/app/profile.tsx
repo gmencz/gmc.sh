@@ -3,7 +3,28 @@ import ProfilePicture from 'components/app/account-profile/picture'
 import Navbar from 'components/app/navbar'
 import Head from 'next/head'
 import { Fragment } from 'react'
+import { QueryClient } from 'react-query'
+import { dehydrate } from 'react-query/hydration'
+import { meKey } from 'utils/react-query-keys'
 import { seoDefaults } from 'utils/seo-defaults'
+import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
+
+export const getServerSideProps = withAuthServerSideProps(
+  async (_ctx, user) => {
+    const queryCache = new QueryClient()
+
+    queryCache.setQueryData(meKey, user)
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryCache),
+      },
+    }
+  },
+  {
+    authenticatedPage: true,
+  },
+)
 
 function Profile() {
   return (
