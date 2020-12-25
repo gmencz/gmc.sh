@@ -1,6 +1,6 @@
 import ErrorAlert from 'components/error-alert'
 import { ChangeEvent, FormEvent, Fragment, useRef, useState } from 'react'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { appQueryClient } from 'pages/_app'
 import { ApiError } from 'utils/api-error'
 import { meKey } from 'utils/react-query-keys'
@@ -13,10 +13,7 @@ import { readFile } from 'utils/read-file'
 import { getCroppedImg } from 'utils/get-cropped-img'
 import SuccessAlert from 'components/success-alert'
 import { updateProfilePicture } from 'utils/api/update-profile-picture'
-
-type ProfilePictureProps = {
-  profilePictureUrl: string
-}
+import { SafeUser } from '@types'
 
 type CroppedImage = {
   src: string | null
@@ -36,7 +33,13 @@ const initialImageState: CroppedImage = {
   },
 }
 
-function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
+function ProfilePicture() {
+  const queryClient = useQueryClient()
+
+  const { data: me } = useQuery(meKey, () =>
+    queryClient.getQueryData<SafeUser>(meKey),
+  )
+
   const [image, setImage] = useState(initialImageState)
   const imageRef = useRef<HTMLImageElement | null>(null)
   const resetImage = () => {
@@ -115,7 +118,7 @@ function ProfilePicture({ profilePictureUrl }: ProfilePictureProps) {
         <div className="h-12 w-12">
           <Image
             className="rounded-full object-cover"
-            src={profilePictureUrl}
+            src={me?.profilePicture as string}
             alt="Profile"
             height="100%"
             width="100%"
