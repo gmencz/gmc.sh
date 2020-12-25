@@ -1,13 +1,18 @@
+import { yupResolver } from '@hookform/resolvers/yup'
 import AccountProfile from 'components/app/account-profile'
 import ProfilePicture from 'components/app/account-profile/picture'
 import Navbar from 'components/app/navbar'
 import Head from 'next/head'
 import { Fragment } from 'react'
-import { QueryClient } from 'react-query'
+import { useForm } from 'react-hook-form'
+import { QueryClient, useQuery, useQueryClient } from 'react-query'
 import { dehydrate } from 'react-query/hydration'
+import * as yup from 'yup'
 import { meKey } from 'utils/react-query-keys'
 import { seoDefaults } from 'utils/seo-defaults'
 import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
+import { SafeUser } from '@types'
+import ErrorAlert from 'components/error-alert'
 
 export const getServerSideProps = withAuthServerSideProps(
   async (_ctx, user) => {
@@ -26,7 +31,56 @@ export const getServerSideProps = withAuthServerSideProps(
   },
 )
 
+type UpdateProfileInputs = {
+  username: string
+  bio: string
+  name: string
+  website: string
+  location: string
+  publicEmail: string
+  twitter: string
+}
+
+const schema = yup.object().shape({
+  username: yup.string().max(255).required('Your username is required.'),
+  bio: yup.string().max(2000),
+  name: yup.string().max(255),
+  website: yup.string().max(255).url(),
+  location: yup.string().max(255),
+  publicEmail: yup.string().max(255).email(),
+  twitter: yup.string().max(255),
+})
+
 function Profile() {
+  const queryClient = useQueryClient()
+  const { data: me } = useQuery(meKey, () =>
+    queryClient.getQueryData<SafeUser>(meKey),
+  )
+
+  const {
+    register,
+    handleSubmit,
+    errors,
+    clearErrors,
+  } = useForm<UpdateProfileInputs>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      username: me?.username,
+      bio: me?.bio as string | undefined,
+      location: me?.location as string | undefined,
+      name: me?.name as string | undefined,
+      publicEmail: me?.publicEmail as string | undefined,
+      twitter: me?.twitterUsername as string | undefined,
+      website: me?.website as string | undefined,
+    },
+  })
+
+  const onSubmit = (updatedProfile: UpdateProfileInputs) => {
+    console.log(updatedProfile)
+  }
+
+  const arraifyedErrorFields = Object.keys(errors)
+
   return (
     <Fragment>
       <Head>
@@ -35,7 +89,7 @@ function Profile() {
         <meta name="image" content={seoDefaults.image} />
         <meta name="keywords" content={seoDefaults.keywords} />
 
-        <meta property="og:url" content={`https://app.gmc.sh/app`} />
+        <meta property="og:url" content={`https://app.gmc.sh/app/profile`} />
         <meta property="og:title" content={seoDefaults.title} />
         <meta property="og:description" content={seoDefaults.description} />
         <meta property="og:image" content={seoDefaults.image} />
@@ -67,7 +121,10 @@ function Profile() {
 
             {/* Profile */}
             <div className="flex-grow w-full max-w-7xl mx-auto xl:px-8 lg:flex py-6">
-              <form className="space-y-8 divide-y divide-gray-200 flex-grow">
+              <form
+                className="space-y-8 divide-y divide-gray-200 flex-grow"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                   <div>
                     <div>
@@ -91,11 +148,16 @@ function Profile() {
                         <div className="mt-1 sm:mt-0 sm:col-span-2">
                           <div className="max-w-lg flex rounded-md shadow-sm">
                             <input
+                              ref={register}
+                              className={
+                                !!errors.username
+                                  ? 'flex-1 block w-full focus:ring-indigo-500 focus:border-red-500 min-w-0 rounded-md sm:text-sm border-red-300'
+                                  : 'flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300'
+                              }
                               type="text"
                               name="username"
                               id="username"
                               autoComplete="username"
-                              className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
                             />
                           </div>
                         </div>
@@ -105,18 +167,23 @@ function Profile() {
 
                   <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                     <label
-                      htmlFor="about"
+                      htmlFor="bio"
                       className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                     >
                       About
                     </label>
                     <div className="mt-1 sm:mt-0 sm:col-span-2">
                       <textarea
-                        id="about"
-                        name="about"
+                        id="bio"
+                        className={
+                          !!errors.bio
+                            ? 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-red-500 sm:text-sm border-red-300 rounded-md'
+                            : 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
+                        }
+                        ref={register}
+                        name="bio"
                         rows={3}
-                        className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                      ></textarea>
+                      />
                       <p className="mt-2 text-sm text-gray-500">
                         Write a few sentences about yourself.
                       </p>
@@ -149,11 +216,16 @@ function Profile() {
                     </label>
                     <div className="mt-1 sm:mt-0 sm:col-span-2">
                       <input
+                        className={
+                          !!errors.name
+                            ? 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-red-500 sm:text-sm border-red-300 rounded-md'
+                            : 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
+                        }
+                        ref={register}
                         type="text"
                         name="name"
                         id="name"
                         autoComplete="given-name"
-                        className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                   </div>
@@ -167,29 +239,39 @@ function Profile() {
                     </label>
                     <div className="mt-1 sm:mt-0 sm:col-span-2">
                       <input
+                        className={
+                          !!errors.location
+                            ? 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-red-500 sm:text-sm border-red-300 rounded-md'
+                            : 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
+                        }
+                        ref={register}
                         type="text"
                         name="location"
                         id="location"
                         autoComplete="location"
-                        className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                   </div>
 
                   <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                     <label
-                      htmlFor="contact_email"
+                      htmlFor="publicEmail"
                       className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                     >
                       Contact email
                     </label>
                     <div className="mt-1 sm:mt-0 sm:col-span-2">
                       <input
+                        className={
+                          !!errors.publicEmail
+                            ? 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-red-500 sm:text-sm border-red-300 rounded-md'
+                            : 'max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
+                        }
+                        ref={register}
                         type="text"
-                        name="contact_email"
-                        id="contact_email"
+                        name="publicEmail"
+                        id="publicEmail"
                         autoComplete="email"
-                        className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
                   </div>
@@ -207,11 +289,16 @@ function Profile() {
                           https://
                         </span>
                         <input
+                          className={
+                            !!errors.website
+                              ? 'flex-1 block w-full focus:ring-indigo-500 focus:border-red-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-red-300'
+                              : 'flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300'
+                          }
+                          ref={register}
                           type="text"
                           name="website"
                           id="website"
                           autoComplete="website"
-                          className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
                         />
                       </div>
                     </div>
@@ -238,11 +325,16 @@ function Profile() {
                           twitter.com/
                         </span>
                         <input
+                          className={
+                            !!errors.twitter
+                              ? 'flex-1 block w-full focus:ring-indigo-500 focus:border-red-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-red-300'
+                              : 'flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300'
+                          }
+                          ref={register}
                           type="text"
                           name="twitter"
                           id="twitter"
                           autoComplete="twitter"
-                          className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
                         />
                       </div>
                     </div>
@@ -253,6 +345,25 @@ function Profile() {
           </div>
         </div>
       </div>
+      <ErrorAlert
+        isOpen={arraifyedErrorFields.length > 0}
+        onClose={() => clearErrors()}
+      >
+        <Fragment>
+          <h3 className="text-sm font-medium text-red-800">
+            {arraifyedErrorFields.length > 1
+              ? `There were ${arraifyedErrorFields.length} errors with your submission`
+              : `There was ${arraifyedErrorFields.length} error with your submission`}
+          </h3>
+          <div className="mt-2 text-sm text-red-700">
+            <ul className="list-disc pl-5 space-y-1">
+              {arraifyedErrorFields.map(errorField => (
+                <li key={errorField}>{errors[errorField].message}</li>
+              ))}
+            </ul>
+          </div>
+        </Fragment>
+      </ErrorAlert>
     </Fragment>
   )
 }
