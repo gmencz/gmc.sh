@@ -2,6 +2,7 @@
 import { GetServerSidePropsContext } from 'next'
 import { SafeUser } from '@types'
 import { withIronSession } from 'next-iron-session'
+import { ironSessionCookieOptions } from './iron-session-cookie'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (
   ...args: any
@@ -38,50 +39,40 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = {},
 ) {
-  return withIronSession(
-    async function getMergedServerSideProps(
-      ctx: GetServerSidePropsContext,
-    ): Promise<{ props: T['props'] & DefaultWithAuthServerSideProps }> {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const loggedInUser = ctx.req.session.get('user') || null
+  return withIronSession(async function getMergedServerSideProps(
+    ctx: GetServerSidePropsContext,
+  ): Promise<{ props: T['props'] & DefaultWithAuthServerSideProps }> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const loggedInUser = ctx.req.session.get('user') || null
 
-      if (options.authenticatedPage && !loggedInUser) {
-        return ({
-          redirect: {
-            destination: '/sign-in',
-            permanent: false,
-          },
-          // We have to trick the TS compiler here.
-        } as unknown) as { props: T['props'] & DefaultWithAuthServerSideProps }
-      }
+    if (options.authenticatedPage && !loggedInUser) {
+      return ({
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
+        // We have to trick the TS compiler here.
+      } as unknown) as { props: T['props'] & DefaultWithAuthServerSideProps }
+    }
 
-      if (getServerSidePropsFunc) {
-        return {
-          props: {
-            user: loggedInUser as SafeUser,
-            ...((await getServerSidePropsFunc(ctx, loggedInUser as SafeUser))
-              .props || {}),
-          },
-        }
-      }
-
+    if (getServerSidePropsFunc) {
       return {
         props: {
           user: loggedInUser as SafeUser,
+          ...((await getServerSidePropsFunc(ctx, loggedInUser as SafeUser))
+            .props || {}),
         },
       }
-    },
-    {
-      password: process.env.SESSION_PASSWORD as string,
-      cookieOptions: {
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        sameSite: 'strict',
+    }
+
+    return {
+      props: {
+        user: loggedInUser as SafeUser,
       },
-      cookieName: '__session',
-    },
-  )
+    }
+  },
+  ironSessionCookieOptions)
 }
 
 export { withAuthServerSideProps }
