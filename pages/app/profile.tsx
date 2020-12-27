@@ -5,8 +5,7 @@ import Navbar from 'components/app/navbar'
 import Head from 'next/head'
 import { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
-import { QueryClient, useQuery, useQueryClient } from 'react-query'
-import { dehydrate } from 'react-query/hydration'
+import { useQuery, useQueryClient } from 'react-query'
 import * as yup from 'yup'
 import { meKey } from 'utils/react-query-keys'
 import { seoDefaults } from 'utils/seo-defaults'
@@ -14,22 +13,9 @@ import { withAuthServerSideProps } from 'utils/with-auth-server-side-props'
 import { SafeUser } from '@types'
 import ErrorAlert from 'components/error-alert'
 
-export const getServerSideProps = withAuthServerSideProps(
-  async (_ctx, user) => {
-    const queryCache = new QueryClient()
-
-    queryCache.setQueryData(meKey, user)
-
-    return {
-      props: {
-        dehydratedState: dehydrate(queryCache),
-      },
-    }
-  },
-  {
-    authenticatedPage: true,
-  },
-)
+export const getServerSideProps = withAuthServerSideProps(undefined, {
+  authenticatedPage: true,
+})
 
 type UpdateProfileInputs = {
   username: string

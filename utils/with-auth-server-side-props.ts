@@ -3,6 +3,9 @@ import { GetServerSidePropsContext } from 'next'
 import { SafeUser } from '@types'
 import { withIronSession } from 'next-iron-session'
 import { ironSessionCookieOptions } from './iron-session-cookie'
+import { QueryClient } from 'react-query'
+import { meKey } from './react-query-keys'
+import { dehydrate } from 'react-query/hydration'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (
   ...args: any
@@ -35,7 +38,8 @@ type DefaultWithAuthServerSideProps = {
 function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
-    user?: SafeUser,
+    user: SafeUser | null,
+    queryClient: QueryClient,
   ) => Promise<T>,
   options: WithAuthServerSidePropsOptions = {},
 ) {
@@ -56,12 +60,25 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
       } as unknown) as { props: T['props'] & DefaultWithAuthServerSideProps }
     }
 
+    const props: Record<string, unknown> = {}
+    const queryClient = new QueryClient()
+    if (loggedInUser) {
+      queryClient.setQueryData(meKey, loggedInUser)
+      props.dehydratedState = dehydrate(queryClient)
+    }
+
     if (getServerSidePropsFunc) {
       return {
         props: {
           user: loggedInUser as SafeUser,
-          ...((await getServerSidePropsFunc(ctx, loggedInUser as SafeUser))
-            .props || {}),
+          ...props,
+          ...((
+            await getServerSidePropsFunc(
+              ctx,
+              loggedInUser as SafeUser,
+              queryClient,
+            )
+          ).props || {}),
         },
       }
     }
@@ -69,6 +86,7 @@ function withAuthServerSideProps<T extends EmptyProps = EmptyProps>(
     return {
       props: {
         user: loggedInUser as SafeUser,
+        ...props,
       },
     }
   },
