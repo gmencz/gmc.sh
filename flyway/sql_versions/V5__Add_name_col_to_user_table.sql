@@ -1,2 +1,0 @@
-ALTER TABLE "User"
-ADD name VARCHAR(255);
