@@ -4,14 +4,17 @@ import auth0 from '../../utils/auth0'
 export default async function login(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { screen_hint } = req.query
+    const redirectTo = `${req.headers.referer}api/callback`
+
     if (req.query.screen_hint) {
       await auth0.handleLogin(req, res, {
         authParams: {
           screen_hint,
         },
+        redirectTo,
       })
     } else {
-      await auth0.handleLogin(req, res)
+      await auth0.handleLogin(req, res, { redirectTo })
     }
   } catch (error) {
     console.error(error)
