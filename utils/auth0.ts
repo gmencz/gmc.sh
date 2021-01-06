@@ -44,7 +44,7 @@ function getAuth0BaseConfig(): IAuth0Settings {
 
 export default initAuth0({
   ...getAuth0BaseConfig(),
-  audience: process.env.GQL_ENDPOINT as string,
+  audience: process.env.AUTH0_AUDIENCE as string,
   session: {
     cookieSecret: process.env.AUTH0_COOKIE_SECRET as string,
     cookieLifetime: 60 * 60 * 8,
