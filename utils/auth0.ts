@@ -3,19 +3,7 @@ import { initAuth0 } from '@auth0/nextjs-auth0'
 const isProd = String(process.env.NODE_ENV) === 'production'
 
 export const getProdPath = () => {
-  if (!process.env.VERCEL_GITHUB_COMMIT_REF) {
-    return `https://app.gmc.sh`
-  }
-
-  const currentBranch = process.env.VERCEL_GITHUB_COMMIT_REF.toLowerCase()
-    .replace('/', '-')
-    .replace('_', '-')
-
-  if (currentBranch === 'main') {
-    return `https://app.gmc.sh` // we have a production URL env in the project we are working on
-  }
-
-  return `https://gmc-sh${currentBranch}.vercel.app`
+  return `https://${process.env.VERCEL_URL}`
 }
 
 export default initAuth0({
