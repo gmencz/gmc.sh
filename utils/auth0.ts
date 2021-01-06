@@ -2,20 +2,16 @@ import { initAuth0 } from '@auth0/nextjs-auth0'
 
 const isProd = String(process.env.NODE_ENV) === 'production'
 
-export const getProdPath = () => {
-  return `https://${process.env.VERCEL_URL}`
-}
-
 export default initAuth0({
   domain: process.env.AUTH0_DOMAIN as string,
   clientId: process.env.AUTH0_CLIENT_ID as string,
   clientSecret: process.env.AUTH0_CLIENT_SECRET as string,
   scope: 'openid profile',
   redirectUri: isProd
-    ? `${getProdPath()}/api/callback`
+    ? `https://app.gmc.sh/api/callback`
     : 'http://localhost:3000/api/callback',
   postLogoutRedirectUri: isProd
-    ? `${getProdPath()}/auth`
+    ? `https://app.gmc.sh/auth`
     : 'http://localhost:3000/auth',
   session: {
     // The secret used to encrypt the cookie.
