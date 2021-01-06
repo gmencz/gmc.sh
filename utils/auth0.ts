@@ -1,15 +1,16 @@
 import { initAuth0 } from '@auth0/nextjs-auth0'
 import IAuth0Settings from '@auth0/nextjs-auth0/dist/settings'
 
-type VercelNodeEnv = 'production' | 'preview' | 'development'
 function getAuth0BaseConfig(): IAuth0Settings {
   if (typeof window === 'undefined') {
-    const url = (production: string, branch: string, local: string) => {
-      switch (process.env.NODE_ENV as VercelNodeEnv) {
+    const url = (production: string, local: string) => {
+      if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`
+      }
+
+      switch (process.env.NODE_ENV) {
         case 'production':
           return production
-        case 'preview':
-          return branch
         case 'development':
           return local
         default:
@@ -17,11 +18,7 @@ function getAuth0BaseConfig(): IAuth0Settings {
       }
     }
 
-    const base = url(
-      'https://app.gmc.sh',
-      `https://${process.env.VERCEL_URL}`,
-      'http://localhost:3000',
-    )
+    const base = url('https://app.gmc.sh', 'http://localhost:3000')
 
     return {
       clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string,
