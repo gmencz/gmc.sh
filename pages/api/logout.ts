@@ -6,9 +6,7 @@ export default async function logout(
   res: NextApiResponse,
 ) {
   try {
-    await auth0.handleLogout(req, res, {
-      returnTo: '/auth',
-    })
+    await auth0.handleLogout(req, res)
   } catch (error) {
     console.error(error)
     res.status(error.status || 400).end(error.message)

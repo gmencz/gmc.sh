@@ -1,12 +1,34 @@
 import { initAuth0 } from '@auth0/nextjs-auth0'
 
+const isProd = String(process.env.NODE_ENV) === 'production'
+
+export const getProdPath = () => {
+  if (!process.env.VERCEL_GITHUB_COMMIT_REF) {
+    return `https://app.gmc.sh`
+  }
+
+  const currentBranch = process.env.VERCEL_GITHUB_COMMIT_REF.toLowerCase()
+    .replace('/', '-')
+    .replace('_', '-')
+
+  if (currentBranch === 'master') {
+    return `https://app.gmc.sh` // we have a production URL env in the project we are working on
+  }
+
+  return `https://gmc-sh${currentBranch}.vercel.app`
+}
+
 export default initAuth0({
   domain: process.env.AUTH0_DOMAIN as string,
   clientId: process.env.AUTH0_CLIENT_ID as string,
   clientSecret: process.env.AUTH0_CLIENT_SECRET as string,
   scope: 'openid profile',
-  redirectUri: 'http://localhost:3000/api/callback',
-  postLogoutRedirectUri: 'http://localhost:3000/auth',
+  redirectUri: isProd
+    ? `${getProdPath()}/api/callback`
+    : 'http://localhost:3000/api/callback',
+  postLogoutRedirectUri: isProd
+    ? `${getProdPath()}/auth`
+    : 'http://localhost:3000/auth',
   session: {
     // The secret used to encrypt the cookie.
     cookieSecret: process.env.AUTH0_COOKIE_SECRET as string,
