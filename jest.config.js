@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { resolve } = require('path')
+
 module.exports = {
   setupFiles: [require.resolve('whatwg-fetch')],
   setupFilesAfterEnv: ['<rootDir>/test/setup-env.ts'],
