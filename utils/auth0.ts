@@ -4,7 +4,10 @@ import IAuth0Settings from '@auth0/nextjs-auth0/dist/settings'
 function getAuth0BaseConfig(): IAuth0Settings {
   if (typeof window === 'undefined') {
     const url = (production: string, local: string) => {
-      if (process.env.VERCEL_URL) {
+      if (
+        process.env.VERCEL_URL &&
+        process.env.VERCEL_URL.startsWith('gmc-sh-')
+      ) {
         return `https://${process.env.VERCEL_URL}`
       }
 
