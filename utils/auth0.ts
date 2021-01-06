@@ -1,38 +1,55 @@
 import { initAuth0 } from '@auth0/nextjs-auth0'
+import IAuth0Settings from '@auth0/nextjs-auth0/dist/settings'
 
-const isProd = String(process.env.NODE_ENV) === 'production'
+type VercelNodeEnv = 'production' | 'preview' | 'development'
+function getAuth0BaseConfig(): IAuth0Settings {
+  if (typeof window === 'undefined') {
+    const url = (production: string, branch: string, local: string) => {
+      switch (process.env.NODE_ENV as VercelNodeEnv) {
+        case 'production':
+          return production
+        case 'preview':
+          return branch
+        case 'development':
+          return local
+        default:
+          return local
+      }
+    }
+
+    const base = url(
+      'https://app.gmc.sh',
+      `https://${process.env.VERCEL_URL}`,
+      'http://localhost:3000',
+    )
+
+    return {
+      clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET as string,
+      domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string,
+      scope: 'openid profile',
+      redirectUri: `${base}/api/callback`,
+      postLogoutRedirectUri: `${base}/auth`,
+    }
+  }
+
+  return {
+    clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string,
+    domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string,
+    scope: 'openid profile',
+    redirectUri: `${window.location.origin}/api/callback`,
+    postLogoutRedirectUri: `${window.location.origin}/auth`,
+  }
+}
 
 export default initAuth0({
-  domain: process.env.AUTH0_DOMAIN as string,
-  clientId: process.env.AUTH0_CLIENT_ID as string,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET as string,
-  scope: 'openid profile',
-  redirectUri: isProd
-    ? `https://app.gmc.sh/api/callback`
-    : 'http://localhost:3000/api/callback',
-  postLogoutRedirectUri: isProd
-    ? `https://app.gmc.sh/auth`
-    : 'http://localhost:3000/auth',
+  ...getAuth0BaseConfig(),
+  audience: process.env.GQL_ENDPOINT as string,
   session: {
-    // The secret used to encrypt the cookie.
     cookieSecret: process.env.AUTH0_COOKIE_SECRET as string,
-    // The cookie lifetime (expiration) in seconds. Set to 8 hours by default.
     cookieLifetime: 60 * 60 * 8,
-    // (Optional) The cookie domain this should run on. Leave it blank to restrict it to your domain.
     cookieDomain: '',
-    // (Optional) SameSite configuration for the session cookie. Defaults to 'lax', but can be changed to 'strict' or 'none'. Set it to false if you want to disable the SameSite setting.
     cookieSameSite: 'lax',
-    // (Optional) Store the id_token in the session. Defaults to false.
-    storeIdToken: false,
-    // (Optional) Store the access_token in the session. Defaults to false.
-    storeAccessToken: false,
-    // (Optional) Store the refresh_token in the session. Defaults to false.
-    storeRefreshToken: false,
-  },
-  oidcClient: {
-    // (Optional) Configure the timeout in milliseconds for HTTP requests to Auth0.
-    httpTimeout: 2500,
-    // (Optional) Configure the clock tolerance in milliseconds, if the time on your server is running behind.
-    clockTolerance: 10000,
+    storeAccessToken: true,
   },
 })

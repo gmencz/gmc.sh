@@ -14,6 +14,30 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
   }
 
+  const res = await fetch(process.env.GQL_ENDPOINT as string, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({
+      query: `
+        query Users {
+          users {
+            id
+            name
+            last_seen
+          }
+        }
+      `,
+    }),
+  })
+
+  const data = await res.json()
+
+  if (data.data) {
+    console.log(data.data.users)
+  }
+
   return {
     props: {
       user: session.user,
@@ -29,10 +53,15 @@ function Index({ user }: Props) {
   return (
     <div className="container mx-auto py-8 px-4">
       <Head>
-        <title>Gmc.sh</title>
+        <title>Hello {user.name}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <p className="mb-2">Hi 🙋‍♂️!</p>
+      <p className="mb-2">
+        Hi{' '}
+        <span role="img" aria-label="man raising hand emoji">
+          🙋‍♂️
+        </span>
+      </p>
       <pre className="overflow-x-auto">{JSON.stringify(user, null, 2)}</pre>
       <a
         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4"
