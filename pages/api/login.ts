@@ -9,9 +9,12 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
         authParams: {
           screen_hint,
         },
+        redirectTo: '/',
       })
     } else {
-      await auth0.handleLogin(req, res)
+      await auth0.handleLogin(req, res, {
+        redirectTo: '/',
+      })
     }
   } catch (error) {
     console.error(error)
