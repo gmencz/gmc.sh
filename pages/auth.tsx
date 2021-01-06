@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 function Login() {
   return (
-    <div className="container mx-auto py-8 flex items-center flex-col justify-center min-h-screen">
+    <div className="container mx-auto px-4 py-8 flex items-center flex-col justify-center min-h-screen">
       <Image src="/logo.svg" width={100} height={100} priority />
       <div className="flex mt-8">
         <a

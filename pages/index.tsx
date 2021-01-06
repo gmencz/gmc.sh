@@ -27,13 +27,13 @@ type Props = {
 
 function Index({ user }: Props) {
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-4">
       <Head>
         <title>Gmc.sh</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <p className="mb-2">Hi 🙋‍♂️!</p>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      <pre className="overflow-x-auto">{JSON.stringify(user, null, 2)}</pre>
       <a
         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4"
         href="/api/logout"
