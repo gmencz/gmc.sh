@@ -11,7 +11,7 @@ export const getProdPath = () => {
     .replace('/', '-')
     .replace('_', '-')
 
-  if (currentBranch === 'master') {
+  if (currentBranch === 'main') {
     return `https://app.gmc.sh` // we have a production URL env in the project we are working on
   }
 
