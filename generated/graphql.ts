@@ -352,7 +352,10 @@ export enum Users_Update_Column {
   Name = 'name'
 }
 
-export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetUsersQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  orderBy?: Maybe<Array<Users_Order_By> | Users_Order_By>;
+}>;
 
 
 export type GetUsersQuery = (
@@ -365,8 +368,8 @@ export type GetUsersQuery = (
 
 
 export const GetUsersDocument = gql`
-    query getUsers {
-  users {
+    query getUsers($limit: Int!, $orderBy: [users_order_by!]) {
+  users(limit: $limit, order_by: $orderBy) {
     id
     name
     last_seen
@@ -380,7 +383,7 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    getUsers(variables?: GetUsersQueryVariables, requestHeaders?: Headers): Promise<GetUsersQuery> {
+    getUsers(variables: GetUsersQueryVariables, requestHeaders?: Headers): Promise<GetUsersQuery> {
       return withWrapper(() => client.request<GetUsersQuery>(print(GetUsersDocument), variables, requestHeaders));
     }
   };

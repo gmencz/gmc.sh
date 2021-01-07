@@ -1,3 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 
-export default new GraphQLClient(process.env.GQL_ENDPOINT as string)
+const gqlProxy = new GraphQLClient('/api/gql')
+const gqlClient = new GraphQLClient(process.env.GQL_ENDPOINT as string)
+
+export { gqlProxy, gqlClient }

@@ -1,12 +1,23 @@
 import { getSdk } from 'generated/graphql'
-import gqlClient from './gql-client'
+import { gqlProxy } from './gql-client'
 
-function getGqlOperations(accessToken?: string) {
-  if (accessToken) {
-    gqlClient.setHeader('Authorization', `Bearer ${accessToken}`)
+type GqlProxyOpts = {
+  publicOperation?: boolean
+}
+
+function getGqlOperations(
+  proxyOpts: GqlProxyOpts = {},
+  proxiedHeaders?: Record<string, string>,
+) {
+  if (proxiedHeaders) {
+    gqlProxy.setHeaders(proxiedHeaders)
   }
 
-  const { ...operations } = getSdk(gqlClient)
+  if (!proxyOpts.publicOperation) {
+    gqlProxy.setHeader('x-proxy-auth', 'true')
+  }
+
+  const { ...operations } = getSdk(gqlProxy)
   return operations
 }
 
