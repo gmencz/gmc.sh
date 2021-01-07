@@ -1,28 +1,27 @@
-import { GetMostRecentUsersQuery, Order_By } from 'generated/graphql'
-import { ClientError } from 'graphql-request'
+import {
+  MostRecentUsersQuery,
+  Order_By,
+  useMostRecentUsersQuery,
+} from 'generated/graphql'
 import Head from 'next/head'
-import { useQuery } from 'react-query'
-import getGqlOperations from 'utils/get-gql-operations'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import authenticatedServerSideProps, {
+import {
+  authenticatedServerSideProps,
   InferAuthenticatedServerSideProps,
 } from 'utils/authenticated-server-side-props'
+import { ClientError } from 'graphql-request'
 
 export const getServerSideProps = authenticatedServerSideProps()
 
 function Index({
   user,
 }: InferAuthenticatedServerSideProps<typeof getServerSideProps>) {
-  const { data, error, status } = useQuery<
-    GetMostRecentUsersQuery,
+  const { data, error, status } = useMostRecentUsersQuery<
+    MostRecentUsersQuery,
     ClientError
-  >('getMostRecentUsers', () => {
-    const { getMostRecentUsers } = getGqlOperations()
-
-    return getMostRecentUsers({
-      limit: 10,
-      orderBy: { last_seen: Order_By.Desc },
-    })
+  >({
+    limit: 10,
+    orderBy: { last_seen: Order_By.Desc },
   })
 
   return (
@@ -51,7 +50,7 @@ function Index({
       </pre>
       <div className="mt-4">
         <p className="mb-2 font-bold">
-          And here are the most recent 10 users of the app:
+          And here are the most recent users of the app:
         </p>
         {status === 'loading' && <span>loading...</span>}
         {status === 'error' && (

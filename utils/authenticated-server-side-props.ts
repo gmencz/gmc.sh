@@ -63,4 +63,4 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
   }
 }
 
-export default authenticatedServerSideProps
+export { authenticatedServerSideProps }

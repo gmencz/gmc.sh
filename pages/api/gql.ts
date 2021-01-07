@@ -1,7 +1,7 @@
 import { ClientError } from 'graphql-request'
 import { NextApiRequest, NextApiResponse } from 'next'
 import auth0 from 'utils/auth0'
-import { gqlClient } from 'utils/gql-client'
+import { gqlProxyClient } from 'utils/gql-client'
 
 type GqlBody = {
   query?: string
@@ -29,11 +29,11 @@ export default async function gql(req: NextApiRequest, res: NextApiResponse) {
         })
       }
 
-      gqlClient.setHeader('Authorization', `Bearer ${session.accessToken}`)
+      gqlProxyClient.setHeader('Authorization', `Bearer ${session.accessToken}`)
     }
 
     try {
-      const data = await gqlClient.request(query, variables)
+      const data = await gqlProxyClient.request(query, variables)
       return res.status(200).json({
         data,
       })
