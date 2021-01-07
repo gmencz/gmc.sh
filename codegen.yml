@@ -1,0 +1,13 @@
+overwrite: true
+schema:
+  - https://gql.gmc.sh/v1/graphql:
+      headers:
+        X-Hasura-Admin-Secret: ${HASURA_ADMIN_SECRET}
+
+documents: "**/*.graphql"
+generates:
+  generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

@@ -14,30 +14,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     }
   }
 
-  const res = await fetch(process.env.GQL_ENDPOINT as string, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-    },
-    body: JSON.stringify({
-      query: `
-        query Users {
-          users {
-            id
-            name
-            last_seen
-          }
-        }
-      `,
-    }),
-  })
-
-  const data = await res.json()
-
-  if (data.data) {
-    console.log(data.data.users)
-  }
-
   return {
     props: {
       user: session.user,
