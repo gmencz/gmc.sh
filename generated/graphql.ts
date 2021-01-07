@@ -12,7 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  timestamp: any;
+  timestamptz: any;
 };
 
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
@@ -182,24 +182,24 @@ export type Subscription_RootUsers_By_PkArgs = {
 };
 
 
-/** expression to compare columns of type timestamp. All fields are combined with logical 'AND'. */
-export type Timestamp_Comparison_Exp = {
-  _eq?: Maybe<Scalars['timestamp']>;
-  _gt?: Maybe<Scalars['timestamp']>;
-  _gte?: Maybe<Scalars['timestamp']>;
-  _in?: Maybe<Array<Scalars['timestamp']>>;
+/** expression to compare columns of type timestamptz. All fields are combined with logical 'AND'. */
+export type Timestamptz_Comparison_Exp = {
+  _eq?: Maybe<Scalars['timestamptz']>;
+  _gt?: Maybe<Scalars['timestamptz']>;
+  _gte?: Maybe<Scalars['timestamptz']>;
+  _in?: Maybe<Array<Scalars['timestamptz']>>;
   _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['timestamp']>;
-  _lte?: Maybe<Scalars['timestamp']>;
-  _neq?: Maybe<Scalars['timestamp']>;
-  _nin?: Maybe<Array<Scalars['timestamp']>>;
+  _lt?: Maybe<Scalars['timestamptz']>;
+  _lte?: Maybe<Scalars['timestamptz']>;
+  _neq?: Maybe<Scalars['timestamptz']>;
+  _nin?: Maybe<Array<Scalars['timestamptz']>>;
 };
 
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users';
   id: Scalars['String'];
-  last_seen: Scalars['timestamp'];
+  last_seen: Scalars['timestamptz'];
   name: Scalars['String'];
 };
 
@@ -244,7 +244,7 @@ export type Users_Bool_Exp = {
   _not?: Maybe<Users_Bool_Exp>;
   _or?: Maybe<Array<Maybe<Users_Bool_Exp>>>;
   id?: Maybe<String_Comparison_Exp>;
-  last_seen?: Maybe<Timestamp_Comparison_Exp>;
+  last_seen?: Maybe<Timestamptz_Comparison_Exp>;
   name?: Maybe<String_Comparison_Exp>;
 };
 
@@ -257,7 +257,7 @@ export enum Users_Constraint {
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['timestamp']>;
+  last_seen?: Maybe<Scalars['timestamptz']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -265,7 +265,7 @@ export type Users_Insert_Input = {
 export type Users_Max_Fields = {
   __typename?: 'users_max_fields';
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['timestamp']>;
+  last_seen?: Maybe<Scalars['timestamptz']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -280,7 +280,7 @@ export type Users_Max_Order_By = {
 export type Users_Min_Fields = {
   __typename?: 'users_min_fields';
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['timestamp']>;
+  last_seen?: Maybe<Scalars['timestamptz']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -338,7 +338,7 @@ export enum Users_Select_Column {
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['timestamp']>;
+  last_seen?: Maybe<Scalars['timestamptz']>;
   name?: Maybe<Scalars['String']>;
 };
 

@@ -15,7 +15,8 @@
     "test:e2e": "start-test dev http://localhost:3000/auth cy:open",
     "pretest:e2e": "rm -rf .nyc_output coverage .next || true",
     "test:e2e:run": "start-test dev http://localhost:3000/auth cy:run",
-    "generate-gql-types": "dotenv -e .env.local -- graphql-codegen --config codegen.yml"
+    "gen-gql-types": "dotenv -e .env.local -- graphql-codegen --config codegen.yml",
+    "gen-gql-types:watch": "dotenv -e .env.local -- graphql-codegen --config codegen.yml --watch gql/**/*.graphql"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.16.0",
