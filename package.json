@@ -12,9 +12,9 @@
     "check-types": "tsc --noEmit",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
-    "test:e2e": "start-test dev http://localhost:3000/auth cy:open",
+    "test:e2e": "start-test dev http://localhost:3000/api/health cy:open",
     "pretest:e2e": "rm -rf .nyc_output coverage .next || true",
-    "test:e2e:run": "start-test dev http://localhost:3000/auth cy:run",
+    "test:e2e:run": "start-test dev http://localhost:3000/api/health cy:run",
     "gen-gql-types": "dotenv -e .env.local -- graphql-codegen --config codegen.yml",
     "gen-gql-types:watch": "dotenv -e .env.local -- graphql-codegen --config codegen.yml --watch gql/**/*.graphql"
   },

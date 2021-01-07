@@ -1,6 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
-import { print } from 'graphql';
-import gql from 'graphql-tag';
+import { useQuery, UseQueryOptions } from 'react-query';
+import { fetcher } from 'utils/gql-client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -12,7 +11,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  timestamptz: any;
+  timestamptz: string;
 };
 
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
@@ -352,13 +351,13 @@ export enum Users_Update_Column {
   Name = 'name'
 }
 
-export type GetMostRecentUsersQueryVariables = Exact<{
+export type MostRecentUsersQueryVariables = Exact<{
   limit: Scalars['Int'];
   orderBy?: Maybe<Array<Users_Order_By> | Users_Order_By>;
 }>;
 
 
-export type GetMostRecentUsersQuery = (
+export type MostRecentUsersQuery = (
   { __typename?: 'query_root' }
   & { users: Array<(
     { __typename?: 'users' }
@@ -367,8 +366,8 @@ export type GetMostRecentUsersQuery = (
 );
 
 
-export const GetMostRecentUsersDocument = gql`
-    query getMostRecentUsers($limit: Int!, $orderBy: [users_order_by!]) {
+export const MostRecentUsersDocument = `
+    query MostRecentUsers($limit: Int!, $orderBy: [users_order_by!]) {
   users(limit: $limit, order_by: $orderBy) {
     id
     name
@@ -376,16 +375,15 @@ export const GetMostRecentUsersDocument = gql`
   }
 }
     `;
-
-export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
-
-
-const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
-export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {
-    getMostRecentUsers(variables: GetMostRecentUsersQueryVariables, requestHeaders?: Headers): Promise<GetMostRecentUsersQuery> {
-      return withWrapper(() => client.request<GetMostRecentUsersQuery>(print(GetMostRecentUsersDocument), variables, requestHeaders));
-    }
-  };
-}
-export type Sdk = ReturnType<typeof getSdk>;
+export const useMostRecentUsersQuery = <
+      TData = MostRecentUsersQuery,
+      TError = unknown
+    >(
+      variables: MostRecentUsersQueryVariables, 
+      options?: UseQueryOptions<MostRecentUsersQuery, TError, TData>
+    ) => 
+    useQuery<MostRecentUsersQuery, TError, TData>(
+      ['MostRecentUsers', variables],
+      fetcher<MostRecentUsersQuery, MostRecentUsersQueryVariables>(MostRecentUsersDocument, variables),
+      options
+    );
