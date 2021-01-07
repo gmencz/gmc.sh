@@ -10,4 +10,10 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-graphql-request
+      - typescript-react-query
+    config:
+      scalars:
+        timestamptz: string
+      fetcher: utils/gql-client#fetcher
+      # The path of the fetcher is relative to 
+      # the generated file (generated/graphql.ts)

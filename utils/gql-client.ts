@@ -1,6 +1,16 @@
 import { GraphQLClient } from 'graphql-request'
 
-const gqlProxy = new GraphQLClient('/api/gql')
-const gqlClient = new GraphQLClient(process.env.GQL_ENDPOINT as string)
+const gqlClient = new GraphQLClient('/api/gql', {
+  headers: {
+    'x-proxy-auth': 'true',
+  },
+})
 
-export { gqlProxy, gqlClient }
+const gqlProxyClient = new GraphQLClient(process.env.GQL_ENDPOINT as string)
+
+function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
+  return async (): Promise<TData> =>
+    gqlClient.request<TData, TVariables>(query, variables)
+}
+
+export { gqlProxyClient, fetcher }
