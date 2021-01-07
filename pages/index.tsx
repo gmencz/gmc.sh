@@ -1,36 +1,18 @@
-import { IClaims } from '@auth0/nextjs-auth0/dist/session/session'
 import { GetMostRecentUsersQuery, Order_By } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
-import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useQuery } from 'react-query'
-import auth0 from 'utils/auth0'
 import getGqlOperations from 'utils/get-gql-operations'
 import { formatDistanceToNow, parseISO } from 'date-fns'
+import authenticatedServerSideProps, {
+  InferAuthenticatedServerSideProps,
+} from 'utils/authenticated-server-side-props'
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const session = await auth0.getSession(req)
-  if (!session || !session.user) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false,
-      },
-    }
-  }
+export const getServerSideProps = authenticatedServerSideProps()
 
-  return {
-    props: {
-      user: session.user,
-    },
-  }
-}
-
-type Props = {
-  user: IClaims
-}
-
-function Index({ user }: Props) {
+function Index({
+  user,
+}: InferAuthenticatedServerSideProps<typeof getServerSideProps>) {
   const { data, error, status } = useQuery<
     GetMostRecentUsersQuery,
     ClientError
