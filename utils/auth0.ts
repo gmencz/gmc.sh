@@ -25,7 +25,7 @@ function getAuth0BaseConfig(): IAuth0Settings {
     domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string,
     scope: 'openid profile',
     redirectUri: `${base}/api/callback`,
-    postLogoutRedirectUri: `${base}/auth`,
+    postLogoutRedirectUri: base,
   }
 }
 
