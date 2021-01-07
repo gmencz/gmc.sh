@@ -12,7 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  date: any;
+  timestamp: any;
 };
 
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
@@ -32,20 +32,6 @@ export type String_Comparison_Exp = {
   _nlike?: Maybe<Scalars['String']>;
   _nsimilar?: Maybe<Scalars['String']>;
   _similar?: Maybe<Scalars['String']>;
-};
-
-
-/** expression to compare columns of type date. All fields are combined with logical 'AND'. */
-export type Date_Comparison_Exp = {
-  _eq?: Maybe<Scalars['date']>;
-  _gt?: Maybe<Scalars['date']>;
-  _gte?: Maybe<Scalars['date']>;
-  _in?: Maybe<Array<Scalars['date']>>;
-  _is_null?: Maybe<Scalars['Boolean']>;
-  _lt?: Maybe<Scalars['date']>;
-  _lte?: Maybe<Scalars['date']>;
-  _neq?: Maybe<Scalars['date']>;
-  _nin?: Maybe<Array<Scalars['date']>>;
 };
 
 /** mutation root */
@@ -195,11 +181,25 @@ export type Subscription_RootUsers_By_PkArgs = {
   id: Scalars['String'];
 };
 
+
+/** expression to compare columns of type timestamp. All fields are combined with logical 'AND'. */
+export type Timestamp_Comparison_Exp = {
+  _eq?: Maybe<Scalars['timestamp']>;
+  _gt?: Maybe<Scalars['timestamp']>;
+  _gte?: Maybe<Scalars['timestamp']>;
+  _in?: Maybe<Array<Scalars['timestamp']>>;
+  _is_null?: Maybe<Scalars['Boolean']>;
+  _lt?: Maybe<Scalars['timestamp']>;
+  _lte?: Maybe<Scalars['timestamp']>;
+  _neq?: Maybe<Scalars['timestamp']>;
+  _nin?: Maybe<Array<Scalars['timestamp']>>;
+};
+
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users';
   id: Scalars['String'];
-  last_seen: Scalars['date'];
+  last_seen: Scalars['timestamp'];
   name: Scalars['String'];
 };
 
@@ -244,7 +244,7 @@ export type Users_Bool_Exp = {
   _not?: Maybe<Users_Bool_Exp>;
   _or?: Maybe<Array<Maybe<Users_Bool_Exp>>>;
   id?: Maybe<String_Comparison_Exp>;
-  last_seen?: Maybe<Date_Comparison_Exp>;
+  last_seen?: Maybe<Timestamp_Comparison_Exp>;
   name?: Maybe<String_Comparison_Exp>;
 };
 
@@ -257,7 +257,7 @@ export enum Users_Constraint {
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['date']>;
+  last_seen?: Maybe<Scalars['timestamp']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -265,7 +265,7 @@ export type Users_Insert_Input = {
 export type Users_Max_Fields = {
   __typename?: 'users_max_fields';
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['date']>;
+  last_seen?: Maybe<Scalars['timestamp']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -280,7 +280,7 @@ export type Users_Max_Order_By = {
 export type Users_Min_Fields = {
   __typename?: 'users_min_fields';
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['date']>;
+  last_seen?: Maybe<Scalars['timestamp']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -338,7 +338,7 @@ export enum Users_Select_Column {
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
   id?: Maybe<Scalars['String']>;
-  last_seen?: Maybe<Scalars['date']>;
+  last_seen?: Maybe<Scalars['timestamp']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -352,13 +352,13 @@ export enum Users_Update_Column {
   Name = 'name'
 }
 
-export type GetUsersQueryVariables = Exact<{
+export type GetMostRecentUsersQueryVariables = Exact<{
   limit: Scalars['Int'];
   orderBy?: Maybe<Array<Users_Order_By> | Users_Order_By>;
 }>;
 
 
-export type GetUsersQuery = (
+export type GetMostRecentUsersQuery = (
   { __typename?: 'query_root' }
   & { users: Array<(
     { __typename?: 'users' }
@@ -367,8 +367,8 @@ export type GetUsersQuery = (
 );
 
 
-export const GetUsersDocument = gql`
-    query getUsers($limit: Int!, $orderBy: [users_order_by!]) {
+export const GetMostRecentUsersDocument = gql`
+    query getMostRecentUsers($limit: Int!, $orderBy: [users_order_by!]) {
   users(limit: $limit, order_by: $orderBy) {
     id
     name
@@ -383,8 +383,8 @@ export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    getUsers(variables: GetUsersQueryVariables, requestHeaders?: Headers): Promise<GetUsersQuery> {
-      return withWrapper(() => client.request<GetUsersQuery>(print(GetUsersDocument), variables, requestHeaders));
+    getMostRecentUsers(variables: GetMostRecentUsersQueryVariables, requestHeaders?: Headers): Promise<GetMostRecentUsersQuery> {
+      return withWrapper(() => client.request<GetMostRecentUsersQuery>(print(GetMostRecentUsersDocument), variables, requestHeaders));
     }
   };
 }

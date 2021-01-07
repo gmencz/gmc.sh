@@ -1,11 +1,12 @@
 import { IClaims } from '@auth0/nextjs-auth0/dist/session/session'
-import { GetUsersQuery, Order_By } from 'generated/graphql'
+import { GetMostRecentUsersQuery, Order_By } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useQuery } from 'react-query'
 import auth0 from 'utils/auth0'
 import getGqlOperations from 'utils/get-gql-operations'
+import { format, formatDistanceToNow } from 'date-fns'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session = await auth0.getSession(req)
@@ -30,17 +31,17 @@ type Props = {
 }
 
 function Index({ user }: Props) {
-  const { data, error, status } = useQuery<GetUsersQuery, ClientError>(
-    'users',
-    () => {
-      const { getUsers } = getGqlOperations()
+  const { data, error, status } = useQuery<
+    GetMostRecentUsersQuery,
+    ClientError
+  >('getMostRecentUsers', () => {
+    const { getMostRecentUsers } = getGqlOperations()
 
-      return getUsers({
-        limit: 10,
-        orderBy: { last_seen: Order_By.Desc },
-      })
-    },
-  )
+    return getMostRecentUsers({
+      limit: 10,
+      orderBy: { last_seen: Order_By.Desc },
+    })
+  })
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -55,10 +56,24 @@ function Index({ user }: Props) {
         </span>
       </p>
       <p className="mb-2 font-bold">This is your profile:</p>
-      <pre className="overflow-x-auto">{JSON.stringify(user, null, 2)}</pre>
+      <pre className="overflow-x-auto">
+        {JSON.stringify(
+          {
+            nickname: user.nickname,
+            name: user.name,
+            picture: user.picture,
+            updated_at: format(
+              new Date(user.updated_at),
+              "dd/MM/yyyy 'at' HH:mm",
+            ),
+          },
+          null,
+          2,
+        )}
+      </pre>
       <div className="mt-4">
         <p className="mb-2 font-bold">
-          And here are the newest 10 users of the app:
+          And here are the most recent 10 users of the app:
         </p>
         {status === 'loading' && <span>loading...</span>}
         {status === 'error' && (
@@ -73,7 +88,16 @@ function Index({ user }: Props) {
           <div className="space-y-4">
             {data?.users.map(({ id, name, last_seen }) => (
               <pre key={id} className="overflow-x-auto">
-                {JSON.stringify({ name, last_seen }, null, 2)}
+                {JSON.stringify(
+                  {
+                    name,
+                    last_seen: formatDistanceToNow(new Date(last_seen), {
+                      addSuffix: true,
+                    }),
+                  },
+                  null,
+                  2,
+                )}
               </pre>
             ))}
           </div>
