@@ -11,7 +11,11 @@ if (typeof window !== 'undefined' && window.Cypress) {
   require('../mocks')
 }
 
-export const appQueryClient = new QueryClient()
+export const appQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 2 },
+  },
+})
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

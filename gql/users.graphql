@@ -1,0 +1,7 @@
+query getUsers($limit: Int!, $orderBy: [users_order_by!]) {
+  users(limit: $limit, order_by: $orderBy) {
+    id
+    name
+    last_seen
+  }
+}

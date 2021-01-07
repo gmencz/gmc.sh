@@ -11,7 +11,8 @@
       "api/*": ["../utils/api/*"],
       "utils/*": ["../utils/*"],
       "test/*": ["../test/*"],
-      "pages/*": ["../pages/*"]
+      "pages/*": ["../pages/*"],
+      "generated/*": ["../generated/*"]
     }
   },
   "include": ["**/*.ts"]
