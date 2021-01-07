@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { useQuery } from 'react-query'
 import auth0 from 'utils/auth0'
 import getGqlOperations from 'utils/get-gql-operations'
-import { format, formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, parseISO } from 'date-fns'
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session = await auth0.getSession(req)
@@ -62,10 +62,6 @@ function Index({ user }: Props) {
             nickname: user.nickname,
             name: user.name,
             picture: user.picture,
-            updated_at: format(
-              new Date(user.updated_at),
-              "dd/MM/yyyy 'at' HH:mm",
-            ),
           },
           null,
           2,
@@ -91,7 +87,7 @@ function Index({ user }: Props) {
                 {JSON.stringify(
                   {
                     name,
-                    last_seen: formatDistanceToNow(new Date(last_seen), {
+                    last_seen: formatDistanceToNow(parseISO(last_seen), {
                       addSuffix: true,
                     }),
                   },
