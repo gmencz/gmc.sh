@@ -7,7 +7,7 @@ import 'tailwindcss/tailwind.css'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-if (typeof window !== 'undefined' && window.Cypress) {
+if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
   require('../mocks')
 }
 
@@ -17,7 +17,7 @@ export const appQueryClient = new QueryClient({
   },
 })
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <Fragment>
       <QueryClientProvider client={appQueryClient}>
@@ -30,4 +30,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default App

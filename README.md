@@ -1,30 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Gmc.sh
 
-## Getting Started
+App features:
 
-First, run the development server:
+- Manage your favorite links and sites with our URL shortener and manager.
+- Keep track of your projects and manage them with our project manager.
+- Make notes and todo lists so you don't forget anything.
+- Make schedules to keep your life on track with our scheduler.
+- Make shopping lists or import existing ones from anywhere, even a piece of
+  paper.
+- Integrate with your favorite social networks so you don't miss any news.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Contribute
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repo on your pc and checkout to the branch you'll be working on or
+   make a new branch.
+2. Create a .env.local with the variables in .env.example and fill the variables
+   with valid values.
+3. `npm install`
+4. `npm run dev` and good luck 💻!
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Testing and CI
 
-## Learn More
+All tests, lints and type checks are ran on every push with github actions to
+make sure nothing broken gets into production. You can run some of these tests
+locally with `npm t` or `npm test` or `npm run test`.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+To run the E2E Cypress tests you must create a `cypress.env.json` in the
+project's root with the keys in `cypress.env.sample.json`, these keys must be
+filled with valid values otherwise tests won't work properly.

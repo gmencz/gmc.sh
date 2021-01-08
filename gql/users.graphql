@@ -1,5 +1,5 @@
-query MostRecentUsers($limit: Int!, $orderBy: [users_order_by!]) {
-  users(limit: $limit, order_by: $orderBy) {
+query MostRecentUsers($limit: Int!) {
+  users(limit: $limit, order_by: { last_seen: desc }) {
     id
     name
     last_seen

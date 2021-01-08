@@ -7,6 +7,9 @@ schema:
 documents: "gql/**/*.graphql"
 generates:
   generated/graphql.ts:
+    hooks:
+      afterOneFileWrite:
+        - npx prettier --write
     plugins:
       - typescript
       - typescript-operations
@@ -17,3 +20,4 @@ generates:
       fetcher: utils/gql-client#fetcher
       # The path of the fetcher is relative to 
       # the generated file (generated/graphql.ts)
+

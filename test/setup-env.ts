@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { server } from './server'
+import { server } from 'mocks/server'
 
 beforeAll(() => server.listen())
 // if you need to add a handler after calling setupServer for some specific test

@@ -1,4 +1,4 @@
 import { setupServer } from 'msw/node'
-import { handlers } from './handlers'
+import { gqlHandlers, restHandlers } from './handlers'
 
-export const server = setupServer(...handlers)
+export const server = setupServer(...gqlHandlers, ...restHandlers)

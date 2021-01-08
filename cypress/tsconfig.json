@@ -12,7 +12,8 @@
       "utils/*": ["../utils/*"],
       "test/*": ["../test/*"],
       "pages/*": ["../pages/*"],
-      "generated/*": ["../generated/*"]
+      "generated/*": ["../generated/*"],
+      "mocks/*": ["../mocks/*"]
     }
   },
   "include": ["**/*.ts"]

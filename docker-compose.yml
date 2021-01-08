@@ -1,9 +1,0 @@
-version: "3.8"
-
-services:
-  db:
-    image: postgres:13.0-alpine
-    env_file:
-      - ./docker/db/.env
-    ports:
-      - 6543:5432
