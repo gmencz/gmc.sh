@@ -1,6 +1,5 @@
 import {
   MostRecentUsersQuery,
-  Order_By,
   useMostRecentUsersQuery,
 } from 'generated/graphql'
 import Head from 'next/head'
@@ -21,7 +20,6 @@ function Index({
     ClientError
   >({
     limit: 10,
-    orderBy: { last_seen: Order_By.Desc },
   })
 
   return (

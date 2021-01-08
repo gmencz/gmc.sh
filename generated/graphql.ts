@@ -353,7 +353,6 @@ export enum Users_Update_Column {
 
 export type MostRecentUsersQueryVariables = Exact<{
   limit: Scalars['Int'];
-  orderBy?: Maybe<Array<Users_Order_By> | Users_Order_By>;
 }>;
 
 
@@ -367,8 +366,8 @@ export type MostRecentUsersQuery = (
 
 
 export const MostRecentUsersDocument = `
-    query MostRecentUsers($limit: Int!, $orderBy: [users_order_by!]) {
-  users(limit: $limit, order_by: $orderBy) {
+    query MostRecentUsers($limit: Int!) {
+  users(limit: $limit, order_by: {last_seen: desc}) {
     id
     name
     last_seen
