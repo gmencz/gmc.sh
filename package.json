@@ -19,7 +19,7 @@
     "test:e2e:run": "start-test dev http://localhost:3000/api/health cy:run",
     "gen-gql-types": "dotenv -e .env.hasura -- graphql-codegen --config codegen.yml",
     "gen-gql-types:watch": "dotenv -e .env.hasura -- graphql-codegen --config codegen.yml --watch gql/**/*.graphql",
-    "export-metadata": "node scripts/export-hasura-metadata.js",
+    "hasura-console": "cd hasura && npx hasura console --admin-secret notsecretatallthisisjustfordevelopment",
     "precommit": "dotenv -e .env.hasura -- lint-staged"
   },
   "dependencies": {
