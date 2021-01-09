@@ -1,8 +1,5 @@
 module.exports = {
-  '*.{js,ts,tsx,graphql,json,yaml}': [
-    'npm run format --',
-    'npm run export-metadata',
-  ],
+  '*.{js,ts,tsx,graphql,json,yaml}': ['npm run format --'],
   '*.{ts,tsx}': [
     'npm run gen-gql-types',
     () => 'npm run check-types',
