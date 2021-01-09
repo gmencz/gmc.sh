@@ -18,19 +18,6 @@ export type Scalars = {
   timestamptz: string
 }
 
-/** expression to compare columns of type Boolean. All fields are combined with logical 'AND'. */
-export type Boolean_Comparison_Exp = {
-  _eq?: Maybe<Scalars['Boolean']>
-  _gt?: Maybe<Scalars['Boolean']>
-  _gte?: Maybe<Scalars['Boolean']>
-  _in?: Maybe<Array<Scalars['Boolean']>>
-  _is_null?: Maybe<Scalars['Boolean']>
-  _lt?: Maybe<Scalars['Boolean']>
-  _lte?: Maybe<Scalars['Boolean']>
-  _neq?: Maybe<Scalars['Boolean']>
-  _nin?: Maybe<Array<Scalars['Boolean']>>
-}
-
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
 export type String_Comparison_Exp = {
   _eq?: Maybe<Scalars['String']>
@@ -201,12 +188,9 @@ export type Timestamptz_Comparison_Exp = {
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users'
-  company?: Maybe<Scalars['String']>
   id: Scalars['String']
   last_seen: Scalars['timestamptz']
   name: Scalars['String']
-  picture?: Maybe<Scalars['String']>
-  verified: Scalars['Boolean']
 }
 
 /** aggregated selection of "users" */
@@ -248,12 +232,9 @@ export type Users_Bool_Exp = {
   _and?: Maybe<Array<Maybe<Users_Bool_Exp>>>
   _not?: Maybe<Users_Bool_Exp>
   _or?: Maybe<Array<Maybe<Users_Bool_Exp>>>
-  company?: Maybe<String_Comparison_Exp>
   id?: Maybe<String_Comparison_Exp>
   last_seen?: Maybe<Timestamptz_Comparison_Exp>
   name?: Maybe<String_Comparison_Exp>
-  picture?: Maybe<String_Comparison_Exp>
-  verified?: Maybe<Boolean_Comparison_Exp>
 }
 
 /** unique or primary key constraints on table "users" */
@@ -264,50 +245,39 @@ export enum Users_Constraint {
 
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
-  company?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
-  verified?: Maybe<Scalars['Boolean']>
 }
 
 /** aggregate max on columns */
 export type Users_Max_Fields = {
   __typename?: 'users_max_fields'
-  company?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
 }
 
 /** order by max() on columns of table "users" */
 export type Users_Max_Order_By = {
-  company?: Maybe<Order_By>
   id?: Maybe<Order_By>
   last_seen?: Maybe<Order_By>
   name?: Maybe<Order_By>
-  picture?: Maybe<Order_By>
 }
 
 /** aggregate min on columns */
 export type Users_Min_Fields = {
   __typename?: 'users_min_fields'
-  company?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
 }
 
 /** order by min() on columns of table "users" */
 export type Users_Min_Order_By = {
-  company?: Maybe<Order_By>
   id?: Maybe<Order_By>
   last_seen?: Maybe<Order_By>
   name?: Maybe<Order_By>
-  picture?: Maybe<Order_By>
 }
 
 /** response of any mutation on the table "users" */
@@ -334,12 +304,9 @@ export type Users_On_Conflict = {
 
 /** ordering options when selecting data from "users" */
 export type Users_Order_By = {
-  company?: Maybe<Order_By>
   id?: Maybe<Order_By>
   last_seen?: Maybe<Order_By>
   name?: Maybe<Order_By>
-  picture?: Maybe<Order_By>
-  verified?: Maybe<Order_By>
 }
 
 /** primary key columns input for table: "users" */
@@ -350,76 +317,61 @@ export type Users_Pk_Columns_Input = {
 /** select columns of table "users" */
 export enum Users_Select_Column {
   /** column name */
-  Company = 'company',
-  /** column name */
   Id = 'id',
   /** column name */
   LastSeen = 'last_seen',
   /** column name */
   Name = 'name',
-  /** column name */
-  Picture = 'picture',
-  /** column name */
-  Verified = 'verified',
 }
 
 /** input type for updating data in table "users" */
 export type Users_Set_Input = {
-  company?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
-  verified?: Maybe<Scalars['Boolean']>
 }
 
 /** update columns of table "users" */
 export enum Users_Update_Column {
   /** column name */
-  Company = 'company',
-  /** column name */
   Id = 'id',
   /** column name */
   LastSeen = 'last_seen',
   /** column name */
   Name = 'name',
-  /** column name */
-  Picture = 'picture',
-  /** column name */
-  Verified = 'verified',
 }
 
-export type MeQueryVariables = Exact<{
-  id: Scalars['String']
+export type MostRecentUsersQueryVariables = Exact<{
+  limit: Scalars['Int']
 }>
 
-export type MeQuery = { __typename?: 'query_root' } & {
-  users_by_pk?: Maybe<
-    { __typename?: 'users' } & Pick<
-      Users,
-      'id' | 'name' | 'company' | 'picture' | 'verified' | 'last_seen'
-    >
+export type MostRecentUsersQuery = { __typename?: 'query_root' } & {
+  users: Array<
+    { __typename?: 'users' } & Pick<Users, 'id' | 'name' | 'last_seen'>
   >
 }
 
-export const MeDocument = `
-    query Me($id: String!) {
-  users_by_pk(id: $id) {
+export const MostRecentUsersDocument = `
+    query MostRecentUsers($limit: Int!) {
+  users(limit: $limit, order_by: {last_seen: desc}) {
     id
     name
-    company
-    picture
-    verified
     last_seen
   }
 }
     `
-export const useMeQuery = <TData = MeQuery, TError = unknown>(
-  variables: MeQueryVariables,
-  options?: UseQueryOptions<MeQuery, TError, TData>,
+export const useMostRecentUsersQuery = <
+  TData = MostRecentUsersQuery,
+  TError = unknown
+>(
+  variables: MostRecentUsersQueryVariables,
+  options?: UseQueryOptions<MostRecentUsersQuery, TError, TData>,
 ) =>
-  useQuery<MeQuery, TError, TData>(
-    ['Me', variables],
-    fetcher<MeQuery, MeQueryVariables>(MeDocument, variables),
+  useQuery<MostRecentUsersQuery, TError, TData>(
+    ['MostRecentUsers', variables],
+    fetcher<MostRecentUsersQuery, MostRecentUsersQueryVariables>(
+      MostRecentUsersDocument,
+      variables,
+    ),
     options,
   )
