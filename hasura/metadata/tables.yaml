@@ -9,6 +9,7 @@
       - last_seen
       - name
       filter: {}
+      limit: 20
   update_permissions:
   - role: user
     permission:
