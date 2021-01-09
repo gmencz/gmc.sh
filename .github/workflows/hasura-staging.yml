@@ -1,4 +1,4 @@
-name: Hasura staging CI/CD
+name: Hasura staging
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
      steps:
        - uses: actions/checkout@v2
-       - name: Hasura staging CI/CD
+       - name: Hasura staging
          uses: GavinRay97/hasura-ci-cd-action@v1.3
          with:
           PATH_TO_HASURA_PROJECT_ROOT: ./hasura
