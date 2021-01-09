@@ -16,7 +16,8 @@
     "pretest:e2e": "rm -rf .nyc_output coverage .next || true",
     "test:e2e:run": "start-test dev http://localhost:3000/api/health cy:run",
     "gen-gql-types": "dotenv -e .env.local -- graphql-codegen --config codegen.yml",
-    "gen-gql-types:watch": "dotenv -e .env.local -- graphql-codegen --config codegen.yml --watch gql/**/*.graphql"
+    "gen-gql-types:watch": "dotenv -e .env.local -- graphql-codegen --config codegen.yml --watch gql/**/*.graphql",
+    "export-metadata": "node scripts/export-hasura-metadata.js"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.16.0",
