@@ -1,8 +1,8 @@
 overwrite: true
 schema:
-  - https://gql.gmc.sh/v1/graphql:
+  - http://localhost:8080/v1/graphql:
       headers:
-        X-Hasura-Admin-Secret: ${HASURA_ADMIN_SECRET}
+        X-Hasura-Admin-Secret: ${HASURA_GRAPHQL_ADMIN_SECRET}
 
 documents: "gql/**/*.graphql"
 generates:

@@ -1,0 +1,6 @@
+- name: allowed-queries
+  definition:
+    queries:
+    - name: MostRecentUsers
+      query: "query MostRecentUsers($limit: Int!) {\r\n  users(limit: $limit, order_by:
+        { last_seen: desc }) {\r\n    id\r\n    name\r\n    last_seen\r\n  }\r\n}"

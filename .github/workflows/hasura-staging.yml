@@ -1,0 +1,21 @@
+name: Hasura staging
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+
+     runs-on: ubuntu-latest
+
+     steps:
+       - uses: actions/checkout@v2
+       - name: Hasura staging
+         uses: GavinRay97/hasura-ci-cd-action@v1.3
+         with:
+          PATH_TO_HASURA_PROJECT_ROOT: ./hasura
+          HASURA_ENDPOINT: ${{ secrets.STAGING_GQL_ENDPOINT }}
+          HASURA_ADMIN_SECRET: ${{ secrets.STAGING_HASURA_ADMIN_SECRET }}
+          HASURA_MIGRATIONS_ENABLED: true

@@ -1,0 +1,4 @@
+{
+  "*.{js,ts,tsx,graphql,json,yaml}": ["npm run format --", "npm run export-metadata"],
+  "*.{js,ts,tsx}": ["npm run gen-gql-types", "npm run check-types --", "npm run test --", "npm run lint --"]
+}
