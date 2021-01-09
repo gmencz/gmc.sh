@@ -4,28 +4,27 @@ import {
 } from 'generated/graphql'
 import Head from 'next/head'
 import { formatDistanceToNow, parseISO } from 'date-fns'
-import {
-  authenticatedServerSideProps,
-  InferAuthenticatedServerSideProps,
-} from 'utils/authenticated-server-side-props'
+import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
 import { ClientError } from 'graphql-request'
+import useMeQuery from 'hooks/use-me-query'
 
 export const getServerSideProps = authenticatedServerSideProps()
 
-function Index({
-  user,
-}: InferAuthenticatedServerSideProps<typeof getServerSideProps>) {
-  const { data, error, status } = useMostRecentUsersQuery<
-    MostRecentUsersQuery,
-    ClientError
-  >({
+function Index() {
+  const { data: me } = useMeQuery()
+
+  const {
+    data: mostRecentUsers,
+    error: errorFetchingMostRecentUsers,
+    status: mostRecentUsersStatus,
+  } = useMostRecentUsersQuery<MostRecentUsersQuery, ClientError>({
     limit: 10,
   })
 
   return (
     <div className="container mx-auto py-8 px-4">
       <Head>
-        <title>Hello {user.name}</title>
+        <title>Hello {me.name}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <p className="mb-1 font-bold">
@@ -38,9 +37,9 @@ function Index({
       <pre className="overflow-x-auto">
         {JSON.stringify(
           {
-            nickname: user.nickname,
-            name: user.name,
-            picture: user.picture,
+            nickname: me.nickname,
+            name: me.name,
+            picture: me.picture,
           },
           null,
           2,
@@ -50,18 +49,18 @@ function Index({
         <p className="mb-2 font-bold">
           And here are the most recent users of the app:
         </p>
-        {status === 'loading' && <span>loading...</span>}
-        {status === 'error' && (
+        {mostRecentUsersStatus === 'loading' && <span>loading...</span>}
+        {mostRecentUsersStatus === 'error' && (
           <strong>
             Error:{' '}
-            {error?.response.errors
-              ? error.response.errors[0].message
-              : error?.message}
+            {errorFetchingMostRecentUsers?.response.errors
+              ? errorFetchingMostRecentUsers.response.errors[0].message
+              : errorFetchingMostRecentUsers?.message}
           </strong>
         )}
-        {status === 'success' && (
+        {mostRecentUsersStatus === 'success' && (
           <div className="space-y-4">
-            {data?.users.map(({ id, name, last_seen }) => (
+            {mostRecentUsers?.users.map(({ id, name, last_seen }) => (
               <pre key={id} className="overflow-x-auto">
                 {JSON.stringify(
                   {

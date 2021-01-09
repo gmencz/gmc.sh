@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GetServerSidePropsContext } from 'next'
+import { QueryClient } from 'react-query'
+import { dehydrate } from 'react-query/hydration'
 import auth0 from './auth0'
+import { ME_KEY } from './react-query-keys'
 
 type AsyncReturnType<T extends (...args: any) => any> = T extends (
   ...args: any
@@ -16,10 +19,6 @@ export type InferAuthenticatedServerSideProps<
 
 type User = Record<string, unknown>
 
-type DefaultAuthenticatedProps = {
-  user: User
-}
-
 type EmptyProps = {
   props: Record<string, unknown>
 }
@@ -32,7 +31,7 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
 ) {
   return async function getAuthenticatedServerSideProps(
     ctx: GetServerSidePropsContext,
-  ): Promise<{ props: T['props'] & DefaultAuthenticatedProps }> {
+  ): Promise<{ props: T['props'] }> {
     const session = await auth0.getSession(ctx.req)
     if (!session || !session.user) {
       return ({
@@ -41,15 +40,18 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
           permanent: false,
         },
         // We have to trick the TS compiler here.
-      } as unknown) as { props: T['props'] & DefaultAuthenticatedProps }
+      } as unknown) as { props: T['props'] }
     }
 
     const { user } = session
+    const queryClient = new QueryClient()
+    queryClient.setQueryData(ME_KEY, user)
+    const dehydratedState = dehydrate(queryClient)
 
     if (getServerSidePropsFunc) {
       return {
         props: {
-          user,
+          dehydratedState,
           ...((await getServerSidePropsFunc(ctx, user)).props || {}),
         },
       }
@@ -57,7 +59,7 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
 
     return {
       props: {
-        user,
+        dehydratedState,
       },
     }
   }
