@@ -1,9 +1,9 @@
-name: Hasura production CI/CD
+name: Hasura staging CI/CD
 
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   deploy:
@@ -12,10 +12,10 @@ jobs:
 
      steps:
        - uses: actions/checkout@v2
-       - name: Hasura production CI/CD
+       - name: Hasura staging CI/CD
          uses: GavinRay97/hasura-ci-cd-action@v1.3
          with:
           PATH_TO_HASURA_PROJECT_ROOT: ./hasura
-          HASURA_ENDPOINT: ${{ secrets.GQL_ENDPOINT }}
-          HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
+          HASURA_ENDPOINT: ${{ secrets.STAGING_GQL_ENDPOINT }}
+          HASURA_ADMIN_SECRET: ${{ secrets.STAGING_HASURA_ADMIN_SECRET }}
           HASURA_MIGRATIONS_ENABLED: true
