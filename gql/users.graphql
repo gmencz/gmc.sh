@@ -1,10 +1,7 @@
-query Me($id: String!) {
-  users_by_pk(id: $id) {
+query MostRecentUsers($limit: Int!) {
+  users(limit: $limit, order_by: { last_seen: desc }) {
     id
     name
-    company
-    picture
-    verified
     last_seen
   }
 }
