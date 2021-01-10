@@ -1,6 +1,22 @@
-actions: []
+actions:
+  - name: me
+    definition:
+      kind: ''
+      handler: '{{ME_ACTION_BASE_URL}}/api/me'
+      forward_client_headers: true
+    permissions:
+      - role: user
 custom_types:
   enums: []
   input_objects: []
-  objects: []
+  objects:
+    - name: MeOutput
+      relationships:
+        - remote_table:
+            schema: public
+            name: users
+          name: profile
+          type: object
+          field_mapping:
+            user_id: id
   scalars: []

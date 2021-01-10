@@ -43,8 +43,6 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
     }
 
     const { user } = session
-    console.log(user)
-
     if (getServerSidePropsFunc) {
       return {
         props: {

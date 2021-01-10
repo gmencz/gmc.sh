@@ -15,7 +15,9 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  json: any
   timestamptz: string
+  uuid: any
 }
 
 /** expression to compare columns of type Boolean. All fields are combined with logical 'AND'. */
@@ -29,6 +31,12 @@ export type Boolean_Comparison_Exp = {
   _lte?: Maybe<Scalars['Boolean']>
   _neq?: Maybe<Scalars['Boolean']>
   _nin?: Maybe<Array<Scalars['Boolean']>>
+}
+
+export type MeOutput = {
+  __typename?: 'MeOutput'
+  profile?: Maybe<Users>
+  user_id: Scalars['String']
 }
 
 /** expression to compare columns of type String. All fields are combined with logical 'AND'. */
@@ -120,6 +128,8 @@ export enum Order_By {
 /** query root */
 export type Query_Root = {
   __typename?: 'query_root'
+  /** perform the action: "me" */
+  me: MeOutput
   /** fetch data from the table: "users" */
   users: Array<Users>
   /** fetch aggregated fields from the table: "users" */
@@ -154,6 +164,8 @@ export type Query_RootUsers_By_PkArgs = {
 /** subscription root */
 export type Subscription_Root = {
   __typename?: 'subscription_root'
+  /** perform the action: "me" */
+  me: MeOutput
   /** fetch data from the table: "users" */
   users: Array<Users>
   /** fetch aggregated fields from the table: "users" */
@@ -389,37 +401,73 @@ export enum Users_Update_Column {
   Verified = 'verified',
 }
 
-export type MeQueryVariables = Exact<{
+export type MeQueryVariables = Exact<{ [key: string]: never }>
+
+export type MeQuery = { __typename?: 'query_root' } & {
+  me: { __typename?: 'MeOutput' } & Pick<MeOutput, 'user_id'> & {
+      profile?: Maybe<
+        { __typename?: 'users' } & Pick<
+          Users,
+          'last_seen' | 'company' | 'name' | 'picture' | 'verified'
+        >
+      >
+    }
+}
+
+export type UserQueryVariables = Exact<{
   id: Scalars['String']
 }>
 
-export type MeQuery = { __typename?: 'query_root' } & {
+export type UserQuery = { __typename?: 'query_root' } & {
   users_by_pk?: Maybe<
     { __typename?: 'users' } & Pick<
       Users,
-      'id' | 'name' | 'company' | 'picture' | 'verified' | 'last_seen'
+      'id' | 'name' | 'company' | 'picture' | 'last_seen' | 'verified'
     >
   >
 }
 
 export const MeDocument = `
-    query Me($id: String!) {
-  users_by_pk(id: $id) {
-    id
-    name
-    company
-    picture
-    verified
-    last_seen
+    query Me {
+  me {
+    user_id
+    profile {
+      last_seen
+      company
+      name
+      picture
+      verified
+    }
   }
 }
     `
 export const useMeQuery = <TData = MeQuery, TError = unknown>(
-  variables: MeQueryVariables,
+  variables?: MeQueryVariables,
   options?: UseQueryOptions<MeQuery, TError, TData>,
 ) =>
   useQuery<MeQuery, TError, TData>(
     ['Me', variables],
     fetcher<MeQuery, MeQueryVariables>(MeDocument, variables),
+    options,
+  )
+export const UserDocument = `
+    query User($id: String!) {
+  users_by_pk(id: $id) {
+    id
+    name
+    company
+    picture
+    last_seen
+    verified
+  }
+}
+    `
+export const useUserQuery = <TData = UserQuery, TError = unknown>(
+  variables: UserQueryVariables,
+  options?: UseQueryOptions<UserQuery, TError, TData>,
+) =>
+  useQuery<UserQuery, TError, TData>(
+    ['User', variables],
+    fetcher<UserQuery, UserQueryVariables>(UserDocument, variables),
     options,
   )

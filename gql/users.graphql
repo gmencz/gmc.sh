@@ -1,10 +1,23 @@
-query Me($id: String!) {
+query Me {
+  me {
+    user_id
+    profile {
+      last_seen
+      company
+      name
+      picture
+      verified
+    }
+  }
+}
+
+query User($id: String!) {
   users_by_pk(id: $id) {
     id
     name
     company
     picture
-    verified
     last_seen
+    verified
   }
 }

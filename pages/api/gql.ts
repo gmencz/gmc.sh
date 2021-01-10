@@ -20,17 +20,16 @@ export default async function gql(req: NextApiRequest, res: NextApiResponse) {
       })
     }
 
-    if (req.headers['x-proxy-auth'] === 'true') {
-      const session = await auth0.getSession(req)
-      if (!session || !session.user) {
-        return res.status(401).json({
-          message: `You must login to access this resource.`,
-          code: 'UNAUTHENTICATED',
-        })
-      }
-
-      gqlProxyClient.setHeader('Authorization', `Bearer ${session.accessToken}`)
+    const session = await auth0.getSession(req)
+    if (!session || !session.user) {
+      return res.status(401).json({
+        message: `You must login to access this resource.`,
+        code: 'UNAUTHENTICATED',
+      })
     }
+
+    gqlProxyClient.setHeader('Authorization', `Bearer ${session.accessToken}`)
+    gqlProxyClient.setHeader('Cookie', req.headers.cookie || '')
 
     try {
       const data = await gqlProxyClient.request(query, variables)

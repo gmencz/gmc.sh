@@ -1,9 +1,6 @@
 import Head from 'next/head'
 import { Transition } from '@headlessui/react'
-import {
-  authenticatedServerSideProps,
-  InferAuthenticatedServerSideProps,
-} from 'utils/authenticated-server-side-props'
+import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useMeQuery } from 'generated/graphql'
@@ -11,16 +8,14 @@ import { getHours } from 'date-fns'
 
 export const getServerSideProps = authenticatedServerSideProps()
 
-function Index({
-  userId,
-}: InferAuthenticatedServerSideProps<typeof getServerSideProps>) {
-  const { data: me, status } = useMeQuery({ id: userId })
+function Index() {
+  const { data: me, status } = useMeQuery()
   const [isOpen, setIsOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const open = () => setIsOpen(true)
   const close = () => setIsOpen(false)
 
-  const profilePicture = me?.users_by_pk?.picture || '/default_picture.png'
+  const profilePicture = me?.me.profile?.picture || '/default_picture.png'
 
   const greetUser = () => {
     const hour = getHours(new Date())
@@ -530,12 +525,12 @@ function Index({
                         <img
                           className="h-8 w-8 rounded-full"
                           src={profilePicture}
-                          alt={me?.users_by_pk?.name}
+                          alt={me?.me.profile?.name}
                         />
                       )}
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                         <span className="sr-only">Open user menu for </span>
-                        {me?.users_by_pk?.name || ''}
+                        {me?.me.profile?.name || ''}
                       </span>
                       {/* Heroicon name: chevron-down */}
                       <svg
@@ -612,7 +607,7 @@ function Index({
                         <img
                           className="hidden h-16 w-16 rounded-full sm:block"
                           src={profilePicture}
-                          alt={me?.users_by_pk?.name}
+                          alt={me?.me.profile?.name}
                         />
                       )}
                       <div className="flex-1">
@@ -625,7 +620,7 @@ function Index({
                             <img
                               className="h-16 w-16 rounded-full sm:hidden"
                               src={profilePicture}
-                              alt={me?.users_by_pk?.name}
+                              alt={me?.me.profile?.name}
                             />
                           )}
                           <div className="ml-3 flex-1">
@@ -637,7 +632,7 @@ function Index({
                               </div>
                             ) : (
                               <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                                {greetUser()}, {me?.users_by_pk?.name}
+                                {greetUser()}, {me?.me.profile?.name}
                               </h1>
                             )}
                           </div>
@@ -650,7 +645,7 @@ function Index({
                           </div>
                         ) : (
                           <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
-                            {me?.users_by_pk?.company && (
+                            {me?.me.profile?.company && (
                               <>
                                 <dt className="sr-only">Company</dt>
                                 <dd className="flex items-center text-sm text-gray-500 font-medium capitalize sm:mr-6">
@@ -668,11 +663,11 @@ function Index({
                                       clipRule="evenodd"
                                     />
                                   </svg>
-                                  {me.users_by_pk.company}
+                                  {me.me.profile.company}
                                 </dd>
                               </>
                             )}
-                            {me?.users_by_pk?.verified && (
+                            {me?.me.profile?.verified && (
                               <>
                                 <dt className="sr-only">Account status</dt>
                                 <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">

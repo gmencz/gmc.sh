@@ -1,10 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 
-const gqlClient = new GraphQLClient('/api/gql', {
-  headers: {
-    'x-proxy-auth': 'true',
-  },
-})
+const gqlClient = new GraphQLClient('/api/gql')
 
 const gqlProxyClient = new GraphQLClient(process.env.GQL_ENDPOINT as string)
 
