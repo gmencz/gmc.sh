@@ -1,25 +1,12 @@
 import { Menu, Transition } from '@headlessui/react'
-import { MeQuery, useMeQuery } from 'generated/graphql'
-import { ClientError } from 'graphql-request'
-import { useToasts } from 'react-toast-notifications'
+import { useMeQuery } from 'generated/graphql'
 
 type HeaderProps = {
   openMobileSidebar: () => void
 }
 
 function Header({ openMobileSidebar }: HeaderProps) {
-  const { addToast } = useToasts()
-  const { data: me, status } = useMeQuery<MeQuery, ClientError>(
-    {},
-    {
-      onError: error => {
-        addToast(
-          <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
-          { appearance: 'error' },
-        )
-      },
-    },
-  )
+  const { data: me, status } = useMeQuery({})
 
   const profilePicture = me?.me.profile?.picture || '/default_picture.png'
 

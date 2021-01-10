@@ -1,15 +1,29 @@
 import Head from 'next/head'
 import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
 import { useState } from 'react'
-import { useMeQuery } from 'generated/graphql'
+import { MeQuery, useMeQuery } from 'generated/graphql'
 import { getHours } from 'date-fns'
 import Sidebar from 'components/sidebar'
 import Header from 'components/header'
+import { useToasts } from 'react-toast-notifications'
+import { ClientError } from 'graphql-request'
 
 export const getServerSideProps = authenticatedServerSideProps()
 
 function Index() {
-  const { data: me, status } = useMeQuery()
+  const { addToast } = useToasts()
+  const { data: me, status } = useMeQuery<MeQuery, ClientError>(
+    {},
+    {
+      onError: error => {
+        addToast(
+          <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
+          { appearance: 'error' },
+        )
+      },
+    },
+  )
+
   const profilePicture = me?.me.profile?.picture || '/default_picture.png'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const openMobileSidebar = () => setIsMobileSidebarOpen(true)
@@ -83,11 +97,14 @@ function Index() {
                   <div className="flex-1 min-w-0">
                     {/* Profile */}
                     <div className="flex items-center">
-                      {status === 'loading' ? (
+                      {status === 'loading' && (
                         <div className="animate-pulse">
-                          <div className="hidden rounded-full sm:block bg-gray-200 h-16 w-16"></div>
+                          <div className="hidden rounded-full sm:block bg-gray-200 h-16 w-16">
+                            <span className="sr-only">loading...</span>
+                          </div>
                         </div>
-                      ) : (
+                      )}
+                      {status === 'success' && (
                         <img
                           className="hidden h-16 w-16 rounded-full sm:block"
                           src={profilePicture}
@@ -96,11 +113,14 @@ function Index() {
                       )}
                       <div className="flex-1">
                         <div className="flex items-center">
-                          {status === 'loading' ? (
+                          {status === 'loading' && (
                             <div className="animate-pulse">
-                              <div className="rounded-full sm:hidden bg-gray-200 h-16 w-16"></div>
+                              <div className="rounded-full sm:hidden bg-gray-200 h-16 w-16">
+                                <span className="sr-only">loading...</span>
+                              </div>
                             </div>
-                          ) : (
+                          )}
+                          {status === 'success' && (
                             <img
                               className="h-16 w-16 rounded-full sm:hidden"
                               src={profilePicture}
@@ -108,26 +128,31 @@ function Index() {
                             />
                           )}
                           <div className="ml-3 flex-1">
-                            {status === 'loading' ? (
+                            {status === 'loading' && (
                               <div className="animate-pulse mb-3">
                                 <div className="h-4 bg-gray-200 rounded">
                                   <span className="sr-only">loading...</span>
                                 </div>
                               </div>
-                            ) : (
+                            )}
+                            {status === 'success' && (
                               <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
                                 {greetUser()}, {me?.me.profile?.name}
                               </h1>
                             )}
+                            {status === 'error' && (
+                              <strong>Couldn&apos;t load profile.</strong>
+                            )}
                           </div>
                         </div>
-                        {status === 'loading' ? (
+                        {status === 'loading' && (
                           <div className="animate-pulse sm:ml-3 mt-4 sm:mt-1">
                             <div className="h-14 sm:h-4 bg-gray-200 rounded">
                               <span className="sr-only">loading...</span>
                             </div>
                           </div>
-                        ) : (
+                        )}
+                        {status === 'success' && (
                           <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                             {me?.me.profile?.company && (
                               <>
@@ -152,7 +177,7 @@ function Index() {
                               </>
                             )}
                             {me?.me.profile?.verified && (
-                              <>
+                              <dl>
                                 <dt className="sr-only">Account status</dt>
                                 <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
                                   {/* Heroicon name: check-circle */}
@@ -171,7 +196,7 @@ function Index() {
                                   </svg>
                                   Verified account
                                 </dd>
-                              </>
+                              </dl>
                             )}
                           </dl>
                         )}
