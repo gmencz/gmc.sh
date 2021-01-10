@@ -1,6 +1,14 @@
 - name: allowed-queries
   definition:
     queries:
-    - name: MostRecentUsers
-      query: "query MostRecentUsers($limit: Int!) {\r\n  users(limit: $limit, order_by:
-        { last_seen: desc }) {\r\n    id\r\n    name\r\n    last_seen\r\n  }\r\n}"
+      - name: User
+        query:
+          "query User($id: String!) {\r\n  users_by_pk(id: $id) {\r\n    id\r\n
+          \   name\r\n    company\r\n    picture\r\n    last_seen\r\n    verified\r\n
+          \ }\r\n}"
+      - name: Me
+        query:
+          "query Me {\r\n  me {\r\n    user_id\r\n    profile
+          {\r\n      last_seen\r\n
+          \     company\r\n      name\r\n      picture\r\n      verified\r\n    }\r\n
+          \ }\r\n}"

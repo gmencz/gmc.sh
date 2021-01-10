@@ -1,7 +1,23 @@
-query MostRecentUsers($limit: Int!) {
-  users(limit: $limit, order_by: { last_seen: desc }) {
+query Me {
+  me {
+    user_id
+    profile {
+      last_seen
+      company
+      name
+      picture
+      verified
+    }
+  }
+}
+
+query User($id: String!) {
+  users_by_pk(id: $id) {
     id
     name
+    company
+    picture
     last_seen
+    verified
   }
 }

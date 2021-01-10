@@ -11,11 +11,7 @@ if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
   require('../mocks')
 }
 
-export const appQueryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 2 },
-  },
-})
+export const appQueryClient = new QueryClient()
 
 function App({ Component, pageProps }: AppProps) {
   return (

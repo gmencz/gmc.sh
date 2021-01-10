@@ -1,2 +1,7 @@
+type Query {
+  me: MeOutput!
+}
 
-
+type MeOutput {
+  user_id: String!
+}

@@ -14,10 +14,8 @@ export type InferAuthenticatedServerSideProps<
   T extends (...args: any) => Promise<{ props: any }>
 > = AsyncReturnType<T>['props']
 
-type User = Record<string, unknown>
-
-type DefaultAuthenticatedProps = {
-  user: User
+type DefaultProps = {
+  userId: string
 }
 
 type EmptyProps = {
@@ -27,12 +25,12 @@ type EmptyProps = {
 function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
-    user: User,
+    userId: string,
   ) => Promise<T>,
 ) {
   return async function getAuthenticatedServerSideProps(
     ctx: GetServerSidePropsContext,
-  ): Promise<{ props: T['props'] & DefaultAuthenticatedProps }> {
+  ): Promise<{ props: T['props'] & DefaultProps }> {
     const session = await auth0.getSession(ctx.req)
     if (!session || !session.user) {
       return ({
@@ -41,23 +39,22 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
           permanent: false,
         },
         // We have to trick the TS compiler here.
-      } as unknown) as { props: T['props'] & DefaultAuthenticatedProps }
+      } as unknown) as { props: T['props'] & DefaultProps }
     }
 
     const { user } = session
-
     if (getServerSidePropsFunc) {
       return {
         props: {
-          user,
-          ...((await getServerSidePropsFunc(ctx, user)).props || {}),
+          userId: user.sub,
+          ...((await getServerSidePropsFunc(ctx, user.sub)).props || {}),
         },
       }
     }
 
     return {
       props: {
-        user,
+        userId: user.sub,
       },
     }
   }
