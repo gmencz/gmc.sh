@@ -2,8 +2,8 @@ name: Hasura staging
 
 on:
   push:
-    branches:
-      - develop
+    branches-ignore:
+      - main
 
 jobs:
   deploy:
