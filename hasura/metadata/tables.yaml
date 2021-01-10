@@ -2,35 +2,28 @@
     schema: public
     name: users
   select_permissions:
-    - role: user
-      permission:
-        columns:
-          - company
-          - id
-          - last_seen
-          - name
-          - picture
-          - verified
-        filter:
-          id:
-            _eq: x-hasura-user-id
-        limit: 1
+  - role: user
+    permission:
+      columns:
+      - id
+      - last_seen
+      - name
+      filter: {}
+      limit: 20
   update_permissions:
-    - role: user
-      permission:
-        columns:
-          - company
-          - name
-          - picture
-        filter:
-          id:
-            _eq: x-hasura-user-id
-        check:
-          id:
-            _eq: x-hasura-user-id
+  - role: user
+    permission:
+      columns:
+      - name
+      filter:
+        id:
+          _eq: x-hasura-user-id
+      check:
+        id:
+          _eq: x-hasura-user-id
   delete_permissions:
-    - role: user
-      permission:
-        filter:
-          id:
-            _eq: x-hasura-user-id
+  - role: user
+    permission:
+      filter:
+        id:
+          _eq: x-hasura-user-id
