@@ -20,12 +20,4 @@ custom_types:
           field_mapping:
             user_id: id
     - name: Me
-      relationships:
-        - remote_table:
-            schema: public
-            name: account
-          name: account
-          type: object
-          field_mapping:
-            user_id: id
   scalars: []
