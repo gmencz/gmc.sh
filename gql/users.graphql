@@ -1,7 +1,7 @@
 query Me {
   me {
     user_id
-    profile {
+    account {
       last_seen
       company
       name
@@ -12,7 +12,7 @@ query Me {
 }
 
 query User($id: String!) {
-  users_by_pk(id: $id) {
+  account_by_pk(id: $id) {
     id
     name
     company

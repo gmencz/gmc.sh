@@ -33,9 +33,15 @@ export type Boolean_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['Boolean']>>
 }
 
+export type Me = {
+  __typename?: 'Me'
+  account?: Maybe<Account>
+  user_id: Scalars['String']
+}
+
 export type MeOutput = {
   __typename?: 'MeOutput'
-  profile?: Maybe<Users>
+  account?: Maybe<Account>
   user_id: Scalars['String']
 }
 
@@ -58,55 +64,317 @@ export type String_Comparison_Exp = {
   _similar?: Maybe<Scalars['String']>
 }
 
+/** columns and relationships of "account" */
+export type Account = {
+  __typename?: 'account'
+  company?: Maybe<Scalars['String']>
+  id: Scalars['String']
+  last_seen: Scalars['timestamptz']
+  name: Scalars['String']
+  picture?: Maybe<Scalars['String']>
+  /** An array relationship */
+  schedules: Array<Schedule>
+  /** An aggregated array relationship */
+  schedules_aggregate: Schedule_Aggregate
+  verified: Scalars['Boolean']
+}
+
+/** columns and relationships of "account" */
+export type AccountSchedulesArgs = {
+  distinct_on?: Maybe<Array<Schedule_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Order_By>>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** columns and relationships of "account" */
+export type AccountSchedules_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Order_By>>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** aggregated selection of "account" */
+export type Account_Aggregate = {
+  __typename?: 'account_aggregate'
+  aggregate?: Maybe<Account_Aggregate_Fields>
+  nodes: Array<Account>
+}
+
+/** aggregate fields of "account" */
+export type Account_Aggregate_Fields = {
+  __typename?: 'account_aggregate_fields'
+  count?: Maybe<Scalars['Int']>
+  max?: Maybe<Account_Max_Fields>
+  min?: Maybe<Account_Min_Fields>
+}
+
+/** aggregate fields of "account" */
+export type Account_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Account_Select_Column>>
+  distinct?: Maybe<Scalars['Boolean']>
+}
+
+/** order by aggregate values of table "account" */
+export type Account_Aggregate_Order_By = {
+  count?: Maybe<Order_By>
+  max?: Maybe<Account_Max_Order_By>
+  min?: Maybe<Account_Min_Order_By>
+}
+
+/** input type for inserting array relation for remote table "account" */
+export type Account_Arr_Rel_Insert_Input = {
+  data: Array<Account_Insert_Input>
+  on_conflict?: Maybe<Account_On_Conflict>
+}
+
+/** Boolean expression to filter rows from the table "account". All fields are combined with a logical 'AND'. */
+export type Account_Bool_Exp = {
+  _and?: Maybe<Array<Maybe<Account_Bool_Exp>>>
+  _not?: Maybe<Account_Bool_Exp>
+  _or?: Maybe<Array<Maybe<Account_Bool_Exp>>>
+  company?: Maybe<String_Comparison_Exp>
+  id?: Maybe<String_Comparison_Exp>
+  last_seen?: Maybe<Timestamptz_Comparison_Exp>
+  name?: Maybe<String_Comparison_Exp>
+  picture?: Maybe<String_Comparison_Exp>
+  schedules?: Maybe<Schedule_Bool_Exp>
+  verified?: Maybe<Boolean_Comparison_Exp>
+}
+
+/** unique or primary key constraints on table "account" */
+export enum Account_Constraint {
+  /** unique or primary key constraint */
+  UsersPkey = 'users_pkey',
+}
+
+/** input type for inserting data into table "account" */
+export type Account_Insert_Input = {
+  company?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  last_seen?: Maybe<Scalars['timestamptz']>
+  name?: Maybe<Scalars['String']>
+  picture?: Maybe<Scalars['String']>
+  schedules?: Maybe<Schedule_Arr_Rel_Insert_Input>
+  verified?: Maybe<Scalars['Boolean']>
+}
+
+/** aggregate max on columns */
+export type Account_Max_Fields = {
+  __typename?: 'account_max_fields'
+  company?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  last_seen?: Maybe<Scalars['timestamptz']>
+  name?: Maybe<Scalars['String']>
+  picture?: Maybe<Scalars['String']>
+}
+
+/** order by max() on columns of table "account" */
+export type Account_Max_Order_By = {
+  company?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  last_seen?: Maybe<Order_By>
+  name?: Maybe<Order_By>
+  picture?: Maybe<Order_By>
+}
+
+/** aggregate min on columns */
+export type Account_Min_Fields = {
+  __typename?: 'account_min_fields'
+  company?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  last_seen?: Maybe<Scalars['timestamptz']>
+  name?: Maybe<Scalars['String']>
+  picture?: Maybe<Scalars['String']>
+}
+
+/** order by min() on columns of table "account" */
+export type Account_Min_Order_By = {
+  company?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  last_seen?: Maybe<Order_By>
+  name?: Maybe<Order_By>
+  picture?: Maybe<Order_By>
+}
+
+/** response of any mutation on the table "account" */
+export type Account_Mutation_Response = {
+  __typename?: 'account_mutation_response'
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int']
+  /** data of the affected rows by the mutation */
+  returning: Array<Account>
+}
+
+/** input type for inserting object relation for remote table "account" */
+export type Account_Obj_Rel_Insert_Input = {
+  data: Account_Insert_Input
+  on_conflict?: Maybe<Account_On_Conflict>
+}
+
+/** on conflict condition type for table "account" */
+export type Account_On_Conflict = {
+  constraint: Account_Constraint
+  update_columns: Array<Account_Update_Column>
+  where?: Maybe<Account_Bool_Exp>
+}
+
+/** ordering options when selecting data from "account" */
+export type Account_Order_By = {
+  company?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  last_seen?: Maybe<Order_By>
+  name?: Maybe<Order_By>
+  picture?: Maybe<Order_By>
+  schedules_aggregate?: Maybe<Schedule_Aggregate_Order_By>
+  verified?: Maybe<Order_By>
+}
+
+/** primary key columns input for table: "account" */
+export type Account_Pk_Columns_Input = {
+  id: Scalars['String']
+}
+
+/** select columns of table "account" */
+export enum Account_Select_Column {
+  /** column name */
+  Company = 'company',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Picture = 'picture',
+  /** column name */
+  Verified = 'verified',
+}
+
+/** input type for updating data in table "account" */
+export type Account_Set_Input = {
+  company?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  last_seen?: Maybe<Scalars['timestamptz']>
+  name?: Maybe<Scalars['String']>
+  picture?: Maybe<Scalars['String']>
+  verified?: Maybe<Scalars['Boolean']>
+}
+
+/** update columns of table "account" */
+export enum Account_Update_Column {
+  /** column name */
+  Company = 'company',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  LastSeen = 'last_seen',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Picture = 'picture',
+  /** column name */
+  Verified = 'verified',
+}
+
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root'
-  /** delete data from the table: "users" */
-  delete_users?: Maybe<Users_Mutation_Response>
-  /** delete single row from the table: "users" */
-  delete_users_by_pk?: Maybe<Users>
-  /** insert data into the table: "users" */
-  insert_users?: Maybe<Users_Mutation_Response>
-  /** insert a single row into the table: "users" */
-  insert_users_one?: Maybe<Users>
-  /** update data of the table: "users" */
-  update_users?: Maybe<Users_Mutation_Response>
-  /** update single row of the table: "users" */
-  update_users_by_pk?: Maybe<Users>
+  /** delete data from the table: "account" */
+  delete_account?: Maybe<Account_Mutation_Response>
+  /** delete single row from the table: "account" */
+  delete_account_by_pk?: Maybe<Account>
+  /** delete data from the table: "schedule" */
+  delete_schedule?: Maybe<Schedule_Mutation_Response>
+  /** delete single row from the table: "schedule" */
+  delete_schedule_by_pk?: Maybe<Schedule>
+  /** insert data into the table: "account" */
+  insert_account?: Maybe<Account_Mutation_Response>
+  /** insert a single row into the table: "account" */
+  insert_account_one?: Maybe<Account>
+  /** insert data into the table: "schedule" */
+  insert_schedule?: Maybe<Schedule_Mutation_Response>
+  /** insert a single row into the table: "schedule" */
+  insert_schedule_one?: Maybe<Schedule>
+  /** update data of the table: "account" */
+  update_account?: Maybe<Account_Mutation_Response>
+  /** update single row of the table: "account" */
+  update_account_by_pk?: Maybe<Account>
+  /** update data of the table: "schedule" */
+  update_schedule?: Maybe<Schedule_Mutation_Response>
+  /** update single row of the table: "schedule" */
+  update_schedule_by_pk?: Maybe<Schedule>
 }
 
 /** mutation root */
-export type Mutation_RootDelete_UsersArgs = {
-  where: Users_Bool_Exp
+export type Mutation_RootDelete_AccountArgs = {
+  where: Account_Bool_Exp
 }
 
 /** mutation root */
-export type Mutation_RootDelete_Users_By_PkArgs = {
+export type Mutation_RootDelete_Account_By_PkArgs = {
   id: Scalars['String']
 }
 
 /** mutation root */
-export type Mutation_RootInsert_UsersArgs = {
-  objects: Array<Users_Insert_Input>
-  on_conflict?: Maybe<Users_On_Conflict>
+export type Mutation_RootDelete_ScheduleArgs = {
+  where: Schedule_Bool_Exp
 }
 
 /** mutation root */
-export type Mutation_RootInsert_Users_OneArgs = {
-  object: Users_Insert_Input
-  on_conflict?: Maybe<Users_On_Conflict>
+export type Mutation_RootDelete_Schedule_By_PkArgs = {
+  id: Scalars['uuid']
 }
 
 /** mutation root */
-export type Mutation_RootUpdate_UsersArgs = {
-  _set?: Maybe<Users_Set_Input>
-  where: Users_Bool_Exp
+export type Mutation_RootInsert_AccountArgs = {
+  objects: Array<Account_Insert_Input>
+  on_conflict?: Maybe<Account_On_Conflict>
 }
 
 /** mutation root */
-export type Mutation_RootUpdate_Users_By_PkArgs = {
-  _set?: Maybe<Users_Set_Input>
-  pk_columns: Users_Pk_Columns_Input
+export type Mutation_RootInsert_Account_OneArgs = {
+  object: Account_Insert_Input
+  on_conflict?: Maybe<Account_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_ScheduleArgs = {
+  objects: Array<Schedule_Insert_Input>
+  on_conflict?: Maybe<Schedule_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_OneArgs = {
+  object: Schedule_Insert_Input
+  on_conflict?: Maybe<Schedule_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_AccountArgs = {
+  _set?: Maybe<Account_Set_Input>
+  where: Account_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Account_By_PkArgs = {
+  _set?: Maybe<Account_Set_Input>
+  pk_columns: Account_Pk_Columns_Input
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_ScheduleArgs = {
+  _set?: Maybe<Schedule_Set_Input>
+  where: Schedule_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_By_PkArgs = {
+  _set?: Maybe<Schedule_Set_Input>
+  pk_columns: Schedule_Pk_Columns_Input
 }
 
 /** column ordering options */
@@ -128,73 +396,327 @@ export enum Order_By {
 /** query root */
 export type Query_Root = {
   __typename?: 'query_root'
+  /** fetch data from the table: "account" */
+  account: Array<Account>
+  /** fetch aggregated fields from the table: "account" */
+  account_aggregate: Account_Aggregate
+  /** fetch data from the table: "account" using primary key columns */
+  account_by_pk?: Maybe<Account>
   /** perform the action: "me" */
-  me: MeOutput
-  /** fetch data from the table: "users" */
-  users: Array<Users>
-  /** fetch aggregated fields from the table: "users" */
-  users_aggregate: Users_Aggregate
-  /** fetch data from the table: "users" using primary key columns */
-  users_by_pk?: Maybe<Users>
+  me: Me
+  /** fetch data from the table: "schedule" */
+  schedule: Array<Schedule>
+  /** fetch aggregated fields from the table: "schedule" */
+  schedule_aggregate: Schedule_Aggregate
+  /** fetch data from the table: "schedule" using primary key columns */
+  schedule_by_pk?: Maybe<Schedule>
 }
 
 /** query root */
-export type Query_RootUsersArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>
+export type Query_RootAccountArgs = {
+  distinct_on?: Maybe<Array<Account_Select_Column>>
   limit?: Maybe<Scalars['Int']>
   offset?: Maybe<Scalars['Int']>
-  order_by?: Maybe<Array<Users_Order_By>>
-  where?: Maybe<Users_Bool_Exp>
+  order_by?: Maybe<Array<Account_Order_By>>
+  where?: Maybe<Account_Bool_Exp>
 }
 
 /** query root */
-export type Query_RootUsers_AggregateArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>
+export type Query_RootAccount_AggregateArgs = {
+  distinct_on?: Maybe<Array<Account_Select_Column>>
   limit?: Maybe<Scalars['Int']>
   offset?: Maybe<Scalars['Int']>
-  order_by?: Maybe<Array<Users_Order_By>>
-  where?: Maybe<Users_Bool_Exp>
+  order_by?: Maybe<Array<Account_Order_By>>
+  where?: Maybe<Account_Bool_Exp>
 }
 
 /** query root */
-export type Query_RootUsers_By_PkArgs = {
+export type Query_RootAccount_By_PkArgs = {
   id: Scalars['String']
+}
+
+/** query root */
+export type Query_RootScheduleArgs = {
+  distinct_on?: Maybe<Array<Schedule_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Order_By>>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Order_By>>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_By_PkArgs = {
+  id: Scalars['uuid']
+}
+
+/** columns and relationships of "schedule" */
+export type Schedule = {
+  __typename?: 'schedule'
+  active: Scalars['Boolean']
+  created_at: Scalars['timestamptz']
+  id: Scalars['uuid']
+  title: Scalars['String']
+  updated_at: Scalars['timestamptz']
+  /** An object relationship */
+  user?: Maybe<Account>
+  user_id: Scalars['String']
+}
+
+/** aggregated selection of "schedule" */
+export type Schedule_Aggregate = {
+  __typename?: 'schedule_aggregate'
+  aggregate?: Maybe<Schedule_Aggregate_Fields>
+  nodes: Array<Schedule>
+}
+
+/** aggregate fields of "schedule" */
+export type Schedule_Aggregate_Fields = {
+  __typename?: 'schedule_aggregate_fields'
+  count?: Maybe<Scalars['Int']>
+  max?: Maybe<Schedule_Max_Fields>
+  min?: Maybe<Schedule_Min_Fields>
+}
+
+/** aggregate fields of "schedule" */
+export type Schedule_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Schedule_Select_Column>>
+  distinct?: Maybe<Scalars['Boolean']>
+}
+
+/** order by aggregate values of table "schedule" */
+export type Schedule_Aggregate_Order_By = {
+  count?: Maybe<Order_By>
+  max?: Maybe<Schedule_Max_Order_By>
+  min?: Maybe<Schedule_Min_Order_By>
+}
+
+/** input type for inserting array relation for remote table "schedule" */
+export type Schedule_Arr_Rel_Insert_Input = {
+  data: Array<Schedule_Insert_Input>
+  on_conflict?: Maybe<Schedule_On_Conflict>
+}
+
+/** Boolean expression to filter rows from the table "schedule". All fields are combined with a logical 'AND'. */
+export type Schedule_Bool_Exp = {
+  _and?: Maybe<Array<Maybe<Schedule_Bool_Exp>>>
+  _not?: Maybe<Schedule_Bool_Exp>
+  _or?: Maybe<Array<Maybe<Schedule_Bool_Exp>>>
+  active?: Maybe<Boolean_Comparison_Exp>
+  created_at?: Maybe<Timestamptz_Comparison_Exp>
+  id?: Maybe<Uuid_Comparison_Exp>
+  title?: Maybe<String_Comparison_Exp>
+  updated_at?: Maybe<Timestamptz_Comparison_Exp>
+  user?: Maybe<Account_Bool_Exp>
+  user_id?: Maybe<String_Comparison_Exp>
+}
+
+/** unique or primary key constraints on table "schedule" */
+export enum Schedule_Constraint {
+  /** unique or primary key constraint */
+  SchedulesPkey = 'schedules_pkey',
+}
+
+/** input type for inserting data into table "schedule" */
+export type Schedule_Insert_Input = {
+  active?: Maybe<Scalars['Boolean']>
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['uuid']>
+  title?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+  user?: Maybe<Account_Obj_Rel_Insert_Input>
+  user_id?: Maybe<Scalars['String']>
+}
+
+/** aggregate max on columns */
+export type Schedule_Max_Fields = {
+  __typename?: 'schedule_max_fields'
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['uuid']>
+  title?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+  user_id?: Maybe<Scalars['String']>
+}
+
+/** order by max() on columns of table "schedule" */
+export type Schedule_Max_Order_By = {
+  created_at?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  title?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
+  user_id?: Maybe<Order_By>
+}
+
+/** aggregate min on columns */
+export type Schedule_Min_Fields = {
+  __typename?: 'schedule_min_fields'
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['uuid']>
+  title?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+  user_id?: Maybe<Scalars['String']>
+}
+
+/** order by min() on columns of table "schedule" */
+export type Schedule_Min_Order_By = {
+  created_at?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  title?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
+  user_id?: Maybe<Order_By>
+}
+
+/** response of any mutation on the table "schedule" */
+export type Schedule_Mutation_Response = {
+  __typename?: 'schedule_mutation_response'
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int']
+  /** data of the affected rows by the mutation */
+  returning: Array<Schedule>
+}
+
+/** input type for inserting object relation for remote table "schedule" */
+export type Schedule_Obj_Rel_Insert_Input = {
+  data: Schedule_Insert_Input
+  on_conflict?: Maybe<Schedule_On_Conflict>
+}
+
+/** on conflict condition type for table "schedule" */
+export type Schedule_On_Conflict = {
+  constraint: Schedule_Constraint
+  update_columns: Array<Schedule_Update_Column>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** ordering options when selecting data from "schedule" */
+export type Schedule_Order_By = {
+  active?: Maybe<Order_By>
+  created_at?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  title?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
+  user?: Maybe<Account_Order_By>
+  user_id?: Maybe<Order_By>
+}
+
+/** primary key columns input for table: "schedule" */
+export type Schedule_Pk_Columns_Input = {
+  id: Scalars['uuid']
+}
+
+/** select columns of table "schedule" */
+export enum Schedule_Select_Column {
+  /** column name */
+  Active = 'active',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Title = 'title',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
+}
+
+/** input type for updating data in table "schedule" */
+export type Schedule_Set_Input = {
+  active?: Maybe<Scalars['Boolean']>
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['uuid']>
+  title?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+  user_id?: Maybe<Scalars['String']>
+}
+
+/** update columns of table "schedule" */
+export enum Schedule_Update_Column {
+  /** column name */
+  Active = 'active',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Title = 'title',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  UserId = 'user_id',
 }
 
 /** subscription root */
 export type Subscription_Root = {
   __typename?: 'subscription_root'
+  /** fetch data from the table: "account" */
+  account: Array<Account>
+  /** fetch aggregated fields from the table: "account" */
+  account_aggregate: Account_Aggregate
+  /** fetch data from the table: "account" using primary key columns */
+  account_by_pk?: Maybe<Account>
   /** perform the action: "me" */
-  me: MeOutput
-  /** fetch data from the table: "users" */
-  users: Array<Users>
-  /** fetch aggregated fields from the table: "users" */
-  users_aggregate: Users_Aggregate
-  /** fetch data from the table: "users" using primary key columns */
-  users_by_pk?: Maybe<Users>
+  me: Me
+  /** fetch data from the table: "schedule" */
+  schedule: Array<Schedule>
+  /** fetch aggregated fields from the table: "schedule" */
+  schedule_aggregate: Schedule_Aggregate
+  /** fetch data from the table: "schedule" using primary key columns */
+  schedule_by_pk?: Maybe<Schedule>
 }
 
 /** subscription root */
-export type Subscription_RootUsersArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>
+export type Subscription_RootAccountArgs = {
+  distinct_on?: Maybe<Array<Account_Select_Column>>
   limit?: Maybe<Scalars['Int']>
   offset?: Maybe<Scalars['Int']>
-  order_by?: Maybe<Array<Users_Order_By>>
-  where?: Maybe<Users_Bool_Exp>
+  order_by?: Maybe<Array<Account_Order_By>>
+  where?: Maybe<Account_Bool_Exp>
 }
 
 /** subscription root */
-export type Subscription_RootUsers_AggregateArgs = {
-  distinct_on?: Maybe<Array<Users_Select_Column>>
+export type Subscription_RootAccount_AggregateArgs = {
+  distinct_on?: Maybe<Array<Account_Select_Column>>
   limit?: Maybe<Scalars['Int']>
   offset?: Maybe<Scalars['Int']>
-  order_by?: Maybe<Array<Users_Order_By>>
-  where?: Maybe<Users_Bool_Exp>
+  order_by?: Maybe<Array<Account_Order_By>>
+  where?: Maybe<Account_Bool_Exp>
 }
 
 /** subscription root */
-export type Subscription_RootUsers_By_PkArgs = {
+export type Subscription_RootAccount_By_PkArgs = {
   id: Scalars['String']
+}
+
+/** subscription root */
+export type Subscription_RootScheduleArgs = {
+  distinct_on?: Maybe<Array<Schedule_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Order_By>>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Order_By>>
+  where?: Maybe<Schedule_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_By_PkArgs = {
+  id: Scalars['uuid']
 }
 
 /** expression to compare columns of type timestamptz. All fields are combined with logical 'AND'. */
@@ -210,204 +732,26 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['timestamptz']>>
 }
 
-/** columns and relationships of "users" */
-export type Users = {
-  __typename?: 'users'
-  company?: Maybe<Scalars['String']>
-  id: Scalars['String']
-  last_seen: Scalars['timestamptz']
-  name: Scalars['String']
-  picture?: Maybe<Scalars['String']>
-  verified: Scalars['Boolean']
-}
-
-/** aggregated selection of "users" */
-export type Users_Aggregate = {
-  __typename?: 'users_aggregate'
-  aggregate?: Maybe<Users_Aggregate_Fields>
-  nodes: Array<Users>
-}
-
-/** aggregate fields of "users" */
-export type Users_Aggregate_Fields = {
-  __typename?: 'users_aggregate_fields'
-  count?: Maybe<Scalars['Int']>
-  max?: Maybe<Users_Max_Fields>
-  min?: Maybe<Users_Min_Fields>
-}
-
-/** aggregate fields of "users" */
-export type Users_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Users_Select_Column>>
-  distinct?: Maybe<Scalars['Boolean']>
-}
-
-/** order by aggregate values of table "users" */
-export type Users_Aggregate_Order_By = {
-  count?: Maybe<Order_By>
-  max?: Maybe<Users_Max_Order_By>
-  min?: Maybe<Users_Min_Order_By>
-}
-
-/** input type for inserting array relation for remote table "users" */
-export type Users_Arr_Rel_Insert_Input = {
-  data: Array<Users_Insert_Input>
-  on_conflict?: Maybe<Users_On_Conflict>
-}
-
-/** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
-export type Users_Bool_Exp = {
-  _and?: Maybe<Array<Maybe<Users_Bool_Exp>>>
-  _not?: Maybe<Users_Bool_Exp>
-  _or?: Maybe<Array<Maybe<Users_Bool_Exp>>>
-  company?: Maybe<String_Comparison_Exp>
-  id?: Maybe<String_Comparison_Exp>
-  last_seen?: Maybe<Timestamptz_Comparison_Exp>
-  name?: Maybe<String_Comparison_Exp>
-  picture?: Maybe<String_Comparison_Exp>
-  verified?: Maybe<Boolean_Comparison_Exp>
-}
-
-/** unique or primary key constraints on table "users" */
-export enum Users_Constraint {
-  /** unique or primary key constraint */
-  UsersPkey = 'users_pkey',
-}
-
-/** input type for inserting data into table "users" */
-export type Users_Insert_Input = {
-  company?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  last_seen?: Maybe<Scalars['timestamptz']>
-  name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
-  verified?: Maybe<Scalars['Boolean']>
-}
-
-/** aggregate max on columns */
-export type Users_Max_Fields = {
-  __typename?: 'users_max_fields'
-  company?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  last_seen?: Maybe<Scalars['timestamptz']>
-  name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
-}
-
-/** order by max() on columns of table "users" */
-export type Users_Max_Order_By = {
-  company?: Maybe<Order_By>
-  id?: Maybe<Order_By>
-  last_seen?: Maybe<Order_By>
-  name?: Maybe<Order_By>
-  picture?: Maybe<Order_By>
-}
-
-/** aggregate min on columns */
-export type Users_Min_Fields = {
-  __typename?: 'users_min_fields'
-  company?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  last_seen?: Maybe<Scalars['timestamptz']>
-  name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
-}
-
-/** order by min() on columns of table "users" */
-export type Users_Min_Order_By = {
-  company?: Maybe<Order_By>
-  id?: Maybe<Order_By>
-  last_seen?: Maybe<Order_By>
-  name?: Maybe<Order_By>
-  picture?: Maybe<Order_By>
-}
-
-/** response of any mutation on the table "users" */
-export type Users_Mutation_Response = {
-  __typename?: 'users_mutation_response'
-  /** number of affected rows by the mutation */
-  affected_rows: Scalars['Int']
-  /** data of the affected rows by the mutation */
-  returning: Array<Users>
-}
-
-/** input type for inserting object relation for remote table "users" */
-export type Users_Obj_Rel_Insert_Input = {
-  data: Users_Insert_Input
-  on_conflict?: Maybe<Users_On_Conflict>
-}
-
-/** on conflict condition type for table "users" */
-export type Users_On_Conflict = {
-  constraint: Users_Constraint
-  update_columns: Array<Users_Update_Column>
-  where?: Maybe<Users_Bool_Exp>
-}
-
-/** ordering options when selecting data from "users" */
-export type Users_Order_By = {
-  company?: Maybe<Order_By>
-  id?: Maybe<Order_By>
-  last_seen?: Maybe<Order_By>
-  name?: Maybe<Order_By>
-  picture?: Maybe<Order_By>
-  verified?: Maybe<Order_By>
-}
-
-/** primary key columns input for table: "users" */
-export type Users_Pk_Columns_Input = {
-  id: Scalars['String']
-}
-
-/** select columns of table "users" */
-export enum Users_Select_Column {
-  /** column name */
-  Company = 'company',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  LastSeen = 'last_seen',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  Picture = 'picture',
-  /** column name */
-  Verified = 'verified',
-}
-
-/** input type for updating data in table "users" */
-export type Users_Set_Input = {
-  company?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  last_seen?: Maybe<Scalars['timestamptz']>
-  name?: Maybe<Scalars['String']>
-  picture?: Maybe<Scalars['String']>
-  verified?: Maybe<Scalars['Boolean']>
-}
-
-/** update columns of table "users" */
-export enum Users_Update_Column {
-  /** column name */
-  Company = 'company',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  LastSeen = 'last_seen',
-  /** column name */
-  Name = 'name',
-  /** column name */
-  Picture = 'picture',
-  /** column name */
-  Verified = 'verified',
+/** expression to compare columns of type uuid. All fields are combined with logical 'AND'. */
+export type Uuid_Comparison_Exp = {
+  _eq?: Maybe<Scalars['uuid']>
+  _gt?: Maybe<Scalars['uuid']>
+  _gte?: Maybe<Scalars['uuid']>
+  _in?: Maybe<Array<Scalars['uuid']>>
+  _is_null?: Maybe<Scalars['Boolean']>
+  _lt?: Maybe<Scalars['uuid']>
+  _lte?: Maybe<Scalars['uuid']>
+  _neq?: Maybe<Scalars['uuid']>
+  _nin?: Maybe<Array<Scalars['uuid']>>
 }
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>
 
 export type MeQuery = { __typename?: 'query_root' } & {
-  me: { __typename?: 'MeOutput' } & Pick<MeOutput, 'user_id'> & {
-      profile?: Maybe<
-        { __typename?: 'users' } & Pick<
-          Users,
+  me: { __typename?: 'Me' } & Pick<Me, 'user_id'> & {
+      account?: Maybe<
+        { __typename?: 'account' } & Pick<
+          Account,
           'last_seen' | 'company' | 'name' | 'picture' | 'verified'
         >
       >
@@ -419,9 +763,9 @@ export type UserQueryVariables = Exact<{
 }>
 
 export type UserQuery = { __typename?: 'query_root' } & {
-  users_by_pk?: Maybe<
-    { __typename?: 'users' } & Pick<
-      Users,
+  account_by_pk?: Maybe<
+    { __typename?: 'account' } & Pick<
+      Account,
       'id' | 'name' | 'company' | 'picture' | 'last_seen' | 'verified'
     >
   >
@@ -431,7 +775,7 @@ export const MeDocument = `
     query Me {
   me {
     user_id
-    profile {
+    account {
       last_seen
       company
       name
@@ -452,7 +796,7 @@ export const useMeQuery = <TData = MeQuery, TError = unknown>(
   )
 export const UserDocument = `
     query User($id: String!) {
-  users_by_pk(id: $id) {
+  account_by_pk(id: $id) {
     id
     name
     company
