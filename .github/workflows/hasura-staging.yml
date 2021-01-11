@@ -3,7 +3,7 @@ name: Hasura staging
 on:
   push:
     branches:
-      - develop
+      - staging
 
 jobs:
   deploy:
