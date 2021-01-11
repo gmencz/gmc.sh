@@ -22,7 +22,7 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
       },
     )
 
-    if (!user.users_by_pk) {
+    if (!user.account_by_pk) {
       return res.status(401).json({
         message: `Current user was deleted or no longer exists.`,
         code: 'deleted-user',
@@ -30,7 +30,7 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
     }
 
     return res.status(200).json({
-      user_id: user.users_by_pk.id,
+      user_id: user.account_by_pk.id,
     })
   } catch (error) {
     console.error(error)

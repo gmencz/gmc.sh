@@ -1,7 +1,11 @@
 type Query {
-  me: MeOutput!
+  me: Me!
 }
 
 type MeOutput {
+  user_id: String!
+}
+
+type Me {
   user_id: String!
 }

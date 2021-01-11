@@ -8,7 +8,7 @@ type HeaderProps = {
 function Header({ openMobileSidebar }: HeaderProps) {
   const { data: me, status } = useMeQuery({})
 
-  const profilePicture = me?.me.profile?.picture || '/default_picture.png'
+  const profilePicture = me?.me.account?.picture || '/default_picture.png'
 
   return (
     <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
@@ -109,7 +109,7 @@ function Header({ openMobileSidebar }: HeaderProps) {
                         <img
                           className="h-8 w-8 rounded-full"
                           src={profilePicture}
-                          alt={me?.me.profile?.name}
+                          alt={me?.me.account?.name}
                         />
                       )}
                       {status === 'error' && (
@@ -136,7 +136,7 @@ function Header({ openMobileSidebar }: HeaderProps) {
                             <div className="rounded-full bg-gray-200 h-4 w-40"></div>
                           </div>
                         )}
-                        {status === 'success' && (me?.me.profile?.name || '')}
+                        {status === 'success' && (me?.me.account?.name || '')}
                       </span>
                       {/* Heroicon name: chevron-down */}
                       <svg

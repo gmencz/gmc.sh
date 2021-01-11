@@ -24,7 +24,7 @@ function Index() {
     },
   )
 
-  const profilePicture = me?.me.profile?.picture || '/default_picture.png'
+  const profilePicture = me?.me.account?.picture || '/default_picture.png'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const openMobileSidebar = () => setIsMobileSidebarOpen(true)
   const closeMobileSidebar = () => setIsMobileSidebarOpen(false)
@@ -108,7 +108,7 @@ function Index() {
                         <img
                           className="hidden h-16 w-16 rounded-full sm:block"
                           src={profilePicture}
-                          alt={me?.me.profile?.name}
+                          alt={me?.me.account?.name}
                         />
                       )}
                       <div className="flex-1">
@@ -124,7 +124,7 @@ function Index() {
                             <img
                               className="h-16 w-16 rounded-full sm:hidden"
                               src={profilePicture}
-                              alt={me?.me.profile?.name}
+                              alt={me?.me.account?.name}
                             />
                           )}
                           <div className="ml-3 flex-1">
@@ -137,7 +137,7 @@ function Index() {
                             )}
                             {status === 'success' && (
                               <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                                {greetUser()}, {me?.me.profile?.name}
+                                {greetUser()}, {me?.me.account?.name}
                               </h1>
                             )}
                             {status === 'error' && (
@@ -154,7 +154,7 @@ function Index() {
                         )}
                         {status === 'success' && (
                           <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
-                            {me?.me.profile?.company && (
+                            {me?.me.account?.company && (
                               <>
                                 <dt className="sr-only">Company</dt>
                                 <dd className="flex items-center text-sm text-gray-500 font-medium capitalize sm:mr-6">
@@ -172,11 +172,11 @@ function Index() {
                                       clipRule="evenodd"
                                     />
                                   </svg>
-                                  {me.me.profile.company}
+                                  {me.me.account.company}
                                 </dd>
                               </>
                             )}
-                            {me?.me.profile?.verified && (
+                            {me?.me.account?.verified && (
                               <dl>
                                 <dt className="sr-only">Account status</dt>
                                 <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
