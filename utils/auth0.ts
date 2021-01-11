@@ -3,7 +3,7 @@ import IAuth0Settings from '@auth0/nextjs-auth0/dist/settings'
 
 function getAuth0BaseConfig(): IAuth0Settings {
   const url = (productionUrl: string, stagingUrl: string, localUrl: string) => {
-    switch (process.env.VERCEL_GIT_COMMIT_REF) {
+    switch (process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF) {
       case 'staging':
         return stagingUrl
       case 'main':
