@@ -2,22 +2,22 @@ import { initAuth0 } from '@auth0/nextjs-auth0'
 import IAuth0Settings from '@auth0/nextjs-auth0/dist/settings'
 
 function getAuth0BaseConfig(): IAuth0Settings {
-  const url = (productionUrl: string, localUrl: string) => {
-    if (process.env.VERCEL_URL) {
-      return `https://${process.env.VERCEL_URL}`
-    }
-
-    switch (process.env.NODE_ENV) {
-      case 'production':
+  const url = (productionUrl: string, stagingUrl: string, localUrl: string) => {
+    switch (process.env.VERCEL_GIT_COMMIT_REF) {
+      case 'staging':
+        return stagingUrl
+      case 'main':
         return productionUrl
-      case 'development':
-        return localUrl
       default:
         return localUrl
     }
   }
 
-  const base = url('https://app.gmc.sh', 'http://localhost:3000')
+  const base = url(
+    'https://app.gmc.sh',
+    'https://staging.app.gmc.sh',
+    'http://localhost:3000',
+  )
 
   return {
     clientId: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string,
