@@ -258,9 +258,26 @@ function Index() {
                               Schedules
                             </dt>
                             <dd>
-                              <div className="text-lg font-medium text-gray-900">
-                                1
-                              </div>
+                              {status === 'loading' && (
+                                <div className="animate-pulse mt-4">
+                                  <div className="hidden sm:block bg-gray-200 h-5 w-full rounded-full">
+                                    <span className="sr-only">loading...</span>
+                                  </div>
+                                </div>
+                              )}
+                              {status === 'success' && (
+                                <div className="text-lg font-medium text-gray-900">
+                                  {
+                                    me?.me.account?.schedules_aggregate
+                                      .aggregate?.count
+                                  }
+                                </div>
+                              )}
+                              {status === 'error' && (
+                                <div className="text-lg font-medium text-gray-900">
+                                  0
+                                </div>
+                              )}
                             </dd>
                           </dl>
                         </div>
@@ -275,186 +292,6 @@ function Index() {
                           View all
                         </a>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* More cards... */}
-                </div>
-              </div>
-
-              <h2 className="max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
-                Recent activity
-              </h2>
-
-              {/* Activity list (smallest breakopoint only) */}
-              <div className="shadow sm:hidden">
-                <ul className="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                  <li>
-                    <a
-                      href="/"
-                      className="block px-4 py-4 bg-white hover:bg-gray-50"
-                    >
-                      <span className="flex items-center space-x-4">
-                        <span className="flex-1 flex space-x-2 truncate">
-                          {/* Heroicon name: cash */}
-                          <svg
-                            className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          <span className="flex flex-col text-gray-500 text-sm truncate">
-                            <span className="truncate">Example schedule</span>
-                            <span className="text-gray-900 font-medium">
-                              Monday, Friday
-                            </span>
-                            <span>January 9, 2021</span>
-                          </span>
-                        </span>
-                        {/* Heroicon name: chevron-right */}
-                        <svg
-                          className="flex-shrink-0 h-5 w-5 text-gray-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                    </a>
-                  </li>
-
-                  {/* More items... */}
-                </ul>
-
-                <nav
-                  className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200"
-                  aria-label="Pagination"
-                >
-                  <div className="flex-1 flex justify-between">
-                    <a
-                      href="/"
-                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:text-gray-500"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      href="/"
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:text-gray-500"
-                    >
-                      Next
-                    </a>
-                  </div>
-                </nav>
-              </div>
-
-              {/* Activity table (small breakopoint and up) */}
-              <div className="hidden sm:block">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="flex flex-col mt-2">
-                    <div className="align-middle min-w-full overflow-x-auto shadow overflow-hidden sm:rounded-lg">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead>
-                          <tr>
-                            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Schedule
-                            </th>
-                            <th className="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              On days
-                            </th>
-                            <th className="hidden px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
-                              Status
-                            </th>
-                            <th className="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Created
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          <tr className="bg-white">
-                            <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              <div className="flex">
-                                <a
-                                  href="/"
-                                  className="group inline-flex space-x-2 truncate text-sm"
-                                >
-                                  <svg
-                                    className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    />
-                                  </svg>
-                                  <p className="text-gray-500 truncate group-hover:text-gray-900">
-                                    Example schedule
-                                  </p>
-                                </a>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
-                              <span className="text-gray-900 font-medium"></span>
-                              Monday, Friday
-                            </td>
-                            <td className="hidden px-6 py-4 whitespace-nowrap text-sm text-gray-500 md:block">
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
-                                active
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-right whitespace-nowrap text-sm text-gray-500">
-                              January 9, 2021
-                            </td>
-                          </tr>
-
-                          {/* More rows... */}
-                        </tbody>
-                      </table>
-                      {/* Pagination */}
-                      <nav
-                        className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
-                        aria-label="Pagination"
-                      >
-                        <div className="hidden sm:block">
-                          <p className="text-sm text-gray-700">
-                            Showing <span className="font-medium">1</span> to{' '}
-                            <span className="font-medium">1</span> of{' '}
-                            <span className="font-medium">1</span> result
-                          </p>
-                        </div>
-                        <div className="flex-1 flex justify-between sm:justify-end">
-                          <a
-                            // href="/"
-                            className="relative cursor-not-allowed inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                          >
-                            Previous
-                          </a>
-                          <a
-                            // href="/"
-                            className="ml-3 cursor-not-allowed relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                          >
-                            Next
-                          </a>
-                        </div>
-                      </nav>
                     </div>
                   </div>
                 </div>

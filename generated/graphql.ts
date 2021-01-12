@@ -1725,7 +1725,16 @@ export type MeQuery = { __typename?: 'query_root' } & {
         { __typename?: 'account' } & Pick<
           Account,
           'last_seen' | 'company' | 'name' | 'picture' | 'verified'
-        >
+        > & {
+            schedules_aggregate: { __typename?: 'schedule_aggregate' } & {
+              aggregate?: Maybe<
+                { __typename?: 'schedule_aggregate_fields' } & Pick<
+                  Schedule_Aggregate_Fields,
+                  'count'
+                >
+              >
+            }
+          }
       >
     }
 }
@@ -1753,6 +1762,11 @@ export const MeDocument = `
       name
       picture
       verified
+      schedules_aggregate {
+        aggregate {
+          count
+        }
+      }
     }
   }
 }

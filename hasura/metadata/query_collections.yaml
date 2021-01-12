@@ -1,15 +1,16 @@
 - name: allowed-queries
   definition:
     queries:
-      - name: Me
-        query:
-          "query Me {\r\n  me {\r\n    user_id\r\n    account
-          {\r\n      last_seen\r\n
-          \     company\r\n      name\r\n      picture\r\n      verified\r\n    }\r\n
-          \ }\r\n}"
       - name: User
         query:
           "query User($id: String!) {\r\n  account_by_pk(id: $id)
           {\r\n    id\r\n
           \   name\r\n    company\r\n    picture\r\n    last_seen\r\n    verified\r\n
           \ }\r\n}"
+      - name: Me
+        query:
+          "query Me {\r\n  me {\r\n    user_id\r\n    account
+          {\r\n      last_seen\r\n
+          \     company\r\n      name\r\n      picture\r\n      verified\r\n      schedules_aggregate
+          {\r\n        aggregate
+          {\r\n          count\r\n        }\r\n      }\r\n    }\r\n \ }\r\n}"
