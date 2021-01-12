@@ -1,6 +1,7 @@
 import { Transition } from '@headlessui/react'
+import { PER_PAGE } from 'features/scheduler/list'
 import Image from 'next/image'
-import Link from 'next/link'
+import ActiveLink from './active-link'
 
 type SidebarProps = {
   isMobileSidebarOpen: boolean
@@ -80,9 +81,12 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
-                <Link href="/">
+                <ActiveLink
+                  activeClassName="bg-indigo-800 text-white hover"
+                  href="/"
+                >
                   <a
-                    className="bg-indigo-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                    className="text-indigo-100 hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
                     aria-current="page"
                   >
                     <svg
@@ -102,9 +106,15 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                     </svg>
                     Home
                   </a>
-                </Link>
+                </ActiveLink>
 
-                <Link href="/scheduler">
+                <ActiveLink
+                  activeClassName="bg-indigo-800 text-white hover"
+                  href={{
+                    pathname: '/scheduler',
+                    query: { page: 1, 'per-page': PER_PAGE },
+                  }}
+                >
                   <a className="text-indigo-100 hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md">
                     {/* Heroicon name: clock */}
                     <svg
@@ -124,7 +134,7 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                     </svg>
                     Scheduler
                   </a>
-                </Link>
+                </ActiveLink>
               </div>
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1">
@@ -234,13 +244,12 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
-                <Link href="/">
+                <ActiveLink
+                  activeClassName="bg-indigo-800 text-white hover"
+                  href="/"
+                >
                   {/* Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:text-white hover:bg-indigo-600" */}
-                  <a
-                    href="/"
-                    className="bg-indigo-800 text-white group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md"
-                    aria-current="page"
-                  >
+                  <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">
                     {/* Heroicon name: home */}
                     <svg
                       className="mr-4 h-6 w-6 text-indigo-200"
@@ -259,13 +268,16 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                     </svg>
                     Home
                   </a>
-                </Link>
+                </ActiveLink>
 
-                <Link href="/scheduler">
-                  <a
-                    href="/scheduler"
-                    className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
-                  >
+                <ActiveLink
+                  activeClassName="bg-indigo-800"
+                  href={{
+                    pathname: '/scheduler',
+                    query: { page: 1, 'per-page': PER_PAGE },
+                  }}
+                >
+                  <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">
                     {/* Heroicon name: clock */}
                     <svg
                       className="mr-4 h-6 w-6 text-indigo-200"
@@ -284,7 +296,7 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                     </svg>
                     Scheduler
                   </a>
-                </Link>
+                </ActiveLink>
               </div>
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1 ">

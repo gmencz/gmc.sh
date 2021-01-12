@@ -5,5 +5,9 @@
       <loc>https://app.gmc.sh</loc>
   </url>
           
+  <url>
+      <loc>https://app.gmc.sh/scheduler</loc>
+  </url>
+          
 </urlset>
   

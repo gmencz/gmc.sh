@@ -1,0 +1,24 @@
+query MySchedules($limit: Int!, $offset: Int!) {
+  me {
+    account {
+      schedules(
+        limit: $limit
+        offset: $offset
+        order_by: { created_at: desc }
+      ) {
+        id
+        title
+        days {
+          week_day
+        }
+        active
+        created_at
+      }
+      schedules_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
