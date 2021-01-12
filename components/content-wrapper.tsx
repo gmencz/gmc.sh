@@ -8,7 +8,12 @@ type ContentWrapperProps = {
 }
 
 function ContentWrapper({ children }: ContentWrapperProps) {
-  const { data: me, status } = useMeQuery<MeQuery, ClientError>({})
+  const { data: me, status } = useMeQuery<MeQuery, ClientError>(
+    {},
+    {
+      staleTime: Infinity,
+    },
+  )
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
   const greetUser = () => {
     const hour = getHours(new Date())
@@ -155,7 +160,9 @@ function ContentWrapper({ children }: ContentWrapperProps) {
           </div>
         </div>
       </div>
-      {children}
+      <div className="mt-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
+      </div>
     </main>
   )
 }

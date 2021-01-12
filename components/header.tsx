@@ -6,7 +6,12 @@ type HeaderProps = {
 }
 
 function Header({ openMobileSidebar }: HeaderProps) {
-  const { data: me, status } = useMeQuery({})
+  const { data: me, status } = useMeQuery(
+    {},
+    {
+      staleTime: Infinity,
+    },
+  )
 
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
 

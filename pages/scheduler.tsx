@@ -1,15 +1,14 @@
 import Head from 'next/head'
 import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
-import AccountOverview from 'features/account-overview'
 import Layout from 'components/layout'
 
 export const getServerSideProps = authenticatedServerSideProps()
 
-function Index() {
+function Scheduler() {
   return (
     <>
       <Head>
-        <title>Home / Gmc.sh</title>
+        <title>Scheduler / Gmc.sh</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
         <meta
@@ -47,10 +46,10 @@ function Index() {
         />
       </Head>
       <Layout>
-        <AccountOverview />
+        <p>Scheduler</p>
       </Layout>
     </>
   )
 }
 
-export default Index
+export default Scheduler
