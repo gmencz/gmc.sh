@@ -22,3 +22,9 @@ query MySchedules($limit: Int!, $offset: Int!) {
     }
   }
 }
+
+mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
+  insert_schedule(objects: { title: $title, days: { data: $days } }) {
+    affected_rows
+  }
+}

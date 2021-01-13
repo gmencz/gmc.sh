@@ -23,3 +23,9 @@
           {\r\n          week_day\r\n        }\r\n        active\r\n        created_at\r\n
           \     }\r\n      schedules_aggregate {\r\n        aggregate
           {\r\n          count\r\n \       }\r\n      }\r\n    }\r\n  }\r\n}"
+      - name: CreateSchedule
+        query:
+          "mutation CreateSchedule($title: String!, $days:
+          [schedule_day_insert_input!]!) {\r\n  insert_schedule(objects: {
+          title: $title, days: { data: $days } })
+          {\r\n    affected_rows\r\n  }\r\n}"

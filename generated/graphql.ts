@@ -1,4 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query'
+import {
+  useQuery,
+  UseQueryOptions,
+  useMutation,
+  UseMutationOptions,
+} from 'react-query'
 import { fetcher } from 'utils/gql-client'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -1736,6 +1741,20 @@ export type MySchedulesQuery = { __typename?: 'query_root' } & {
   }
 }
 
+export type CreateScheduleMutationVariables = Exact<{
+  title: Scalars['String']
+  days: Array<Schedule_Day_Insert_Input> | Schedule_Day_Insert_Input
+}>
+
+export type CreateScheduleMutation = { __typename?: 'mutation_root' } & {
+  insert_schedule?: Maybe<
+    { __typename?: 'schedule_mutation_response' } & Pick<
+      Schedule_Mutation_Response,
+      'affected_rows'
+    >
+  >
+}
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>
 
 export type MeQuery = { __typename?: 'query_root' } & {
@@ -1803,6 +1822,34 @@ export const useMySchedulesQuery = <TData = MySchedulesQuery, TError = unknown>(
       MySchedulesDocument,
       variables,
     ),
+    options,
+  )
+export const CreateScheduleDocument = `
+    mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
+  insert_schedule(objects: {title: $title, days: {data: $days}}) {
+    affected_rows
+  }
+}
+    `
+export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    CreateScheduleMutation,
+    TError,
+    CreateScheduleMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    CreateScheduleMutation,
+    TError,
+    CreateScheduleMutationVariables,
+    TContext
+  >(
+    (variables?: CreateScheduleMutationVariables) =>
+      fetcher<CreateScheduleMutation, CreateScheduleMutationVariables>(
+        CreateScheduleDocument,
+        variables,
+      )(),
     options,
   )
 export const MeDocument = `

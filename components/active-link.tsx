@@ -5,11 +5,13 @@ import { Children, cloneElement, ReactHTMLElement, ReactNode } from 'react'
 type ActiveLinkProps = {
   children: ReactNode
   activeClassName: string
+  exact?: boolean
 }
 
 function ActiveLink({
   activeClassName,
   children,
+  exact = false,
   ...props
 }: ActiveLinkProps & LinkProps) {
   const { pathname } = useRouter()
@@ -26,10 +28,10 @@ function ActiveLink({
     href = props.href
   }
 
-  const className =
-    pathname === href
-      ? `${childClassName} ${activeClassName}`.trim()
-      : childClassName
+  const match = exact ? pathname === href : pathname.startsWith(href)
+  const className = match
+    ? `${childClassName} ${activeClassName}`.trim()
+    : childClassName
 
   return (
     <Link {...props}>

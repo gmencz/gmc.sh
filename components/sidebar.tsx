@@ -83,6 +83,7 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               <div className="px-2 space-y-1">
                 <ActiveLink
                   activeClassName="bg-indigo-800 text-white hover"
+                  exact
                   href="/"
                 >
                   <a
@@ -247,6 +248,7 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                 <ActiveLink
                   activeClassName="bg-indigo-800 text-white hover"
                   href="/"
+                  exact
                 >
                   {/* Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:text-white hover:bg-indigo-600" */}
                   <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">

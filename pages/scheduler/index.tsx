@@ -43,7 +43,7 @@ function Scheduler() {
 
         <meta
           name="description"
-          content="Organize your life with just a few clicks using our powerful and modern tools."
+          content="Manage your schedules effectively with our best-in-class scheduler."
         />
 
         <meta name="image" content="https://app.gmc.sh/generic_hero.png" />
@@ -52,11 +52,11 @@ function Scheduler() {
           content="Organize, tasks, schedules, url shortener, free"
         />
 
-        <meta property="og:url" content="https://app.gmc.sh/" />
-        <meta property="og:title" content="Home / Gmc.sh" />
+        <meta property="og:url" content="https://app.gmc.sh/scheduler" />
+        <meta property="og:title" content="Scheduler / Gmc.sh" />
         <meta
           property="og:description"
-          content="Organize your life with just a few clicks using our powerful and modern tools."
+          content="Manage your schedules effectively with our best-in-class scheduler."
         />
         <meta
           property="og:image"
@@ -65,10 +65,10 @@ function Scheduler() {
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="gmencz" />
-        <meta name="twitter:title" content="Home / Gmc.sh" />
+        <meta name="twitter:title" content="Scheduler / Gmc.sh" />
         <meta
           name="twitter:description"
-          content="Organize your life with just a few clicks using our powerful and modern tools."
+          content="Manage your schedules effectively with our best-in-class scheduler."
         />
         <meta
           name="twitter:image"
