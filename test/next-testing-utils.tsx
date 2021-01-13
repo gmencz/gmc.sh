@@ -5,6 +5,9 @@ import '@testing-library/jest-dom'
 import { RouterContext } from 'next/dist/next-server/lib/router-context'
 import { ImageProps } from 'next/image'
 import { QueryClientProvider, QueryClient } from 'react-query'
+import { ToastProvider } from 'react-toast-notifications'
+import Toast from 'components/toast'
+import ToastContainer from 'components/toast-container'
 
 export const mockRouter: NextRouter = {
   basePath: '',
@@ -44,15 +47,20 @@ jest.mock('next/image', () => ({
   },
 }))
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+  },
+})
 
 const renderWithRouter = (component: ReactElement): RenderResult => {
   return render(
     <QueryClientProvider client={queryClient}>
-      <RouterContext.Provider value={mockRouter}>
-        {component}
-      </RouterContext.Provider>
-      ,
+      <ToastProvider components={{ Toast, ToastContainer }}>
+        <RouterContext.Provider value={mockRouter}>
+          {component}
+        </RouterContext.Provider>
+      </ToastProvider>
     </QueryClientProvider>,
   )
 }
