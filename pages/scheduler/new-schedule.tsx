@@ -1,5 +1,5 @@
 import Layout from 'components/layout'
-import NewScheduleForm from 'features/scheduler/new-schedule-form'
+import NewScheduleFormStepOne from 'features/scheduler/new-schedule-form/step-1'
 import Head from 'next/head'
 import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
 
@@ -47,10 +47,7 @@ function NewSchedule() {
         />
       </Head>
       <Layout>
-        <h2 className="max-w-6xl mb-4 mx-auto mt-8 text-lg leading-6 font-medium text-gray-900">
-          First, we need you to tell us a little about the new schedule.
-        </h2>
-        <NewScheduleForm />
+        <NewScheduleFormStepOne />
       </Layout>
     </>
   )
