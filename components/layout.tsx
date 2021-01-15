@@ -19,7 +19,10 @@ function Layout({ children }: LayoutProps) {
         onCloseMobileSidebar={closeMobileSidebar}
       />
 
-      <div className="flex-1 overflow-auto focus:outline-none" tabIndex={0}>
+      <div
+        className="flex-1 overflow-auto flex flex-col focus:outline-none"
+        tabIndex={0}
+      >
         <Header openMobileSidebar={openMobileSidebar} />
 
         <ContentWrapper>{children}</ContentWrapper>

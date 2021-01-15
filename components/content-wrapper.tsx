@@ -7,6 +7,17 @@ type ContentWrapperProps = {
   children: ReactNode
 }
 
+const greetUser = () => {
+  const hour = getHours(new Date())
+  if (hour >= 5 && hour <= 12) {
+    return 'Good morning'
+  } else if (hour >= 12 && hour <= 18) {
+    return 'Good afternoon'
+  } else {
+    return 'Good evening'
+  }
+}
+
 function ContentWrapper({ children }: ContentWrapperProps) {
   const { data: me, status } = useMeQuery<MeQuery, ClientError>(
     {},
@@ -15,16 +26,6 @@ function ContentWrapper({ children }: ContentWrapperProps) {
     },
   )
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
-  const greetUser = () => {
-    const hour = getHours(new Date())
-    if (hour >= 5 && hour <= 12) {
-      return 'Good morning'
-    } else if (hour >= 12 && hour <= 18) {
-      return 'Good afternoon'
-    } else {
-      return 'Good evening'
-    }
-  }
 
   return (
     <main className="flex-1 relative pb-8 z-0 overflow-y-auto">
