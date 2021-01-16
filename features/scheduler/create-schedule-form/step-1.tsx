@@ -31,7 +31,7 @@ const schema = yup.object().shape({
     ),
 })
 
-function NewScheduleFormStepOne() {
+function CreateScheduleFormStepOne() {
   const [stepData, setStepData] = useState<FormData>()
   const {
     register,
@@ -184,4 +184,4 @@ function NewScheduleFormStepOne() {
   )
 }
 
-export default NewScheduleFormStepOne
+export default CreateScheduleFormStepOne

@@ -22,7 +22,6 @@ export type Scalars = {
   Float: number
   json: any
   timestamptz: string
-  timetz: any
   uuid: any
 }
 
@@ -1064,7 +1063,7 @@ export type Schedule_Day_Task = {
   /** An object relationship */
   schedule_day?: Maybe<Schedule_Day>
   schedule_day_id: Scalars['String']
-  start_time: Scalars['timetz']
+  start_time: Scalars['timestamptz']
 }
 
 /** aggregated selection of "schedule_day_task" */
@@ -1110,7 +1109,7 @@ export type Schedule_Day_Task_Bool_Exp = {
   id?: Maybe<String_Comparison_Exp>
   schedule_day?: Maybe<Schedule_Day_Bool_Exp>
   schedule_day_id?: Maybe<String_Comparison_Exp>
-  start_time?: Maybe<Timetz_Comparison_Exp>
+  start_time?: Maybe<Timestamptz_Comparison_Exp>
 }
 
 /** unique or primary key constraints on table "schedule_day_task" */
@@ -1125,7 +1124,7 @@ export type Schedule_Day_Task_Insert_Input = {
   id?: Maybe<Scalars['String']>
   schedule_day?: Maybe<Schedule_Day_Obj_Rel_Insert_Input>
   schedule_day_id?: Maybe<Scalars['String']>
-  start_time?: Maybe<Scalars['timetz']>
+  start_time?: Maybe<Scalars['timestamptz']>
 }
 
 /** aggregate max on columns */
@@ -1134,7 +1133,7 @@ export type Schedule_Day_Task_Max_Fields = {
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   schedule_day_id?: Maybe<Scalars['String']>
-  start_time?: Maybe<Scalars['timetz']>
+  start_time?: Maybe<Scalars['timestamptz']>
 }
 
 /** order by max() on columns of table "schedule_day_task" */
@@ -1151,7 +1150,7 @@ export type Schedule_Day_Task_Min_Fields = {
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   schedule_day_id?: Maybe<Scalars['String']>
-  start_time?: Maybe<Scalars['timetz']>
+  start_time?: Maybe<Scalars['timestamptz']>
 }
 
 /** order by min() on columns of table "schedule_day_task" */
@@ -1215,7 +1214,7 @@ export type Schedule_Day_Task_Set_Input = {
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['String']>
   schedule_day_id?: Maybe<Scalars['String']>
-  start_time?: Maybe<Scalars['timetz']>
+  start_time?: Maybe<Scalars['timestamptz']>
 }
 
 /** update columns of table "schedule_day_task" */
@@ -1696,19 +1695,6 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['timestamptz']>>
 }
 
-/** expression to compare columns of type timetz. All fields are combined with logical 'AND'. */
-export type Timetz_Comparison_Exp = {
-  _eq?: Maybe<Scalars['timetz']>
-  _gt?: Maybe<Scalars['timetz']>
-  _gte?: Maybe<Scalars['timetz']>
-  _in?: Maybe<Array<Scalars['timetz']>>
-  _is_null?: Maybe<Scalars['Boolean']>
-  _lt?: Maybe<Scalars['timetz']>
-  _lte?: Maybe<Scalars['timetz']>
-  _neq?: Maybe<Scalars['timetz']>
-  _nin?: Maybe<Array<Scalars['timetz']>>
-}
-
 export type MySchedulesQueryVariables = Exact<{
   limit: Scalars['Int']
   offset: Scalars['Int']
@@ -1748,10 +1734,9 @@ export type CreateScheduleMutationVariables = Exact<{
 
 export type CreateScheduleMutation = { __typename?: 'mutation_root' } & {
   insert_schedule?: Maybe<
-    { __typename?: 'schedule_mutation_response' } & Pick<
-      Schedule_Mutation_Response,
-      'affected_rows'
-    >
+    { __typename?: 'schedule_mutation_response' } & {
+      returning: Array<{ __typename?: 'schedule' } & Pick<Schedule, 'id'>>
+    }
   >
 }
 
@@ -1827,7 +1812,9 @@ export const useMySchedulesQuery = <TData = MySchedulesQuery, TError = unknown>(
 export const CreateScheduleDocument = `
     mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
   insert_schedule(objects: {title: $title, days: {data: $days}}) {
-    affected_rows
+    returning {
+      id
+    }
   }
 }
     `

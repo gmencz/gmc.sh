@@ -1,6 +1,8 @@
+import { Menu, Transition } from '@headlessui/react'
 import { getHours } from 'date-fns'
 import { MeQuery, useMeQuery } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
 type ContentWrapperProps = {
@@ -142,21 +144,84 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-              <button
-                type="button"
-                disabled
-                className="inline-flex disabled:cursor-not-allowed items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Add credits
-              </button>
-              <button
-                type="button"
-                disabled
-                className="inline-flex disabled:cursor-not-allowed items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Upgrade
-              </button>
+            <div className="mt-6 flex space-x-3 md:mt-0 relative">
+              <Menu>
+                {({ open }) => (
+                  <div>
+                    <Menu.Button className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                      Create
+                      <svg
+                        className="-mr-1 ml-1.5 mt-0.5 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </Menu.Button>
+                    <Transition
+                      show={open}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items
+                        static
+                        className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
+                      >
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link href="/scheduler/create-schedule">
+                              <a
+                                className={
+                                  active
+                                    ? 'group rounded-md flex items-center px-4 py-2 text-sm bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                                    : 'group rounded-md flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                                }
+                                role="menuitem"
+                              >
+                                <svg
+                                  className={
+                                    active
+                                      ? 'mr-3 h-5 w-5 text-gray-500'
+                                      : 'mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                                  }
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                  />
+                                </svg>
+                                <div>
+                                  <span>Schedule</span>
+                                  <span className="block text-gray-500">
+                                    Manage your time
+                                  </span>
+                                </div>
+                              </a>
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </div>
+                )}
+              </Menu>
             </div>
           </div>
         </div>

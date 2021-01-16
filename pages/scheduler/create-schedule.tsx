@@ -1,5 +1,5 @@
 import Layout from 'components/layout'
-import NewScheduleFormStepOne from 'features/scheduler/new-schedule-form/step-1'
+import CreateScheduleFormStepOne from 'features/scheduler/create-schedule-form/step-1'
 import Head from 'next/head'
 import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
 
@@ -47,7 +47,7 @@ function NewSchedule() {
         />
       </Head>
       <Layout>
-        <NewScheduleFormStepOne />
+        <CreateScheduleFormStepOne />
       </Layout>
     </>
   )
