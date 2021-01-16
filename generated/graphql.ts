@@ -749,6 +749,7 @@ export type Schedule = {
   /** An object relationship */
   user?: Maybe<Account>
   user_id: Scalars['String']
+  user_is_subscribed?: Maybe<Scalars['Boolean']>
 }
 
 /**
@@ -826,6 +827,7 @@ export type Schedule_Bool_Exp = {
   updated_at?: Maybe<Timestamptz_Comparison_Exp>
   user?: Maybe<Account_Bool_Exp>
   user_id?: Maybe<String_Comparison_Exp>
+  user_is_subscribed?: Maybe<Boolean_Comparison_Exp>
 }
 
 /** unique or primary key constraints on table "schedule" */
@@ -1409,6 +1411,7 @@ export type Schedule_Insert_Input = {
   updated_at?: Maybe<Scalars['timestamptz']>
   user?: Maybe<Account_Obj_Rel_Insert_Input>
   user_id?: Maybe<Scalars['String']>
+  user_is_subscribed?: Maybe<Scalars['Boolean']>
 }
 
 /** aggregate max on columns */
@@ -1481,6 +1484,7 @@ export type Schedule_Order_By = {
   updated_at?: Maybe<Order_By>
   user?: Maybe<Account_Order_By>
   user_id?: Maybe<Order_By>
+  user_is_subscribed?: Maybe<Order_By>
 }
 
 /** primary key columns input for table: "schedule" */
@@ -1502,6 +1506,8 @@ export enum Schedule_Select_Column {
   UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id',
+  /** column name */
+  UserIsSubscribed = 'user_is_subscribed',
 }
 
 /** input type for updating data in table "schedule" */
@@ -1512,6 +1518,7 @@ export type Schedule_Set_Input = {
   title?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['String']>
+  user_is_subscribed?: Maybe<Scalars['Boolean']>
 }
 
 /** update columns of table "schedule" */
@@ -1528,6 +1535,8 @@ export enum Schedule_Update_Column {
   UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id',
+  /** column name */
+  UserIsSubscribed = 'user_is_subscribed',
 }
 
 /** subscription root */
@@ -1727,6 +1736,33 @@ export type MySchedulesQuery = { __typename?: 'query_root' } & {
   }
 }
 
+export type ScheduleQueryVariables = Exact<{
+  id: Scalars['String']
+}>
+
+export type ScheduleQuery = { __typename?: 'query_root' } & {
+  schedule_by_pk?: Maybe<
+    { __typename?: 'schedule' } & Pick<
+      Schedule,
+      'active' | 'created_at' | 'updated_at' | 'title' | 'user_is_subscribed'
+    > & {
+        days: Array<
+          { __typename?: 'schedule_day' } & Pick<
+            Schedule_Day,
+            'id' | 'active' | 'week_day'
+          > & {
+              tasks: Array<
+                { __typename?: 'schedule_day_task' } & Pick<
+                  Schedule_Day_Task,
+                  'id' | 'description' | 'start_time'
+                >
+              >
+            }
+        >
+      }
+  >
+}
+
 export type CreateScheduleMutationVariables = Exact<{
   title: Scalars['String']
   days: Array<Schedule_Day_Insert_Input> | Schedule_Day_Insert_Input
@@ -1737,6 +1773,19 @@ export type CreateScheduleMutation = { __typename?: 'mutation_root' } & {
     { __typename?: 'schedule_mutation_response' } & {
       returning: Array<{ __typename?: 'schedule' } & Pick<Schedule, 'id'>>
     }
+  >
+}
+
+export type UpdateScheduleUserSubscriptionMutationVariables = Exact<{
+  id: Scalars['String']
+  isUserSubscribed: Scalars['Boolean']
+}>
+
+export type UpdateScheduleUserSubscriptionMutation = {
+  __typename?: 'mutation_root'
+} & {
+  update_schedule_by_pk?: Maybe<
+    { __typename?: 'schedule' } & Pick<Schedule, 'id' | 'user_is_subscribed'>
   >
 }
 
@@ -1809,6 +1858,36 @@ export const useMySchedulesQuery = <TData = MySchedulesQuery, TError = unknown>(
     ),
     options,
   )
+export const ScheduleDocument = `
+    query Schedule($id: String!) {
+  schedule_by_pk(id: $id) {
+    active
+    created_at
+    updated_at
+    title
+    user_is_subscribed
+    days {
+      id
+      active
+      week_day
+      tasks {
+        id
+        description
+        start_time
+      }
+    }
+  }
+}
+    `
+export const useScheduleQuery = <TData = ScheduleQuery, TError = unknown>(
+  variables: ScheduleQueryVariables,
+  options?: UseQueryOptions<ScheduleQuery, TError, TData>,
+) =>
+  useQuery<ScheduleQuery, TError, TData>(
+    ['Schedule', variables],
+    fetcher<ScheduleQuery, ScheduleQueryVariables>(ScheduleDocument, variables),
+    options,
+  )
 export const CreateScheduleDocument = `
     mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
   insert_schedule(objects: {title: $title, days: {data: $days}}) {
@@ -1837,6 +1916,41 @@ export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
         CreateScheduleDocument,
         variables,
       )(),
+    options,
+  )
+export const UpdateScheduleUserSubscriptionDocument = `
+    mutation UpdateScheduleUserSubscription($id: String!, $isUserSubscribed: Boolean!) {
+  update_schedule_by_pk(
+    pk_columns: {id: $id}
+    _set: {user_is_subscribed: $isUserSubscribed}
+  ) {
+    id
+    user_is_subscribed
+  }
+}
+    `
+export const useUpdateScheduleUserSubscriptionMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    UpdateScheduleUserSubscriptionMutation,
+    TError,
+    UpdateScheduleUserSubscriptionMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    UpdateScheduleUserSubscriptionMutation,
+    TError,
+    UpdateScheduleUserSubscriptionMutationVariables,
+    TContext
+  >(
+    (variables?: UpdateScheduleUserSubscriptionMutationVariables) =>
+      fetcher<
+        UpdateScheduleUserSubscriptionMutation,
+        UpdateScheduleUserSubscriptionMutationVariables
+      >(UpdateScheduleUserSubscriptionDocument, variables)(),
     options,
   )
 export const MeDocument = `

@@ -85,6 +85,7 @@
           - id
           - title
           - updated_at
+          - user_is_subscribed
         filter:
           user_id:
             _eq: x-hasura-user-id
@@ -96,6 +97,7 @@
         columns:
           - active
           - title
+          - user_is_subscribed
         filter:
           user_id:
             _eq: x-hasura-user-id
@@ -146,7 +148,10 @@
       permission:
         columns:
           - active
+          - created_at
+          - id
           - schedule_id
+          - updated_at
           - week_day
         filter:
           schedule:
@@ -203,6 +208,7 @@
       permission:
         columns:
           - description
+          - id
           - start_time
         filter:
           schedule_day:

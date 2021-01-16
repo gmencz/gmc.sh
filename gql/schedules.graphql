@@ -23,10 +23,43 @@ query MySchedules($limit: Int!, $offset: Int!) {
   }
 }
 
+query Schedule($id: String!) {
+  schedule_by_pk(id: $id) {
+    active
+    created_at
+    updated_at
+    title
+    user_is_subscribed
+    days {
+      id
+      active
+      week_day
+      tasks {
+        id
+        description
+        start_time
+      }
+    }
+  }
+}
+
 mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
   insert_schedule(objects: { title: $title, days: { data: $days } }) {
     returning {
       id
     }
+  }
+}
+
+mutation UpdateScheduleUserSubscription(
+  $id: String!
+  $isUserSubscribed: Boolean!
+) {
+  update_schedule_by_pk(
+    pk_columns: { id: $id }
+    _set: { user_is_subscribed: $isUserSubscribed }
+  ) {
+    id
+    user_is_subscribed
   }
 }

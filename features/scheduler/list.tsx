@@ -118,7 +118,7 @@ function SchedulerList() {
                                 active
                               </span>
                             ) : (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 capitalize">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 capitalize">
                                 inactive
                               </span>
                             )}
@@ -225,7 +225,7 @@ function SchedulerList() {
               times at which possible tasks, events, or actions are intended to
               take place.
             </p>
-            <Link href="/scheduler/new-schedule">
+            <Link href="/scheduler/create-schedule">
               <a className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Create a schedule
               </a>
