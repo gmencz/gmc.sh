@@ -1,3 +1,4 @@
+import ConfirmDialog from 'components/confirm-dialog'
 import { format, parse, parseISO, setDay } from 'date-fns'
 import {
   ScheduleQuery,
@@ -848,56 +849,23 @@ function SchedulerSchedule() {
                                               </button>
                                               <button
                                                 type="button"
+                                                className="inline-flex disabled:cursor-not-allowed disabled:opacity-60 items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                                 onClick={() => {
                                                   setDeletingId(task.id)
-                                                  deleteTask({
-                                                    id: task.id,
-                                                  })
                                                 }}
-                                                disabled={
-                                                  deleteTaskStatus ===
-                                                    'loading' &&
-                                                  deletingId === task.id
-                                                }
-                                                className="inline-flex disabled:cursor-not-allowed disabled:opacity-60 items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                               >
-                                                {deleteTaskStatus ===
-                                                  'loading' &&
-                                                deletingId === task.id ? (
-                                                  <svg
-                                                    className="animate-spin h-4 w-4 text-red-600"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                  >
-                                                    <circle
-                                                      className="opacity-25"
-                                                      cx="12"
-                                                      cy="12"
-                                                      r="10"
-                                                      stroke="currentColor"
-                                                      strokeWidth="4"
-                                                    ></circle>
-                                                    <path
-                                                      className="opacity-75"
-                                                      fill="currentColor"
-                                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                    ></path>
-                                                  </svg>
-                                                ) : (
-                                                  <svg
-                                                    className="h-4 w-4 text-red-600"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                  >
-                                                    <path
-                                                      fillRule="evenodd"
-                                                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                      clipRule="evenodd"
-                                                    />
-                                                  </svg>
-                                                )}
+                                                <svg
+                                                  className="h-4 w-4 text-red-600"
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  viewBox="0 0 20 20"
+                                                  fill="currentColor"
+                                                >
+                                                  <path
+                                                    fillRule="evenodd"
+                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                    clipRule="evenodd"
+                                                  />
+                                                </svg>
                                                 <span className="sr-only">
                                                   Delete task
                                                 </span>
@@ -906,6 +874,28 @@ function SchedulerSchedule() {
                                           </div>
                                         </div>
                                       </div>
+                                      <ConfirmDialog
+                                        confirmButtonText="Yes, delete it"
+                                        isOpen={deletingId === task.id}
+                                        loading={deleteTaskStatus === 'loading'}
+                                        onClose={() => setDeletingId(null)}
+                                        confirmButtonVariant="danger"
+                                        leaveEvents={['escape']}
+                                        position="right"
+                                        onConfirm={() => {
+                                          deleteTask({
+                                            id: task.id,
+                                          })
+                                        }}
+                                      >
+                                        <div className="pt-2 pb-4">
+                                          <p className="text-base text-gray-900">
+                                            Do you really want to delete this
+                                            task?
+                                          </p>
+                                        </div>
+                                      </ConfirmDialog>
+
                                       <StepTwoNewTask
                                         position="right"
                                         leaveEvents={['escape']}
