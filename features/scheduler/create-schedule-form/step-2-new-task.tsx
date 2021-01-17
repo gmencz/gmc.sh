@@ -104,7 +104,11 @@ const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
           leaveTo="transform opacity-0 scale-95"
         >
           <div
-            className={`origin-top-${position} max-w-sm w-full absolute ${position}-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`}
+            className={
+              position === 'left'
+                ? `origin-top-left max-w-sm w-full absolute left-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`
+                : `origin-top-right max-w-sm w-full absolute right-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`
+            }
           >
             <form onSubmit={handleSubmit(submit)}>
               <div className="w-full mb-4">

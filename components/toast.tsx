@@ -2,12 +2,7 @@ import { Transition } from '@headlessui/react'
 import { useState } from 'react'
 import { ToastProps } from 'react-toast-notifications'
 
-function Toast({
-  appearance,
-  children,
-  onDismiss,
-  transitionDuration,
-}: ToastProps) {
+function Toast({ appearance, children, onDismiss }: ToastProps) {
   const [showToast, setShowToast] = useState(true)
   const hideToast = () => {
     onDismiss()
@@ -17,10 +12,10 @@ function Toast({
   return (
     <Transition
       show={showToast}
-      enter={`transition ease-out duration-${transitionDuration}`}
+      enter={`transition ease-out duration-300`}
       enterFrom="transform opacity-0 scale-95"
       enterTo="transform opacity-100 scale-100"
-      leave={`transition ease-in duration-${transitionDuration}`}
+      leave={`transition ease-in duration-300`}
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
