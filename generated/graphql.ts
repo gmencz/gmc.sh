@@ -1,4 +1,9 @@
-import { useQuery, UseQueryOptions } from 'react-query'
+import {
+  useQuery,
+  UseQueryOptions,
+  useMutation,
+  UseMutationOptions,
+} from 'react-query'
 import { fetcher } from 'utils/gql-client'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -64,10 +69,16 @@ export type String_Comparison_Exp = {
   _similar?: Maybe<Scalars['String']>
 }
 
-/** columns and relationships of "account" */
+/**
+ * User accounts
+ *
+ *
+ * columns and relationships of "account"
+ */
 export type Account = {
   __typename?: 'account'
   company?: Maybe<Scalars['String']>
+  created_at?: Maybe<Scalars['timestamptz']>
   id: Scalars['String']
   last_seen: Scalars['timestamptz']
   name: Scalars['String']
@@ -76,10 +87,16 @@ export type Account = {
   schedules: Array<Schedule>
   /** An aggregated array relationship */
   schedules_aggregate: Schedule_Aggregate
+  updated_at?: Maybe<Scalars['timestamptz']>
   verified: Scalars['Boolean']
 }
 
-/** columns and relationships of "account" */
+/**
+ * User accounts
+ *
+ *
+ * columns and relationships of "account"
+ */
 export type AccountSchedulesArgs = {
   distinct_on?: Maybe<Array<Schedule_Select_Column>>
   limit?: Maybe<Scalars['Int']>
@@ -88,7 +105,12 @@ export type AccountSchedulesArgs = {
   where?: Maybe<Schedule_Bool_Exp>
 }
 
-/** columns and relationships of "account" */
+/**
+ * User accounts
+ *
+ *
+ * columns and relationships of "account"
+ */
 export type AccountSchedules_AggregateArgs = {
   distinct_on?: Maybe<Array<Schedule_Select_Column>>
   limit?: Maybe<Scalars['Int']>
@@ -137,11 +159,13 @@ export type Account_Bool_Exp = {
   _not?: Maybe<Account_Bool_Exp>
   _or?: Maybe<Array<Maybe<Account_Bool_Exp>>>
   company?: Maybe<String_Comparison_Exp>
+  created_at?: Maybe<Timestamptz_Comparison_Exp>
   id?: Maybe<String_Comparison_Exp>
   last_seen?: Maybe<Timestamptz_Comparison_Exp>
   name?: Maybe<String_Comparison_Exp>
   picture?: Maybe<String_Comparison_Exp>
   schedules?: Maybe<Schedule_Bool_Exp>
+  updated_at?: Maybe<Timestamptz_Comparison_Exp>
   verified?: Maybe<Boolean_Comparison_Exp>
 }
 
@@ -154,11 +178,13 @@ export enum Account_Constraint {
 /** input type for inserting data into table "account" */
 export type Account_Insert_Input = {
   company?: Maybe<Scalars['String']>
+  created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
   picture?: Maybe<Scalars['String']>
   schedules?: Maybe<Schedule_Arr_Rel_Insert_Input>
+  updated_at?: Maybe<Scalars['timestamptz']>
   verified?: Maybe<Scalars['Boolean']>
 }
 
@@ -166,38 +192,46 @@ export type Account_Insert_Input = {
 export type Account_Max_Fields = {
   __typename?: 'account_max_fields'
   company?: Maybe<Scalars['String']>
+  created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
   picture?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
 }
 
 /** order by max() on columns of table "account" */
 export type Account_Max_Order_By = {
   company?: Maybe<Order_By>
+  created_at?: Maybe<Order_By>
   id?: Maybe<Order_By>
   last_seen?: Maybe<Order_By>
   name?: Maybe<Order_By>
   picture?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
 }
 
 /** aggregate min on columns */
 export type Account_Min_Fields = {
   __typename?: 'account_min_fields'
   company?: Maybe<Scalars['String']>
+  created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
   picture?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
 }
 
 /** order by min() on columns of table "account" */
 export type Account_Min_Order_By = {
   company?: Maybe<Order_By>
+  created_at?: Maybe<Order_By>
   id?: Maybe<Order_By>
   last_seen?: Maybe<Order_By>
   name?: Maybe<Order_By>
   picture?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
 }
 
 /** response of any mutation on the table "account" */
@@ -225,11 +259,13 @@ export type Account_On_Conflict = {
 /** ordering options when selecting data from "account" */
 export type Account_Order_By = {
   company?: Maybe<Order_By>
+  created_at?: Maybe<Order_By>
   id?: Maybe<Order_By>
   last_seen?: Maybe<Order_By>
   name?: Maybe<Order_By>
   picture?: Maybe<Order_By>
   schedules_aggregate?: Maybe<Schedule_Aggregate_Order_By>
+  updated_at?: Maybe<Order_By>
   verified?: Maybe<Order_By>
 }
 
@@ -243,6 +279,8 @@ export enum Account_Select_Column {
   /** column name */
   Company = 'company',
   /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Id = 'id',
   /** column name */
   LastSeen = 'last_seen',
@@ -251,16 +289,20 @@ export enum Account_Select_Column {
   /** column name */
   Picture = 'picture',
   /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
   Verified = 'verified',
 }
 
 /** input type for updating data in table "account" */
 export type Account_Set_Input = {
   company?: Maybe<Scalars['String']>
+  created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   last_seen?: Maybe<Scalars['timestamptz']>
   name?: Maybe<Scalars['String']>
   picture?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
   verified?: Maybe<Scalars['Boolean']>
 }
 
@@ -269,6 +311,8 @@ export enum Account_Update_Column {
   /** column name */
   Company = 'company',
   /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
   Id = 'id',
   /** column name */
   LastSeen = 'last_seen',
@@ -276,6 +320,8 @@ export enum Account_Update_Column {
   Name = 'name',
   /** column name */
   Picture = 'picture',
+  /** column name */
+  UpdatedAt = 'updated_at',
   /** column name */
   Verified = 'verified',
 }
@@ -291,12 +337,36 @@ export type Mutation_Root = {
   delete_schedule?: Maybe<Schedule_Mutation_Response>
   /** delete single row from the table: "schedule" */
   delete_schedule_by_pk?: Maybe<Schedule>
+  /** delete data from the table: "schedule_day" */
+  delete_schedule_day?: Maybe<Schedule_Day_Mutation_Response>
+  /** delete single row from the table: "schedule_day" */
+  delete_schedule_day_by_pk?: Maybe<Schedule_Day>
+  /** delete data from the table: "schedule_day_task" */
+  delete_schedule_day_task?: Maybe<Schedule_Day_Task_Mutation_Response>
+  /** delete single row from the table: "schedule_day_task" */
+  delete_schedule_day_task_by_pk?: Maybe<Schedule_Day_Task>
+  /** delete data from the table: "schedule_day_week_day" */
+  delete_schedule_day_week_day?: Maybe<Schedule_Day_Week_Day_Mutation_Response>
+  /** delete single row from the table: "schedule_day_week_day" */
+  delete_schedule_day_week_day_by_pk?: Maybe<Schedule_Day_Week_Day>
   /** insert data into the table: "account" */
   insert_account?: Maybe<Account_Mutation_Response>
   /** insert a single row into the table: "account" */
   insert_account_one?: Maybe<Account>
   /** insert data into the table: "schedule" */
   insert_schedule?: Maybe<Schedule_Mutation_Response>
+  /** insert data into the table: "schedule_day" */
+  insert_schedule_day?: Maybe<Schedule_Day_Mutation_Response>
+  /** insert a single row into the table: "schedule_day" */
+  insert_schedule_day_one?: Maybe<Schedule_Day>
+  /** insert data into the table: "schedule_day_task" */
+  insert_schedule_day_task?: Maybe<Schedule_Day_Task_Mutation_Response>
+  /** insert a single row into the table: "schedule_day_task" */
+  insert_schedule_day_task_one?: Maybe<Schedule_Day_Task>
+  /** insert data into the table: "schedule_day_week_day" */
+  insert_schedule_day_week_day?: Maybe<Schedule_Day_Week_Day_Mutation_Response>
+  /** insert a single row into the table: "schedule_day_week_day" */
+  insert_schedule_day_week_day_one?: Maybe<Schedule_Day_Week_Day>
   /** insert a single row into the table: "schedule" */
   insert_schedule_one?: Maybe<Schedule>
   /** update data of the table: "account" */
@@ -307,6 +377,18 @@ export type Mutation_Root = {
   update_schedule?: Maybe<Schedule_Mutation_Response>
   /** update single row of the table: "schedule" */
   update_schedule_by_pk?: Maybe<Schedule>
+  /** update data of the table: "schedule_day" */
+  update_schedule_day?: Maybe<Schedule_Day_Mutation_Response>
+  /** update single row of the table: "schedule_day" */
+  update_schedule_day_by_pk?: Maybe<Schedule_Day>
+  /** update data of the table: "schedule_day_task" */
+  update_schedule_day_task?: Maybe<Schedule_Day_Task_Mutation_Response>
+  /** update single row of the table: "schedule_day_task" */
+  update_schedule_day_task_by_pk?: Maybe<Schedule_Day_Task>
+  /** update data of the table: "schedule_day_week_day" */
+  update_schedule_day_week_day?: Maybe<Schedule_Day_Week_Day_Mutation_Response>
+  /** update single row of the table: "schedule_day_week_day" */
+  update_schedule_day_week_day_by_pk?: Maybe<Schedule_Day_Week_Day>
 }
 
 /** mutation root */
@@ -326,7 +408,37 @@ export type Mutation_RootDelete_ScheduleArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Schedule_By_PkArgs = {
-  id: Scalars['uuid']
+  id: Scalars['String']
+}
+
+/** mutation root */
+export type Mutation_RootDelete_Schedule_DayArgs = {
+  where: Schedule_Day_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootDelete_Schedule_Day_By_PkArgs = {
+  id: Scalars['String']
+}
+
+/** mutation root */
+export type Mutation_RootDelete_Schedule_Day_TaskArgs = {
+  where: Schedule_Day_Task_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootDelete_Schedule_Day_Task_By_PkArgs = {
+  id: Scalars['String']
+}
+
+/** mutation root */
+export type Mutation_RootDelete_Schedule_Day_Week_DayArgs = {
+  where: Schedule_Day_Week_Day_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootDelete_Schedule_Day_Week_Day_By_PkArgs = {
+  day: Scalars['String']
 }
 
 /** mutation root */
@@ -345,6 +457,42 @@ export type Mutation_RootInsert_Account_OneArgs = {
 export type Mutation_RootInsert_ScheduleArgs = {
   objects: Array<Schedule_Insert_Input>
   on_conflict?: Maybe<Schedule_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_DayArgs = {
+  objects: Array<Schedule_Day_Insert_Input>
+  on_conflict?: Maybe<Schedule_Day_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_Day_OneArgs = {
+  object: Schedule_Day_Insert_Input
+  on_conflict?: Maybe<Schedule_Day_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_Day_TaskArgs = {
+  objects: Array<Schedule_Day_Task_Insert_Input>
+  on_conflict?: Maybe<Schedule_Day_Task_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_Day_Task_OneArgs = {
+  object: Schedule_Day_Task_Insert_Input
+  on_conflict?: Maybe<Schedule_Day_Task_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_Day_Week_DayArgs = {
+  objects: Array<Schedule_Day_Week_Day_Insert_Input>
+  on_conflict?: Maybe<Schedule_Day_Week_Day_On_Conflict>
+}
+
+/** mutation root */
+export type Mutation_RootInsert_Schedule_Day_Week_Day_OneArgs = {
+  object: Schedule_Day_Week_Day_Insert_Input
+  on_conflict?: Maybe<Schedule_Day_Week_Day_On_Conflict>
 }
 
 /** mutation root */
@@ -375,6 +523,42 @@ export type Mutation_RootUpdate_ScheduleArgs = {
 export type Mutation_RootUpdate_Schedule_By_PkArgs = {
   _set?: Maybe<Schedule_Set_Input>
   pk_columns: Schedule_Pk_Columns_Input
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_DayArgs = {
+  _set?: Maybe<Schedule_Day_Set_Input>
+  where: Schedule_Day_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_Day_By_PkArgs = {
+  _set?: Maybe<Schedule_Day_Set_Input>
+  pk_columns: Schedule_Day_Pk_Columns_Input
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_Day_TaskArgs = {
+  _set?: Maybe<Schedule_Day_Task_Set_Input>
+  where: Schedule_Day_Task_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_Day_Task_By_PkArgs = {
+  _set?: Maybe<Schedule_Day_Task_Set_Input>
+  pk_columns: Schedule_Day_Task_Pk_Columns_Input
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_Day_Week_DayArgs = {
+  _set?: Maybe<Schedule_Day_Week_Day_Set_Input>
+  where: Schedule_Day_Week_Day_Bool_Exp
+}
+
+/** mutation root */
+export type Mutation_RootUpdate_Schedule_Day_Week_Day_By_PkArgs = {
+  _set?: Maybe<Schedule_Day_Week_Day_Set_Input>
+  pk_columns: Schedule_Day_Week_Day_Pk_Columns_Input
 }
 
 /** column ordering options */
@@ -410,6 +594,24 @@ export type Query_Root = {
   schedule_aggregate: Schedule_Aggregate
   /** fetch data from the table: "schedule" using primary key columns */
   schedule_by_pk?: Maybe<Schedule>
+  /** fetch data from the table: "schedule_day" */
+  schedule_day: Array<Schedule_Day>
+  /** fetch aggregated fields from the table: "schedule_day" */
+  schedule_day_aggregate: Schedule_Day_Aggregate
+  /** fetch data from the table: "schedule_day" using primary key columns */
+  schedule_day_by_pk?: Maybe<Schedule_Day>
+  /** fetch data from the table: "schedule_day_task" */
+  schedule_day_task: Array<Schedule_Day_Task>
+  /** fetch aggregated fields from the table: "schedule_day_task" */
+  schedule_day_task_aggregate: Schedule_Day_Task_Aggregate
+  /** fetch data from the table: "schedule_day_task" using primary key columns */
+  schedule_day_task_by_pk?: Maybe<Schedule_Day_Task>
+  /** fetch data from the table: "schedule_day_week_day" */
+  schedule_day_week_day: Array<Schedule_Day_Week_Day>
+  /** fetch aggregated fields from the table: "schedule_day_week_day" */
+  schedule_day_week_day_aggregate: Schedule_Day_Week_Day_Aggregate
+  /** fetch data from the table: "schedule_day_week_day" using primary key columns */
+  schedule_day_week_day_by_pk?: Maybe<Schedule_Day_Week_Day>
 }
 
 /** query root */
@@ -455,20 +657,127 @@ export type Query_RootSchedule_AggregateArgs = {
 
 /** query root */
 export type Query_RootSchedule_By_PkArgs = {
-  id: Scalars['uuid']
+  id: Scalars['String']
 }
 
-/** columns and relationships of "schedule" */
+/** query root */
+export type Query_RootSchedule_DayArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_Day_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_Day_By_PkArgs = {
+  id: Scalars['String']
+}
+
+/** query root */
+export type Query_RootSchedule_Day_TaskArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Task_Order_By>>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_Day_Task_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Task_Order_By>>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_Day_Task_By_PkArgs = {
+  id: Scalars['String']
+}
+
+/** query root */
+export type Query_RootSchedule_Day_Week_DayArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Week_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Week_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Week_Day_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_Day_Week_Day_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Week_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Week_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Week_Day_Bool_Exp>
+}
+
+/** query root */
+export type Query_RootSchedule_Day_Week_Day_By_PkArgs = {
+  day: Scalars['String']
+}
+
+/**
+ * Schedules of users
+ *
+ *
+ * columns and relationships of "schedule"
+ */
 export type Schedule = {
   __typename?: 'schedule'
   active: Scalars['Boolean']
   created_at: Scalars['timestamptz']
-  id: Scalars['uuid']
+  /** An array relationship */
+  days: Array<Schedule_Day>
+  /** An aggregated array relationship */
+  days_aggregate: Schedule_Day_Aggregate
+  id: Scalars['String']
   title: Scalars['String']
   updated_at: Scalars['timestamptz']
   /** An object relationship */
   user?: Maybe<Account>
   user_id: Scalars['String']
+  user_is_subscribed?: Maybe<Scalars['Boolean']>
+}
+
+/**
+ * Schedules of users
+ *
+ *
+ * columns and relationships of "schedule"
+ */
+export type ScheduleDaysArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Bool_Exp>
+}
+
+/**
+ * Schedules of users
+ *
+ *
+ * columns and relationships of "schedule"
+ */
+export type ScheduleDays_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Bool_Exp>
 }
 
 /** aggregated selection of "schedule" */
@@ -512,11 +821,13 @@ export type Schedule_Bool_Exp = {
   _or?: Maybe<Array<Maybe<Schedule_Bool_Exp>>>
   active?: Maybe<Boolean_Comparison_Exp>
   created_at?: Maybe<Timestamptz_Comparison_Exp>
-  id?: Maybe<Uuid_Comparison_Exp>
+  days?: Maybe<Schedule_Day_Bool_Exp>
+  id?: Maybe<String_Comparison_Exp>
   title?: Maybe<String_Comparison_Exp>
   updated_at?: Maybe<Timestamptz_Comparison_Exp>
   user?: Maybe<Account_Bool_Exp>
   user_id?: Maybe<String_Comparison_Exp>
+  user_is_subscribed?: Maybe<Boolean_Comparison_Exp>
 }
 
 /** unique or primary key constraints on table "schedule" */
@@ -525,22 +836,589 @@ export enum Schedule_Constraint {
   SchedulesPkey = 'schedules_pkey',
 }
 
+/**
+ * Days of a schedule
+ *
+ *
+ * columns and relationships of "schedule_day"
+ */
+export type Schedule_Day = {
+  __typename?: 'schedule_day'
+  active: Scalars['Boolean']
+  created_at: Scalars['timestamptz']
+  id: Scalars['String']
+  /** An object relationship */
+  schedule?: Maybe<Schedule>
+  schedule_id: Scalars['String']
+  /** An array relationship */
+  tasks: Array<Schedule_Day_Task>
+  /** An aggregated array relationship */
+  tasks_aggregate: Schedule_Day_Task_Aggregate
+  updated_at: Scalars['timestamptz']
+  week_day: Schedule_Day_Week_Day_Enum
+}
+
+/**
+ * Days of a schedule
+ *
+ *
+ * columns and relationships of "schedule_day"
+ */
+export type Schedule_DayTasksArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Task_Order_By>>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/**
+ * Days of a schedule
+ *
+ *
+ * columns and relationships of "schedule_day"
+ */
+export type Schedule_DayTasks_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Task_Order_By>>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/** aggregated selection of "schedule_day" */
+export type Schedule_Day_Aggregate = {
+  __typename?: 'schedule_day_aggregate'
+  aggregate?: Maybe<Schedule_Day_Aggregate_Fields>
+  nodes: Array<Schedule_Day>
+}
+
+/** aggregate fields of "schedule_day" */
+export type Schedule_Day_Aggregate_Fields = {
+  __typename?: 'schedule_day_aggregate_fields'
+  count?: Maybe<Scalars['Int']>
+  max?: Maybe<Schedule_Day_Max_Fields>
+  min?: Maybe<Schedule_Day_Min_Fields>
+}
+
+/** aggregate fields of "schedule_day" */
+export type Schedule_Day_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Schedule_Day_Select_Column>>
+  distinct?: Maybe<Scalars['Boolean']>
+}
+
+/** order by aggregate values of table "schedule_day" */
+export type Schedule_Day_Aggregate_Order_By = {
+  count?: Maybe<Order_By>
+  max?: Maybe<Schedule_Day_Max_Order_By>
+  min?: Maybe<Schedule_Day_Min_Order_By>
+}
+
+/** input type for inserting array relation for remote table "schedule_day" */
+export type Schedule_Day_Arr_Rel_Insert_Input = {
+  data: Array<Schedule_Day_Insert_Input>
+  on_conflict?: Maybe<Schedule_Day_On_Conflict>
+}
+
+/** Boolean expression to filter rows from the table "schedule_day". All fields are combined with a logical 'AND'. */
+export type Schedule_Day_Bool_Exp = {
+  _and?: Maybe<Array<Maybe<Schedule_Day_Bool_Exp>>>
+  _not?: Maybe<Schedule_Day_Bool_Exp>
+  _or?: Maybe<Array<Maybe<Schedule_Day_Bool_Exp>>>
+  active?: Maybe<Boolean_Comparison_Exp>
+  created_at?: Maybe<Timestamptz_Comparison_Exp>
+  id?: Maybe<String_Comparison_Exp>
+  schedule?: Maybe<Schedule_Bool_Exp>
+  schedule_id?: Maybe<String_Comparison_Exp>
+  tasks?: Maybe<Schedule_Day_Task_Bool_Exp>
+  updated_at?: Maybe<Timestamptz_Comparison_Exp>
+  week_day?: Maybe<Schedule_Day_Week_Day_Enum_Comparison_Exp>
+}
+
+/** unique or primary key constraints on table "schedule_day" */
+export enum Schedule_Day_Constraint {
+  /** unique or primary key constraint */
+  ScheduleDayPkey = 'schedule_day_pkey',
+}
+
+/** input type for inserting data into table "schedule_day" */
+export type Schedule_Day_Insert_Input = {
+  active?: Maybe<Scalars['Boolean']>
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['String']>
+  schedule?: Maybe<Schedule_Obj_Rel_Insert_Input>
+  schedule_id?: Maybe<Scalars['String']>
+  tasks?: Maybe<Schedule_Day_Task_Arr_Rel_Insert_Input>
+  updated_at?: Maybe<Scalars['timestamptz']>
+  week_day?: Maybe<Schedule_Day_Week_Day_Enum>
+}
+
+/** aggregate max on columns */
+export type Schedule_Day_Max_Fields = {
+  __typename?: 'schedule_day_max_fields'
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['String']>
+  schedule_id?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+}
+
+/** order by max() on columns of table "schedule_day" */
+export type Schedule_Day_Max_Order_By = {
+  created_at?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  schedule_id?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
+}
+
+/** aggregate min on columns */
+export type Schedule_Day_Min_Fields = {
+  __typename?: 'schedule_day_min_fields'
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['String']>
+  schedule_id?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+}
+
+/** order by min() on columns of table "schedule_day" */
+export type Schedule_Day_Min_Order_By = {
+  created_at?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  schedule_id?: Maybe<Order_By>
+  updated_at?: Maybe<Order_By>
+}
+
+/** response of any mutation on the table "schedule_day" */
+export type Schedule_Day_Mutation_Response = {
+  __typename?: 'schedule_day_mutation_response'
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int']
+  /** data of the affected rows by the mutation */
+  returning: Array<Schedule_Day>
+}
+
+/** input type for inserting object relation for remote table "schedule_day" */
+export type Schedule_Day_Obj_Rel_Insert_Input = {
+  data: Schedule_Day_Insert_Input
+  on_conflict?: Maybe<Schedule_Day_On_Conflict>
+}
+
+/** on conflict condition type for table "schedule_day" */
+export type Schedule_Day_On_Conflict = {
+  constraint: Schedule_Day_Constraint
+  update_columns: Array<Schedule_Day_Update_Column>
+  where?: Maybe<Schedule_Day_Bool_Exp>
+}
+
+/** ordering options when selecting data from "schedule_day" */
+export type Schedule_Day_Order_By = {
+  active?: Maybe<Order_By>
+  created_at?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  schedule?: Maybe<Schedule_Order_By>
+  schedule_id?: Maybe<Order_By>
+  tasks_aggregate?: Maybe<Schedule_Day_Task_Aggregate_Order_By>
+  updated_at?: Maybe<Order_By>
+  week_day?: Maybe<Order_By>
+}
+
+/** primary key columns input for table: "schedule_day" */
+export type Schedule_Day_Pk_Columns_Input = {
+  id: Scalars['String']
+}
+
+/** select columns of table "schedule_day" */
+export enum Schedule_Day_Select_Column {
+  /** column name */
+  Active = 'active',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ScheduleId = 'schedule_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  WeekDay = 'week_day',
+}
+
+/** input type for updating data in table "schedule_day" */
+export type Schedule_Day_Set_Input = {
+  active?: Maybe<Scalars['Boolean']>
+  created_at?: Maybe<Scalars['timestamptz']>
+  id?: Maybe<Scalars['String']>
+  schedule_id?: Maybe<Scalars['String']>
+  updated_at?: Maybe<Scalars['timestamptz']>
+  week_day?: Maybe<Schedule_Day_Week_Day_Enum>
+}
+
+/**
+ * Tasks for the days of a schedule
+ *
+ *
+ * columns and relationships of "schedule_day_task"
+ */
+export type Schedule_Day_Task = {
+  __typename?: 'schedule_day_task'
+  description: Scalars['String']
+  id: Scalars['String']
+  /** An object relationship */
+  schedule_day?: Maybe<Schedule_Day>
+  schedule_day_id: Scalars['String']
+  start_time: Scalars['timestamptz']
+}
+
+/** aggregated selection of "schedule_day_task" */
+export type Schedule_Day_Task_Aggregate = {
+  __typename?: 'schedule_day_task_aggregate'
+  aggregate?: Maybe<Schedule_Day_Task_Aggregate_Fields>
+  nodes: Array<Schedule_Day_Task>
+}
+
+/** aggregate fields of "schedule_day_task" */
+export type Schedule_Day_Task_Aggregate_Fields = {
+  __typename?: 'schedule_day_task_aggregate_fields'
+  count?: Maybe<Scalars['Int']>
+  max?: Maybe<Schedule_Day_Task_Max_Fields>
+  min?: Maybe<Schedule_Day_Task_Min_Fields>
+}
+
+/** aggregate fields of "schedule_day_task" */
+export type Schedule_Day_Task_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  distinct?: Maybe<Scalars['Boolean']>
+}
+
+/** order by aggregate values of table "schedule_day_task" */
+export type Schedule_Day_Task_Aggregate_Order_By = {
+  count?: Maybe<Order_By>
+  max?: Maybe<Schedule_Day_Task_Max_Order_By>
+  min?: Maybe<Schedule_Day_Task_Min_Order_By>
+}
+
+/** input type for inserting array relation for remote table "schedule_day_task" */
+export type Schedule_Day_Task_Arr_Rel_Insert_Input = {
+  data: Array<Schedule_Day_Task_Insert_Input>
+  on_conflict?: Maybe<Schedule_Day_Task_On_Conflict>
+}
+
+/** Boolean expression to filter rows from the table "schedule_day_task". All fields are combined with a logical 'AND'. */
+export type Schedule_Day_Task_Bool_Exp = {
+  _and?: Maybe<Array<Maybe<Schedule_Day_Task_Bool_Exp>>>
+  _not?: Maybe<Schedule_Day_Task_Bool_Exp>
+  _or?: Maybe<Array<Maybe<Schedule_Day_Task_Bool_Exp>>>
+  description?: Maybe<String_Comparison_Exp>
+  id?: Maybe<String_Comparison_Exp>
+  schedule_day?: Maybe<Schedule_Day_Bool_Exp>
+  schedule_day_id?: Maybe<String_Comparison_Exp>
+  start_time?: Maybe<Timestamptz_Comparison_Exp>
+}
+
+/** unique or primary key constraints on table "schedule_day_task" */
+export enum Schedule_Day_Task_Constraint {
+  /** unique or primary key constraint */
+  ScheduleDayTaskPkey = 'schedule_day_task_pkey',
+}
+
+/** input type for inserting data into table "schedule_day_task" */
+export type Schedule_Day_Task_Insert_Input = {
+  description?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  schedule_day?: Maybe<Schedule_Day_Obj_Rel_Insert_Input>
+  schedule_day_id?: Maybe<Scalars['String']>
+  start_time?: Maybe<Scalars['timestamptz']>
+}
+
+/** aggregate max on columns */
+export type Schedule_Day_Task_Max_Fields = {
+  __typename?: 'schedule_day_task_max_fields'
+  description?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  schedule_day_id?: Maybe<Scalars['String']>
+  start_time?: Maybe<Scalars['timestamptz']>
+}
+
+/** order by max() on columns of table "schedule_day_task" */
+export type Schedule_Day_Task_Max_Order_By = {
+  description?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  schedule_day_id?: Maybe<Order_By>
+  start_time?: Maybe<Order_By>
+}
+
+/** aggregate min on columns */
+export type Schedule_Day_Task_Min_Fields = {
+  __typename?: 'schedule_day_task_min_fields'
+  description?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  schedule_day_id?: Maybe<Scalars['String']>
+  start_time?: Maybe<Scalars['timestamptz']>
+}
+
+/** order by min() on columns of table "schedule_day_task" */
+export type Schedule_Day_Task_Min_Order_By = {
+  description?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  schedule_day_id?: Maybe<Order_By>
+  start_time?: Maybe<Order_By>
+}
+
+/** response of any mutation on the table "schedule_day_task" */
+export type Schedule_Day_Task_Mutation_Response = {
+  __typename?: 'schedule_day_task_mutation_response'
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int']
+  /** data of the affected rows by the mutation */
+  returning: Array<Schedule_Day_Task>
+}
+
+/** input type for inserting object relation for remote table "schedule_day_task" */
+export type Schedule_Day_Task_Obj_Rel_Insert_Input = {
+  data: Schedule_Day_Task_Insert_Input
+  on_conflict?: Maybe<Schedule_Day_Task_On_Conflict>
+}
+
+/** on conflict condition type for table "schedule_day_task" */
+export type Schedule_Day_Task_On_Conflict = {
+  constraint: Schedule_Day_Task_Constraint
+  update_columns: Array<Schedule_Day_Task_Update_Column>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/** ordering options when selecting data from "schedule_day_task" */
+export type Schedule_Day_Task_Order_By = {
+  description?: Maybe<Order_By>
+  id?: Maybe<Order_By>
+  schedule_day?: Maybe<Schedule_Day_Order_By>
+  schedule_day_id?: Maybe<Order_By>
+  start_time?: Maybe<Order_By>
+}
+
+/** primary key columns input for table: "schedule_day_task" */
+export type Schedule_Day_Task_Pk_Columns_Input = {
+  id: Scalars['String']
+}
+
+/** select columns of table "schedule_day_task" */
+export enum Schedule_Day_Task_Select_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ScheduleDayId = 'schedule_day_id',
+  /** column name */
+  StartTime = 'start_time',
+}
+
+/** input type for updating data in table "schedule_day_task" */
+export type Schedule_Day_Task_Set_Input = {
+  description?: Maybe<Scalars['String']>
+  id?: Maybe<Scalars['String']>
+  schedule_day_id?: Maybe<Scalars['String']>
+  start_time?: Maybe<Scalars['timestamptz']>
+}
+
+/** update columns of table "schedule_day_task" */
+export enum Schedule_Day_Task_Update_Column {
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ScheduleDayId = 'schedule_day_id',
+  /** column name */
+  StartTime = 'start_time',
+}
+
+/** update columns of table "schedule_day" */
+export enum Schedule_Day_Update_Column {
+  /** column name */
+  Active = 'active',
+  /** column name */
+  CreatedAt = 'created_at',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ScheduleId = 'schedule_id',
+  /** column name */
+  UpdatedAt = 'updated_at',
+  /** column name */
+  WeekDay = 'week_day',
+}
+
+/**
+ * Possible week days of a schedule's day
+ *
+ *
+ * columns and relationships of "schedule_day_week_day"
+ */
+export type Schedule_Day_Week_Day = {
+  __typename?: 'schedule_day_week_day'
+  day: Scalars['String']
+}
+
+/** aggregated selection of "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Aggregate = {
+  __typename?: 'schedule_day_week_day_aggregate'
+  aggregate?: Maybe<Schedule_Day_Week_Day_Aggregate_Fields>
+  nodes: Array<Schedule_Day_Week_Day>
+}
+
+/** aggregate fields of "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Aggregate_Fields = {
+  __typename?: 'schedule_day_week_day_aggregate_fields'
+  count?: Maybe<Scalars['Int']>
+  max?: Maybe<Schedule_Day_Week_Day_Max_Fields>
+  min?: Maybe<Schedule_Day_Week_Day_Min_Fields>
+}
+
+/** aggregate fields of "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Schedule_Day_Week_Day_Select_Column>>
+  distinct?: Maybe<Scalars['Boolean']>
+}
+
+/** order by aggregate values of table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Aggregate_Order_By = {
+  count?: Maybe<Order_By>
+  max?: Maybe<Schedule_Day_Week_Day_Max_Order_By>
+  min?: Maybe<Schedule_Day_Week_Day_Min_Order_By>
+}
+
+/** input type for inserting array relation for remote table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Arr_Rel_Insert_Input = {
+  data: Array<Schedule_Day_Week_Day_Insert_Input>
+  on_conflict?: Maybe<Schedule_Day_Week_Day_On_Conflict>
+}
+
+/** Boolean expression to filter rows from the table "schedule_day_week_day". All fields are combined with a logical 'AND'. */
+export type Schedule_Day_Week_Day_Bool_Exp = {
+  _and?: Maybe<Array<Maybe<Schedule_Day_Week_Day_Bool_Exp>>>
+  _not?: Maybe<Schedule_Day_Week_Day_Bool_Exp>
+  _or?: Maybe<Array<Maybe<Schedule_Day_Week_Day_Bool_Exp>>>
+  day?: Maybe<String_Comparison_Exp>
+}
+
+/** unique or primary key constraints on table "schedule_day_week_day" */
+export enum Schedule_Day_Week_Day_Constraint {
+  /** unique or primary key constraint */
+  ScheduleDayWeekDayPkey = 'schedule_day_week_day_pkey',
+}
+
+export enum Schedule_Day_Week_Day_Enum {
+  Friday = 'friday',
+  Monday = 'monday',
+  Saturday = 'saturday',
+  Sunday = 'sunday',
+  Thursday = 'thursday',
+  Tuesday = 'tuesday',
+  Wednesday = 'wednesday',
+}
+
+/** expression to compare columns of type schedule_day_week_day_enum. All fields are combined with logical 'AND'. */
+export type Schedule_Day_Week_Day_Enum_Comparison_Exp = {
+  _eq?: Maybe<Schedule_Day_Week_Day_Enum>
+  _in?: Maybe<Array<Schedule_Day_Week_Day_Enum>>
+  _is_null?: Maybe<Scalars['Boolean']>
+  _neq?: Maybe<Schedule_Day_Week_Day_Enum>
+  _nin?: Maybe<Array<Schedule_Day_Week_Day_Enum>>
+}
+
+/** input type for inserting data into table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Insert_Input = {
+  day?: Maybe<Scalars['String']>
+}
+
+/** aggregate max on columns */
+export type Schedule_Day_Week_Day_Max_Fields = {
+  __typename?: 'schedule_day_week_day_max_fields'
+  day?: Maybe<Scalars['String']>
+}
+
+/** order by max() on columns of table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Max_Order_By = {
+  day?: Maybe<Order_By>
+}
+
+/** aggregate min on columns */
+export type Schedule_Day_Week_Day_Min_Fields = {
+  __typename?: 'schedule_day_week_day_min_fields'
+  day?: Maybe<Scalars['String']>
+}
+
+/** order by min() on columns of table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Min_Order_By = {
+  day?: Maybe<Order_By>
+}
+
+/** response of any mutation on the table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Mutation_Response = {
+  __typename?: 'schedule_day_week_day_mutation_response'
+  /** number of affected rows by the mutation */
+  affected_rows: Scalars['Int']
+  /** data of the affected rows by the mutation */
+  returning: Array<Schedule_Day_Week_Day>
+}
+
+/** input type for inserting object relation for remote table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Obj_Rel_Insert_Input = {
+  data: Schedule_Day_Week_Day_Insert_Input
+  on_conflict?: Maybe<Schedule_Day_Week_Day_On_Conflict>
+}
+
+/** on conflict condition type for table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_On_Conflict = {
+  constraint: Schedule_Day_Week_Day_Constraint
+  update_columns: Array<Schedule_Day_Week_Day_Update_Column>
+  where?: Maybe<Schedule_Day_Week_Day_Bool_Exp>
+}
+
+/** ordering options when selecting data from "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Order_By = {
+  day?: Maybe<Order_By>
+}
+
+/** primary key columns input for table: "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Pk_Columns_Input = {
+  day: Scalars['String']
+}
+
+/** select columns of table "schedule_day_week_day" */
+export enum Schedule_Day_Week_Day_Select_Column {
+  /** column name */
+  Day = 'day',
+}
+
+/** input type for updating data in table "schedule_day_week_day" */
+export type Schedule_Day_Week_Day_Set_Input = {
+  day?: Maybe<Scalars['String']>
+}
+
+/** update columns of table "schedule_day_week_day" */
+export enum Schedule_Day_Week_Day_Update_Column {
+  /** column name */
+  Day = 'day',
+}
+
 /** input type for inserting data into table "schedule" */
 export type Schedule_Insert_Input = {
   active?: Maybe<Scalars['Boolean']>
   created_at?: Maybe<Scalars['timestamptz']>
-  id?: Maybe<Scalars['uuid']>
+  days?: Maybe<Schedule_Day_Arr_Rel_Insert_Input>
+  id?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user?: Maybe<Account_Obj_Rel_Insert_Input>
   user_id?: Maybe<Scalars['String']>
+  user_is_subscribed?: Maybe<Scalars['Boolean']>
 }
 
 /** aggregate max on columns */
 export type Schedule_Max_Fields = {
   __typename?: 'schedule_max_fields'
   created_at?: Maybe<Scalars['timestamptz']>
-  id?: Maybe<Scalars['uuid']>
+  id?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['String']>
@@ -559,7 +1437,7 @@ export type Schedule_Max_Order_By = {
 export type Schedule_Min_Fields = {
   __typename?: 'schedule_min_fields'
   created_at?: Maybe<Scalars['timestamptz']>
-  id?: Maybe<Scalars['uuid']>
+  id?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['String']>
@@ -600,16 +1478,18 @@ export type Schedule_On_Conflict = {
 export type Schedule_Order_By = {
   active?: Maybe<Order_By>
   created_at?: Maybe<Order_By>
+  days_aggregate?: Maybe<Schedule_Day_Aggregate_Order_By>
   id?: Maybe<Order_By>
   title?: Maybe<Order_By>
   updated_at?: Maybe<Order_By>
   user?: Maybe<Account_Order_By>
   user_id?: Maybe<Order_By>
+  user_is_subscribed?: Maybe<Order_By>
 }
 
 /** primary key columns input for table: "schedule" */
 export type Schedule_Pk_Columns_Input = {
-  id: Scalars['uuid']
+  id: Scalars['String']
 }
 
 /** select columns of table "schedule" */
@@ -626,16 +1506,19 @@ export enum Schedule_Select_Column {
   UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id',
+  /** column name */
+  UserIsSubscribed = 'user_is_subscribed',
 }
 
 /** input type for updating data in table "schedule" */
 export type Schedule_Set_Input = {
   active?: Maybe<Scalars['Boolean']>
   created_at?: Maybe<Scalars['timestamptz']>
-  id?: Maybe<Scalars['uuid']>
+  id?: Maybe<Scalars['String']>
   title?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   user_id?: Maybe<Scalars['String']>
+  user_is_subscribed?: Maybe<Scalars['Boolean']>
 }
 
 /** update columns of table "schedule" */
@@ -652,6 +1535,8 @@ export enum Schedule_Update_Column {
   UpdatedAt = 'updated_at',
   /** column name */
   UserId = 'user_id',
+  /** column name */
+  UserIsSubscribed = 'user_is_subscribed',
 }
 
 /** subscription root */
@@ -671,6 +1556,24 @@ export type Subscription_Root = {
   schedule_aggregate: Schedule_Aggregate
   /** fetch data from the table: "schedule" using primary key columns */
   schedule_by_pk?: Maybe<Schedule>
+  /** fetch data from the table: "schedule_day" */
+  schedule_day: Array<Schedule_Day>
+  /** fetch aggregated fields from the table: "schedule_day" */
+  schedule_day_aggregate: Schedule_Day_Aggregate
+  /** fetch data from the table: "schedule_day" using primary key columns */
+  schedule_day_by_pk?: Maybe<Schedule_Day>
+  /** fetch data from the table: "schedule_day_task" */
+  schedule_day_task: Array<Schedule_Day_Task>
+  /** fetch aggregated fields from the table: "schedule_day_task" */
+  schedule_day_task_aggregate: Schedule_Day_Task_Aggregate
+  /** fetch data from the table: "schedule_day_task" using primary key columns */
+  schedule_day_task_by_pk?: Maybe<Schedule_Day_Task>
+  /** fetch data from the table: "schedule_day_week_day" */
+  schedule_day_week_day: Array<Schedule_Day_Week_Day>
+  /** fetch aggregated fields from the table: "schedule_day_week_day" */
+  schedule_day_week_day_aggregate: Schedule_Day_Week_Day_Aggregate
+  /** fetch data from the table: "schedule_day_week_day" using primary key columns */
+  schedule_day_week_day_by_pk?: Maybe<Schedule_Day_Week_Day>
 }
 
 /** subscription root */
@@ -716,7 +1619,76 @@ export type Subscription_RootSchedule_AggregateArgs = {
 
 /** subscription root */
 export type Subscription_RootSchedule_By_PkArgs = {
-  id: Scalars['uuid']
+  id: Scalars['String']
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_DayArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_By_PkArgs = {
+  id: Scalars['String']
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_TaskArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Task_Order_By>>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_Task_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Task_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Task_Order_By>>
+  where?: Maybe<Schedule_Day_Task_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_Task_By_PkArgs = {
+  id: Scalars['String']
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_Week_DayArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Week_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Week_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Week_Day_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_Week_Day_AggregateArgs = {
+  distinct_on?: Maybe<Array<Schedule_Day_Week_Day_Select_Column>>
+  limit?: Maybe<Scalars['Int']>
+  offset?: Maybe<Scalars['Int']>
+  order_by?: Maybe<Array<Schedule_Day_Week_Day_Order_By>>
+  where?: Maybe<Schedule_Day_Week_Day_Bool_Exp>
+}
+
+/** subscription root */
+export type Subscription_RootSchedule_Day_Week_Day_By_PkArgs = {
+  day: Scalars['String']
 }
 
 /** expression to compare columns of type timestamptz. All fields are combined with logical 'AND'. */
@@ -732,17 +1704,140 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: Maybe<Array<Scalars['timestamptz']>>
 }
 
-/** expression to compare columns of type uuid. All fields are combined with logical 'AND'. */
-export type Uuid_Comparison_Exp = {
-  _eq?: Maybe<Scalars['uuid']>
-  _gt?: Maybe<Scalars['uuid']>
-  _gte?: Maybe<Scalars['uuid']>
-  _in?: Maybe<Array<Scalars['uuid']>>
-  _is_null?: Maybe<Scalars['Boolean']>
-  _lt?: Maybe<Scalars['uuid']>
-  _lte?: Maybe<Scalars['uuid']>
-  _neq?: Maybe<Scalars['uuid']>
-  _nin?: Maybe<Array<Scalars['uuid']>>
+export type MySchedulesQueryVariables = Exact<{
+  limit: Scalars['Int']
+  offset: Scalars['Int']
+}>
+
+export type MySchedulesQuery = { __typename?: 'query_root' } & {
+  me: { __typename?: 'Me' } & {
+    account?: Maybe<
+      { __typename?: 'account' } & {
+        schedules: Array<
+          { __typename?: 'schedule' } & Pick<
+            Schedule,
+            'id' | 'title' | 'active' | 'created_at'
+          > & {
+              days: Array<
+                { __typename?: 'schedule_day' } & Pick<Schedule_Day, 'week_day'>
+              >
+            }
+        >
+        schedules_aggregate: { __typename?: 'schedule_aggregate' } & {
+          aggregate?: Maybe<
+            { __typename?: 'schedule_aggregate_fields' } & Pick<
+              Schedule_Aggregate_Fields,
+              'count'
+            >
+          >
+        }
+      }
+    >
+  }
+}
+
+export type ScheduleQueryVariables = Exact<{
+  id: Scalars['String']
+}>
+
+export type ScheduleQuery = { __typename?: 'query_root' } & {
+  schedule_by_pk?: Maybe<
+    { __typename?: 'schedule' } & Pick<
+      Schedule,
+      'active' | 'created_at' | 'updated_at' | 'title' | 'user_is_subscribed'
+    > & {
+        user?: Maybe<{ __typename?: 'account' } & Pick<Account, 'name'>>
+        days: Array<
+          { __typename?: 'schedule_day' } & Pick<
+            Schedule_Day,
+            'id' | 'active' | 'week_day'
+          > & {
+              tasks: Array<
+                { __typename?: 'schedule_day_task' } & Pick<
+                  Schedule_Day_Task,
+                  'id' | 'description' | 'start_time'
+                >
+              >
+              tasks_aggregate: {
+                __typename?: 'schedule_day_task_aggregate'
+              } & {
+                aggregate?: Maybe<
+                  { __typename?: 'schedule_day_task_aggregate_fields' } & Pick<
+                    Schedule_Day_Task_Aggregate_Fields,
+                    'count'
+                  >
+                >
+              }
+            }
+        >
+      }
+  >
+}
+
+export type CreateScheduleMutationVariables = Exact<{
+  title: Scalars['String']
+  days: Array<Schedule_Day_Insert_Input> | Schedule_Day_Insert_Input
+}>
+
+export type CreateScheduleMutation = { __typename?: 'mutation_root' } & {
+  insert_schedule?: Maybe<
+    { __typename?: 'schedule_mutation_response' } & {
+      returning: Array<{ __typename?: 'schedule' } & Pick<Schedule, 'id'>>
+    }
+  >
+}
+
+export type AddTasksToScheduleMutationVariables = Exact<{
+  tasks: Array<Schedule_Day_Task_Insert_Input> | Schedule_Day_Task_Insert_Input
+}>
+
+export type AddTasksToScheduleMutation = { __typename?: 'mutation_root' } & {
+  insert_schedule_day_task?: Maybe<
+    { __typename?: 'schedule_day_task_mutation_response' } & Pick<
+      Schedule_Day_Task_Mutation_Response,
+      'affected_rows'
+    > & {
+        returning: Array<
+          { __typename?: 'schedule_day_task' } & {
+            schedule_day?: Maybe<
+              { __typename?: 'schedule_day' } & Pick<Schedule_Day, 'id'> & {
+                  tasks_aggregate: {
+                    __typename?: 'schedule_day_task_aggregate'
+                  } & {
+                    aggregate?: Maybe<
+                      {
+                        __typename?: 'schedule_day_task_aggregate_fields'
+                      } & Pick<Schedule_Day_Task_Aggregate_Fields, 'count'>
+                    >
+                  }
+                  tasks: Array<
+                    { __typename?: 'schedule_day_task' } & Pick<
+                      Schedule_Day_Task,
+                      'id' | 'description' | 'start_time'
+                    >
+                  >
+                }
+            >
+          }
+        >
+      }
+  >
+}
+
+export type UpdateScheduleUserSubscriptionMutationVariables = Exact<{
+  id: Scalars['String']
+  isUserSubscribed: Scalars['Boolean']
+}>
+
+export type UpdateScheduleUserSubscriptionMutation = {
+  __typename?: 'mutation_root'
+} & {
+  update_schedule_by_pk?: Maybe<
+    { __typename?: 'schedule' } & Pick<
+      Schedule,
+      'id' | 'user_is_subscribed' | 'updated_at'
+    >
+  >
 }
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>
@@ -753,7 +1848,16 @@ export type MeQuery = { __typename?: 'query_root' } & {
         { __typename?: 'account' } & Pick<
           Account,
           'last_seen' | 'company' | 'name' | 'picture' | 'verified'
-        >
+        > & {
+            schedules_aggregate: { __typename?: 'schedule_aggregate' } & {
+              aggregate?: Maybe<
+                { __typename?: 'schedule_aggregate_fields' } & Pick<
+                  Schedule_Aggregate_Fields,
+                  'count'
+                >
+              >
+            }
+          }
       >
     }
 }
@@ -771,6 +1875,190 @@ export type UserQuery = { __typename?: 'query_root' } & {
   >
 }
 
+export const MySchedulesDocument = `
+    query MySchedules($limit: Int!, $offset: Int!) {
+  me {
+    account {
+      schedules(limit: $limit, offset: $offset, order_by: {created_at: desc}) {
+        id
+        title
+        days {
+          week_day
+        }
+        active
+        created_at
+      }
+      schedules_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
+    `
+export const useMySchedulesQuery = <TData = MySchedulesQuery, TError = unknown>(
+  variables: MySchedulesQueryVariables,
+  options?: UseQueryOptions<MySchedulesQuery, TError, TData>,
+) =>
+  useQuery<MySchedulesQuery, TError, TData>(
+    ['MySchedules', variables],
+    fetcher<MySchedulesQuery, MySchedulesQueryVariables>(
+      MySchedulesDocument,
+      variables,
+    ),
+    options,
+  )
+export const ScheduleDocument = `
+    query Schedule($id: String!) {
+  schedule_by_pk(id: $id) {
+    active
+    created_at
+    updated_at
+    title
+    user_is_subscribed
+    user {
+      name
+    }
+    days {
+      id
+      active
+      week_day
+      tasks(order_by: {start_time: asc}) {
+        id
+        description
+        start_time
+      }
+      tasks_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
+    `
+export const useScheduleQuery = <TData = ScheduleQuery, TError = unknown>(
+  variables: ScheduleQueryVariables,
+  options?: UseQueryOptions<ScheduleQuery, TError, TData>,
+) =>
+  useQuery<ScheduleQuery, TError, TData>(
+    ['Schedule', variables],
+    fetcher<ScheduleQuery, ScheduleQueryVariables>(ScheduleDocument, variables),
+    options,
+  )
+export const CreateScheduleDocument = `
+    mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
+  insert_schedule(objects: {title: $title, days: {data: $days}}) {
+    returning {
+      id
+    }
+  }
+}
+    `
+export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    CreateScheduleMutation,
+    TError,
+    CreateScheduleMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    CreateScheduleMutation,
+    TError,
+    CreateScheduleMutationVariables,
+    TContext
+  >(
+    (variables?: CreateScheduleMutationVariables) =>
+      fetcher<CreateScheduleMutation, CreateScheduleMutationVariables>(
+        CreateScheduleDocument,
+        variables,
+      )(),
+    options,
+  )
+export const AddTasksToScheduleDocument = `
+    mutation AddTasksToSchedule($tasks: [schedule_day_task_insert_input!]!) {
+  insert_schedule_day_task(objects: $tasks) {
+    affected_rows
+    returning {
+      schedule_day {
+        id
+        tasks_aggregate {
+          aggregate {
+            count
+          }
+        }
+        tasks(order_by: {start_time: asc}) {
+          id
+          description
+          start_time
+        }
+      }
+    }
+  }
+}
+    `
+export const useAddTasksToScheduleMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    AddTasksToScheduleMutation,
+    TError,
+    AddTasksToScheduleMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    AddTasksToScheduleMutation,
+    TError,
+    AddTasksToScheduleMutationVariables,
+    TContext
+  >(
+    (variables?: AddTasksToScheduleMutationVariables) =>
+      fetcher<AddTasksToScheduleMutation, AddTasksToScheduleMutationVariables>(
+        AddTasksToScheduleDocument,
+        variables,
+      )(),
+    options,
+  )
+export const UpdateScheduleUserSubscriptionDocument = `
+    mutation UpdateScheduleUserSubscription($id: String!, $isUserSubscribed: Boolean!) {
+  update_schedule_by_pk(
+    pk_columns: {id: $id}
+    _set: {user_is_subscribed: $isUserSubscribed}
+  ) {
+    id
+    user_is_subscribed
+    updated_at
+  }
+}
+    `
+export const useUpdateScheduleUserSubscriptionMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    UpdateScheduleUserSubscriptionMutation,
+    TError,
+    UpdateScheduleUserSubscriptionMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    UpdateScheduleUserSubscriptionMutation,
+    TError,
+    UpdateScheduleUserSubscriptionMutationVariables,
+    TContext
+  >(
+    (variables?: UpdateScheduleUserSubscriptionMutationVariables) =>
+      fetcher<
+        UpdateScheduleUserSubscriptionMutation,
+        UpdateScheduleUserSubscriptionMutationVariables
+      >(UpdateScheduleUserSubscriptionDocument, variables)(),
+    options,
+  )
 export const MeDocument = `
     query Me {
   me {
@@ -781,6 +2069,11 @@ export const MeDocument = `
       name
       picture
       verified
+      schedules_aggregate {
+        aggregate {
+          count
+        }
+      }
     }
   }
 }

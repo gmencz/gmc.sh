@@ -55,6 +55,15 @@
             name: account
           column_mapping:
             user_id: id
+  array_relationships:
+    - name: days
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: schedule_day
+          column_mapping:
+            id: schedule_id
   insert_permissions:
     - role: user
       permission:
@@ -76,16 +85,19 @@
           - id
           - title
           - updated_at
+          - user_is_subscribed
         filter:
           user_id:
             _eq: x-hasura-user-id
         limit: 20
+        allow_aggregations: true
   update_permissions:
     - role: user
       permission:
         columns:
           - active
           - title
+          - user_is_subscribed
         filter:
           user_id:
             _eq: x-hasura-user-id
@@ -98,3 +110,140 @@
         filter:
           user_id:
             _eq: x-hasura-user-id
+- table:
+    schema: public
+    name: schedule_day
+  object_relationships:
+    - name: schedule
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: schedule
+          column_mapping:
+            schedule_id: id
+  array_relationships:
+    - name: tasks
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: schedule_day_task
+          column_mapping:
+            id: schedule_day_id
+  insert_permissions:
+    - role: user
+      permission:
+        check:
+          schedule:
+            user_id:
+              _eq: x-hasura-user-id
+        columns:
+          - active
+          - schedule_id
+          - week_day
+        backend_only: false
+  select_permissions:
+    - role: user
+      permission:
+        columns:
+          - active
+          - created_at
+          - id
+          - schedule_id
+          - updated_at
+          - week_day
+        filter:
+          schedule:
+            user_id:
+              _eq: x-hasura-user-id
+        limit: 20
+        allow_aggregations: true
+  update_permissions:
+    - role: user
+      permission:
+        columns:
+          - active
+          - week_day
+        filter:
+          schedule:
+            user_id:
+              _eq: x-hasura-user-id
+        check:
+          schedule:
+            user_id:
+              _eq: x-hasura-user-id
+  delete_permissions:
+    - role: user
+      permission:
+        filter:
+          schedule:
+            user_id:
+              _eq: x-hasura-user-id
+- table:
+    schema: public
+    name: schedule_day_task
+  object_relationships:
+    - name: schedule_day
+      using:
+        manual_configuration:
+          remote_table:
+            schema: public
+            name: schedule_day
+          column_mapping:
+            schedule_day_id: id
+  insert_permissions:
+    - role: user
+      permission:
+        check:
+          schedule_day:
+            schedule:
+              user_id:
+                _eq: x-hasura-user-id
+        columns:
+          - description
+          - schedule_day_id
+          - start_time
+        backend_only: false
+  select_permissions:
+    - role: user
+      permission:
+        columns:
+          - description
+          - id
+          - start_time
+        filter:
+          schedule_day:
+            schedule:
+              user_id:
+                _eq: x-hasura-user-id
+        limit: 20
+        allow_aggregations: true
+  update_permissions:
+    - role: user
+      permission:
+        columns:
+          - description
+          - start_time
+        filter:
+          schedule_day:
+            schedule:
+              user_id:
+                _eq: x-hasura-user-id
+        check:
+          schedule_day:
+            schedule:
+              user_id:
+                _eq: x-hasura-user-id
+  delete_permissions:
+    - role: user
+      permission:
+        filter:
+          schedule_day:
+            schedule:
+              user_id:
+                _eq: x-hasura-user-id
+- table:
+    schema: public
+    name: schedule_day_week_day
+  is_enum: true

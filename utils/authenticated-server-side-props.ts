@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ISession } from '@auth0/nextjs-auth0/dist/session/session'
 import { GetServerSidePropsContext } from 'next'
 import auth0 from './auth0'
 
@@ -14,10 +15,6 @@ export type InferAuthenticatedServerSideProps<
   T extends (...args: any) => Promise<{ props: any }>
 > = AsyncReturnType<T>['props']
 
-type DefaultProps = {
-  userId: string
-}
-
 type EmptyProps = {
   props: Record<string, unknown>
 }
@@ -25,12 +22,12 @@ type EmptyProps = {
 function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
   getServerSidePropsFunc?: (
     ctx: GetServerSidePropsContext,
-    userId: string,
+    session: ISession,
   ) => Promise<T>,
 ) {
   return async function getAuthenticatedServerSideProps(
     ctx: GetServerSidePropsContext,
-  ): Promise<{ props: T['props'] & DefaultProps }> {
+  ): Promise<{ props: T['props'] }> {
     const session = await auth0.getSession(ctx.req)
     if (!session || !session.user) {
       return ({
@@ -39,23 +36,19 @@ function authenticatedServerSideProps<T extends EmptyProps = EmptyProps>(
           permanent: false,
         },
         // We have to trick the TS compiler here.
-      } as unknown) as { props: T['props'] & DefaultProps }
+      } as unknown) as { props: T['props'] }
     }
 
-    const { user } = session
     if (getServerSidePropsFunc) {
       return {
         props: {
-          userId: user.sub,
-          ...((await getServerSidePropsFunc(ctx, user.sub)).props || {}),
+          ...((await getServerSidePropsFunc(ctx, session)).props || {}),
         },
       }
     }
 
     return {
-      props: {
-        userId: user.sub,
-      },
+      props: {},
     }
   }
 }

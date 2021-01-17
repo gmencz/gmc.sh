@@ -15,6 +15,7 @@
     "jsx": "preserve",
     "strictNullChecks": true,
     "strictFunctionTypes": false,
+    "downlevelIteration": true,
     "baseUrl": "."
   },
   "exclude": ["node_modules", "cypress"],

@@ -1,0 +1,95 @@
+query MySchedules($limit: Int!, $offset: Int!) {
+  me {
+    account {
+      schedules(
+        limit: $limit
+        offset: $offset
+        order_by: { created_at: desc }
+      ) {
+        id
+        title
+        days {
+          week_day
+        }
+        active
+        created_at
+      }
+      schedules_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
+
+query Schedule($id: String!) {
+  schedule_by_pk(id: $id) {
+    active
+    created_at
+    updated_at
+    title
+    user_is_subscribed
+    user {
+      name
+    }
+    days {
+      id
+      active
+      week_day
+      tasks(order_by: { start_time: asc }) {
+        id
+        description
+        start_time
+      }
+      tasks_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+  }
+}
+
+mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
+  insert_schedule(objects: { title: $title, days: { data: $days } }) {
+    returning {
+      id
+    }
+  }
+}
+
+mutation AddTasksToSchedule($tasks: [schedule_day_task_insert_input!]!) {
+  insert_schedule_day_task(objects: $tasks) {
+    affected_rows
+    returning {
+      schedule_day {
+        id
+        tasks_aggregate {
+          aggregate {
+            count
+          }
+        }
+        tasks(order_by: { start_time: asc }) {
+          id
+          description
+          start_time
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateScheduleUserSubscription(
+  $id: String!
+  $isUserSubscribed: Boolean!
+) {
+  update_schedule_by_pk(
+    pk_columns: { id: $id }
+    _set: { user_is_subscribed: $isUserSubscribed }
+  ) {
+    id
+    user_is_subscribed
+    updated_at
+  }
+}

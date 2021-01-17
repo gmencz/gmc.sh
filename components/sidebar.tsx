@@ -1,5 +1,7 @@
 import { Transition } from '@headlessui/react'
+import { PER_PAGE } from 'features/scheduler/list'
 import Image from 'next/image'
+import ActiveLink from './active-link'
 
 type SidebarProps = {
   isMobileSidebarOpen: boolean
@@ -79,53 +81,61 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
-                {/* Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:text-white hover:bg-indigo-600" */}
-                <a
+                <ActiveLink
+                  activeClassName="bg-indigo-800 text-white hover"
+                  exact
                   href="/"
-                  className="bg-indigo-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  aria-current="page"
                 >
-                  {/* Heroicon name: home */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-indigo-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
+                  <a
+                    className="text-indigo-100 hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                    aria-current="page"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                  Home
-                </a>
+                    <svg
+                      className="mr-4 h-6 w-6 text-indigo-200"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
+                    </svg>
+                    Home
+                  </a>
+                </ActiveLink>
 
-                <a
-                  // href="/"
-                  className="text-indigo-100 cursor-not-allowed hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                <ActiveLink
+                  activeClassName="bg-indigo-800 text-white hover"
+                  href={{
+                    pathname: '/scheduler',
+                    query: { page: 1, 'per-page': PER_PAGE },
+                  }}
                 >
-                  {/* Heroicon name: clock */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-indigo-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  Scheduler
-                </a>
+                  <a className="text-indigo-100 hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                    {/* Heroicon name: clock */}
+                    <svg
+                      className="mr-4 h-6 w-6 text-indigo-200"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Scheduler
+                  </a>
+                </ActiveLink>
               </div>
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1">
@@ -235,53 +245,60 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
-                {/* Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:text-white hover:bg-indigo-600" */}
-                <a
+                <ActiveLink
+                  activeClassName="bg-indigo-800 text-white hover"
                   href="/"
-                  className="bg-indigo-800 text-white group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md"
-                  aria-current="page"
+                  exact
                 >
-                  {/* Heroicon name: home */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-indigo-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                  Home
-                </a>
+                  {/* Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:text-white hover:bg-indigo-600" */}
+                  <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">
+                    {/* Heroicon name: home */}
+                    <svg
+                      className="mr-4 h-6 w-6 text-indigo-200"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
+                    </svg>
+                    Home
+                  </a>
+                </ActiveLink>
 
-                <a
-                  // href="/"
-                  className="group cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                <ActiveLink
+                  activeClassName="bg-indigo-800"
+                  href={{
+                    pathname: '/scheduler',
+                    query: { page: 1, 'per-page': PER_PAGE },
+                  }}
                 >
-                  {/* Heroicon name: clock */}
-                  <svg
-                    className="mr-4 h-6 w-6 text-indigo-200"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  Scheduler
-                </a>
+                  <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">
+                    {/* Heroicon name: clock */}
+                    <svg
+                      className="mr-4 h-6 w-6 text-indigo-200"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Scheduler
+                  </a>
+                </ActiveLink>
               </div>
               <div className="mt-6 pt-6">
                 <div className="px-2 space-y-1 ">

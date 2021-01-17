@@ -8,18 +8,12 @@ import { Hydrate } from 'react-query/hydration'
 import { ToastProvider } from 'react-toast-notifications'
 import 'tailwindcss/tailwind.css'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
-  require('../mocks')
-}
-
-export const appQueryClient = new QueryClient()
+const queryClient = new QueryClient()
 
 function App({ Component, pageProps }: AppProps) {
   return (
     <Fragment>
-      <QueryClientProvider client={appQueryClient}>
+      <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           <ToastProvider components={{ Toast, ToastContainer }}>
             <Component {...pageProps} />
