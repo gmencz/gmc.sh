@@ -41,6 +41,7 @@ query Schedule($id: String!) {
         id
         description
         start_time
+        end_time
       }
       tasks_aggregate {
         aggregate {
@@ -74,6 +75,7 @@ mutation AddTasksToSchedule($tasks: [schedule_day_task_insert_input!]!) {
           id
           description
           start_time
+          end_time
         }
       }
     }
@@ -91,5 +93,15 @@ mutation UpdateScheduleUserSubscription(
     id
     user_is_subscribed
     updated_at
+  }
+}
+
+mutation UpdateScheduleTask($id: String!, $_set: schedule_day_task_set_input!) {
+  update_schedule_day_task_by_pk(pk_columns: { id: $id }, _set: $_set) {
+    id
+    description
+    start_time
+    end_time
+    schedule_day_id
   }
 }

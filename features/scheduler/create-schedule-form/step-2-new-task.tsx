@@ -1,6 +1,8 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { isAfter, isBefore, parse } from 'date-fns'
+import useOnLeave from 'hooks/use-on-leave'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -10,6 +12,7 @@ type NewTaskFormData = {
   chosenWeekDays: string[]
   description: string
   startTime: string
+  endTime: string
 }
 
 type StepTwoNewTaskProps = {
@@ -19,6 +22,16 @@ type StepTwoNewTaskProps = {
   onSubmit: (data: NewTask) => void
   position?: 'left' | 'right'
   loading?: boolean
+  initialValues?: Partial<NewTaskFormData>
+  submitButtonText?: string
+  leaveEvents?: ('click-outside' | 'escape')[]
+}
+
+export function getEpochDate() {
+  const date = new Date(0)
+  const getUTC = date.getTime()
+  const offset = date.getTimezoneOffset() * 60000 // It's in minutes so convert to ms
+  return new Date(getUTC + offset) // UTC + OFFSET
 }
 
 const schema = yup.object().shape({
@@ -28,7 +41,39 @@ const schema = yup.object().shape({
     .max(4096, `The description can't be longer than 4096 characters.`),
   startTime: yup
     .string()
-    .required('The time at which the task is expected to happen is required.'),
+    .required('The time at which the task is expected to start is required.')
+    .test(
+      'is before end time',
+      'The task must start before it ends.',
+      (value, { parent }) => {
+        if (!value || !parent.endTime) {
+          return true
+        }
+
+        const startDate = parse(value, 'HH:mm', getEpochDate())
+        const endDate = parse(parent.endTime, 'HH:mm', getEpochDate())
+
+        const isBeforeEnd = isBefore(startDate, endDate)
+        return isBeforeEnd
+      },
+    ),
+  endTime: yup
+    .string()
+    .test(
+      'is after start time',
+      'The task must end after it starts.',
+      (value, { parent }) => {
+        if (!value || !parent.startTime) {
+          return true
+        }
+
+        const startDate = parse(parent.startTime, 'HH:mm', getEpochDate())
+        const endDate = parse(value, 'HH:mm', getEpochDate())
+
+        const isAfterStart = isAfter(endDate, startDate)
+        return isAfterStart
+      },
+    ),
 })
 
 const daysErrorMessage = 'You must choose at least one day for the task.'
@@ -40,77 +85,130 @@ const weekDaysSchema = yup.object().shape({
     .max(7, "You can't choose more than seven days for the task"),
 })
 
-const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
-  function StepTwoNewTask(
-    { isOpen, weekDays, onClose, loading, onSubmit, position = 'left' },
-    ref,
-  ) {
-    const [chosenWeekDays, setChosenWeekDays] = useState<string[]>([])
-    const [weekDaysError, setWeekDaysError] = useState<string | null>(null)
-    const lastLoadingRef = useRef(loading)
+function StepTwoNewTask({
+  isOpen,
+  weekDays,
+  onClose,
+  loading,
+  onSubmit,
+  initialValues,
+  submitButtonText,
+  leaveEvents = ['click-outside', 'escape'],
+  position = 'left',
+}: StepTwoNewTaskProps) {
+  const [chosenWeekDays, setChosenWeekDays] = useState<string[]>(
+    initialValues?.chosenWeekDays || [],
+  )
+  const [weekDaysError, setWeekDaysError] = useState<string | null>(null)
+  const lastLoadingRef = useRef(loading)
 
-    const { register, errors, handleSubmit, reset } = useForm<NewTaskFormData>({
-      defaultValues: { description: '', startTime: '' },
-      resolver: yupResolver(schema),
-    })
+  const {
+    register,
+    errors,
+    handleSubmit,
+    reset,
+    clearErrors,
+  } = useForm<NewTaskFormData>({
+    defaultValues: {
+      description: initialValues?.description || '',
+      startTime: initialValues?.startTime || '',
+      endTime: initialValues?.endTime || '',
+    },
+    resolver: yupResolver(schema),
+  })
 
-    const resetAndClose = () => {
-      if (typeof loading !== 'boolean') {
-        reset()
-        setWeekDaysError(null)
-        setChosenWeekDays([])
-      }
-
-      onClose()
+  const resetAndClose = () => {
+    if (typeof loading !== 'boolean') {
+      reset({
+        description: initialValues?.description || '',
+        startTime: initialValues?.startTime || '',
+        endTime: initialValues?.endTime || '',
+      })
+      clearErrors()
+      setWeekDaysError(null)
+      setChosenWeekDays([])
     }
 
-    // We only want to clear out the form values when we stop loading.
-    useEffect(() => {
-      if (
-        typeof loading === 'boolean' &&
-        !loading &&
-        !isOpen &&
-        lastLoadingRef.current
-      ) {
-        reset()
-        setWeekDaysError(null)
-        setChosenWeekDays([])
-      }
+    onClose()
+  }
 
-      lastLoadingRef.current = loading
-    }, [isOpen, loading, reset])
-
-    const handleClose = () => resetAndClose()
-
-    const submit = async ({ description, startTime }: NewTaskFormData) => {
-      try {
-        await weekDaysSchema.validate({ chosenWeekDays })
-        onSubmit({ description, startTime, chosenWeekDays })
-        resetAndClose()
-      } catch (error) {
-        setWeekDaysError(error.message)
-      }
+  // We only want to clear out the form values when we stop loading.
+  useEffect(() => {
+    if (
+      typeof loading === 'boolean' &&
+      !loading &&
+      !isOpen &&
+      lastLoadingRef.current
+    ) {
+      reset({
+        description: initialValues?.description || '',
+        startTime: initialValues?.startTime || '',
+        endTime: initialValues?.endTime || '',
+      })
+      clearErrors()
+      setWeekDaysError(null)
+      setChosenWeekDays(initialValues?.chosenWeekDays || [])
     }
 
-    return (
-      <div className="relative z-10" ref={ref}>
-        <Transition
-          show={isOpen}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
+    lastLoadingRef.current = loading
+  }, [
+    isOpen,
+    loading,
+    reset,
+    clearErrors,
+    initialValues?.description,
+    initialValues?.startTime,
+    initialValues?.endTime,
+    initialValues?.chosenWeekDays,
+  ])
+
+  const handleClose = () => resetAndClose()
+
+  const submit = async ({
+    description,
+    startTime,
+    endTime,
+  }: NewTaskFormData) => {
+    try {
+      await weekDaysSchema.validate({ chosenWeekDays })
+      onSubmit({ description, startTime, chosenWeekDays, endTime })
+      resetAndClose()
+    } catch (error) {
+      setWeekDaysError(error.message)
+    }
+  }
+
+  const { ref, isVisible, setIsVisible } = useOnLeave(isOpen, {
+    onLeave: () => onClose(),
+    events: leaveEvents,
+  })
+
+  useEffect(() => {
+    if (isOpen !== isVisible) {
+      setIsVisible(isOpen)
+    }
+  }, [isOpen, isVisible, setIsVisible])
+
+  return (
+    <div className="relative z-10" ref={ref}>
+      <Transition
+        show={isVisible}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <div
+          className={
+            position === 'left'
+              ? `origin-top-left max-w-sm w-full absolute left-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`
+              : `origin-top-right max-w-sm w-full absolute right-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`
+          }
         >
-          <div
-            className={
-              position === 'left'
-                ? `origin-top-left max-w-sm w-full absolute left-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`
-                : `origin-top-right max-w-sm w-full absolute right-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`
-            }
-          >
-            <form onSubmit={handleSubmit(submit)}>
+          <form onSubmit={handleSubmit(submit)}>
+            {!initialValues?.chosenWeekDays && (
               <div className="w-full mb-4">
                 <Listbox
                   as="div"
@@ -239,100 +337,124 @@ const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
                   {weekDaysError}
                 </p>
               </div>
-              <div className="block mb-4">
-                <label
-                  htmlFor="description"
-                  className="block text-base font-medium text-gray-700"
-                >
-                  Description
-                </label>
-                <div className="mt-1 max-w-lg">
-                  <textarea
-                    rows={5}
-                    name="description"
-                    id="description"
-                    ref={register}
-                    className={
-                      !!errors.description
-                        ? 'shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-red-300 rounded-md'
-                        : 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
-                    }
-                    placeholder="Walk the dog..."
-                  />
-                </div>
-                <p className="mt-2 text-sm text-red-600" id="email-error">
-                  {errors.description?.message}
-                </p>
+            )}
+            <div className="block mb-4">
+              <label
+                htmlFor="description"
+                className="block text-base font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <div className="mt-1 max-w-lg">
+                <textarea
+                  rows={5}
+                  name="description"
+                  id="description"
+                  ref={register}
+                  className={
+                    !!errors.description
+                      ? 'shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-red-300 rounded-md'
+                      : 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
+                  }
+                  placeholder="Walk the dog..."
+                />
               </div>
-              <div className="block mb-6">
-                <label
-                  htmlFor="startTime"
-                  className="block text-base font-medium text-gray-700"
-                >
-                  Time
-                </label>
-                <div className="mt-1 max-w-lg">
-                  <input
-                    type="time"
-                    name="startTime"
-                    id="startTime"
-                    ref={register}
-                    className={
-                      !!errors.startTime
-                        ? 'shadow-sm focus:ring-red-500 w-full focus:border-red-500 block sm:text-sm border-red-300 rounded-md'
-                        : 'shadow-sm focus:ring-indigo-500 w-full focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md'
-                    }
-                  />
-                </div>
-                <p className="mt-2 text-sm text-red-600" id="email-error">
-                  {errors.startTime?.message}
-                </p>
+              <p className="mt-2 text-sm text-red-600" id="email-error">
+                {errors.description?.message}
+              </p>
+            </div>
+            <div className="block mb-6">
+              <label
+                htmlFor="startTime"
+                className="block text-base font-medium text-gray-700"
+              >
+                Starts at
+              </label>
+              <div className="mt-1 max-w-lg">
+                <input
+                  type="time"
+                  name="startTime"
+                  id="startTime"
+                  ref={register}
+                  className={
+                    !!errors.startTime
+                      ? 'shadow-sm focus:ring-red-500 w-full focus:border-red-500 block sm:text-sm border-red-300 rounded-md'
+                      : 'shadow-sm focus:ring-indigo-500 w-full focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md'
+                  }
+                />
               </div>
-              <div className="flex">
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  disabled={loading}
-                  className="inline-flex items-center disabled:cursor-not-allowed disabled:opacity-60 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="ml-2 inline-flex items-center disabled:cursor-not-allowed disabled:opacity-60 px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  {loading && (
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                  )}
-                  Add task
-                </button>
+              <p className="mt-2 text-sm text-red-600" id="email-error">
+                {errors.startTime?.message}
+              </p>
+            </div>
+            <div className="block mb-6">
+              <label
+                htmlFor="endTime"
+                className="block text-base font-medium text-gray-700"
+              >
+                Ends at
+              </label>
+              <div className="mt-1 max-w-lg">
+                <input
+                  type="time"
+                  name="endTime"
+                  id="endTime"
+                  ref={register}
+                  className={
+                    !!errors.endTime
+                      ? 'shadow-sm focus:ring-red-500 w-full focus:border-red-500 block sm:text-sm border-red-300 rounded-md'
+                      : 'shadow-sm focus:ring-indigo-500 w-full focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md'
+                  }
+                />
               </div>
-            </form>
-          </div>
-        </Transition>
-      </div>
-    )
-  },
-)
+              <p className="mt-2 text-sm text-red-600" id="email-error">
+                {errors.endTime?.message}
+              </p>
+            </div>
+            <div className="flex">
+              <button
+                type="button"
+                onClick={handleClose}
+                disabled={loading}
+                className="inline-flex items-center disabled:cursor-not-allowed disabled:opacity-60 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="ml-2 inline-flex items-center disabled:cursor-not-allowed disabled:opacity-60 px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {loading && (
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
+                {submitButtonText || 'Add task'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </Transition>
+    </div>
+  )
+}
 
 export default StepTwoNewTask

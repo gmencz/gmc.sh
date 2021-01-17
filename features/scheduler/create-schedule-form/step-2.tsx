@@ -1,17 +1,16 @@
-import { addWeeks, format, getHours, parse, setDay } from 'date-fns'
+import { format, getHours, parse, setDay } from 'date-fns'
 import {
   CreateScheduleMutationVariables,
   Schedule_Day_Week_Day_Enum,
   useCreateScheduleMutation,
 } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
-import useOnLeave from 'hooks/use-on-leave'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
 import monthsMappings from 'utils/months-mappings'
 import { FormData } from './step-1'
-import StepTwoNewTask, { NewTask } from './step-2-new-task'
+import StepTwoNewTask, { getEpochDate, NewTask } from './step-2-new-task'
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
@@ -82,7 +81,7 @@ function CreateScheduleFormStepTwo({
     },
   })
 
-  const { ref, isVisible, setIsVisible } = useOnLeave(false)
+  const [isVisible, setIsVisible] = useState(false)
   const weekDays = Object.keys(previousStepData.days)
     .filter(key => previousStepData.days[key])
     .map(capitalizeFirstLetter)
@@ -94,7 +93,12 @@ function CreateScheduleFormStepTwo({
     ),
   )
 
-  const addTask = ({ description, chosenWeekDays, startTime }: NewTask) => {
+  const addTask = ({
+    description,
+    chosenWeekDays,
+    startTime,
+    endTime,
+  }: NewTask) => {
     setWeekTasks(previousWeekTasks => {
       return Object.keys(previousWeekTasks).reduce<WeekDaysTasks>(
         (acc, day) => {
@@ -110,10 +114,10 @@ function CreateScheduleFormStepTwo({
 
             const sortedWeekTasks = [
               ...previousWeekTasks[day],
-              { startTime, id: `${lastTaskId + 1}`, description },
+              { startTime, endTime, id: `${lastTaskId + 1}`, description },
             ].sort((a, b) => {
-              const aParsed = parse(a.startTime, 'HH:mm', new Date(0))
-              const bParsed = parse(b.startTime, 'HH:mm', new Date(0))
+              const aParsed = parse(a.startTime, 'HH:mm', getEpochDate())
+              const bParsed = parse(b.startTime, 'HH:mm', getEpochDate())
               return aParsed.valueOf() - bParsed.valueOf()
             })
 
@@ -144,16 +148,31 @@ function CreateScheduleFormStepTwo({
           week_day: validWeekDay as Schedule_Day_Week_Day_Enum,
           tasks: {
             data: weekTasks[day].map(task => {
-              const parsed = parse(task.startTime, 'HH:mm', new Date(0))
+              const parsedStart = parse(task.startTime, 'HH:mm', getEpochDate())
 
-              const startTime = addWeeks(
-                setDay(parsed, monthsMappings[day]),
-                1,
+              const startTime = setDay(
+                parsedStart,
+                monthsMappings[day],
               ).toISOString()
+
+              if (task.endTime) {
+                const parsedEnd = parse(task.endTime, 'HH:mm', getEpochDate())
+                const endTime = setDay(
+                  parsedEnd,
+                  monthsMappings[day],
+                ).toISOString()
+
+                return {
+                  description: task.description,
+                  start_time: startTime,
+                  end_time: endTime,
+                }
+              }
 
               return {
                 description: task.description,
                 start_time: startTime,
+                end_time: null,
               }
             }),
           },
@@ -182,7 +201,7 @@ function CreateScheduleFormStepTwo({
           New task
         </button>
         <StepTwoNewTask
-          ref={ref}
+          leaveEvents={['escape']}
           onSubmit={addTask}
           onClose={() => setIsVisible(false)}
           isOpen={isVisible}
@@ -221,7 +240,7 @@ function CreateScheduleFormStepTwo({
                                     date={parse(
                                       task.startTime,
                                       'HH:mm',
-                                      new Date(0),
+                                      getEpochDate(),
                                     )}
                                   />
                                 </span>
@@ -233,16 +252,43 @@ function CreateScheduleFormStepTwo({
                                   </p>
                                 </div>
                                 <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                  <time dateTime={task.startTime}>
-                                    {format(
-                                      parse(
-                                        task.startTime,
-                                        'HH:mm',
-                                        new Date(0),
-                                      ),
-                                      "hh:mm' 'a",
-                                    )}
-                                  </time>
+                                  {task.endTime ? (
+                                    <>
+                                      From{' '}
+                                      <time dateTime={task.startTime}>
+                                        {format(
+                                          parse(
+                                            task.startTime,
+                                            'HH:mm',
+                                            getEpochDate(),
+                                          ),
+                                          "hh:mm' 'a",
+                                        )}
+                                      </time>{' '}
+                                      to{' '}
+                                      <time dateTime={task.endTime}>
+                                        {format(
+                                          parse(
+                                            task.endTime,
+                                            'HH:mm',
+                                            getEpochDate(),
+                                          ),
+                                          "hh:mm' 'a",
+                                        )}
+                                      </time>
+                                    </>
+                                  ) : (
+                                    <time dateTime={task.startTime}>
+                                      {format(
+                                        parse(
+                                          task.startTime,
+                                          'HH:mm',
+                                          getEpochDate(),
+                                        ),
+                                        "hh:mm' 'a",
+                                      )}
+                                    </time>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -326,6 +372,7 @@ type Task = {
   id: string
   description: string
   startTime: string
+  endTime: string
 }
 
 type CreateScheduleFormStepTwoProps = {

@@ -45,9 +45,9 @@
           {\r\n      id\r\n      active\r\n
           \     week_day\r\n      tasks(order_by: { start_time: asc })
           {\r\n        id\r\n
-          \       description\r\n        start_time\r\n      }\r\n      tasks_aggregate
-          {\r\n        aggregate
-          {\r\n          count\r\n        }\r\n      }\r\n    }\r\n \ }\r\n}"
+          \       description\r\n        start_time\r\n        end_time\r\n      }\r\n
+          \     tasks_aggregate {\r\n        aggregate
+          {\r\n          count\r\n        }\r\n \     }\r\n    }\r\n  }\r\n}"
       - name: AddTasksToSchedule
         query:
           "mutation AddTasksToSchedule($tasks:
@@ -58,4 +58,13 @@
           {\r\n            count\r\n          }\r\n        }\r\n
           \       tasks(order_by: { start_time: asc })
           {\r\n          id\r\n          description\r\n
-          \         start_time\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"
+          \         start_time\r\n          end_time\r\n        }\r\n      }\r\n    }\r\n
+          \ }\r\n}"
+      - name: UpdateScheduleTask
+        query:
+          "mutation UpdateScheduleTask($id: String!, $_set:
+          schedule_day_task_set_input!)
+          {\r\n  update_schedule_day_task_by_pk(pk_columns: { id: $id }, _set:
+          $_set)
+          {\r\n    id\r\n    description\r\n    start_time\r\n    end_time\r\n    schedule_day_id\r\n
+          \ }\r\n}"
