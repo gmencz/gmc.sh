@@ -21,7 +21,10 @@ function SchedulerSchedule() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { id: scheduleId } = router.query
-  const { data } = useScheduleQuery<ScheduleQuery, ClientError>(
+  const { data, status: scheduleQueryStatus } = useScheduleQuery<
+    ScheduleQuery,
+    ClientError
+  >(
     {
       id: scheduleId as string,
     },
@@ -192,6 +195,16 @@ function SchedulerSchedule() {
   )
 
   const { ref, isVisible, setIsVisible } = useOnLeave(false)
+
+  if (scheduleQueryStatus === 'loading') {
+    return (
+      <main className="flex-1 relative focus:outline-none" tabIndex={-1}>
+        <div className="py-2">
+          <p>Loading...</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <>
