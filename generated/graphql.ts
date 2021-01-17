@@ -1061,6 +1061,7 @@ export type Schedule_Day_Set_Input = {
 export type Schedule_Day_Task = {
   __typename?: 'schedule_day_task'
   description: Scalars['String']
+  end_time?: Maybe<Scalars['timestamptz']>
   id: Scalars['String']
   /** An object relationship */
   schedule_day?: Maybe<Schedule_Day>
@@ -1108,6 +1109,7 @@ export type Schedule_Day_Task_Bool_Exp = {
   _not?: Maybe<Schedule_Day_Task_Bool_Exp>
   _or?: Maybe<Array<Maybe<Schedule_Day_Task_Bool_Exp>>>
   description?: Maybe<String_Comparison_Exp>
+  end_time?: Maybe<Timestamptz_Comparison_Exp>
   id?: Maybe<String_Comparison_Exp>
   schedule_day?: Maybe<Schedule_Day_Bool_Exp>
   schedule_day_id?: Maybe<String_Comparison_Exp>
@@ -1123,6 +1125,7 @@ export enum Schedule_Day_Task_Constraint {
 /** input type for inserting data into table "schedule_day_task" */
 export type Schedule_Day_Task_Insert_Input = {
   description?: Maybe<Scalars['String']>
+  end_time?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   schedule_day?: Maybe<Schedule_Day_Obj_Rel_Insert_Input>
   schedule_day_id?: Maybe<Scalars['String']>
@@ -1133,6 +1136,7 @@ export type Schedule_Day_Task_Insert_Input = {
 export type Schedule_Day_Task_Max_Fields = {
   __typename?: 'schedule_day_task_max_fields'
   description?: Maybe<Scalars['String']>
+  end_time?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   schedule_day_id?: Maybe<Scalars['String']>
   start_time?: Maybe<Scalars['timestamptz']>
@@ -1141,6 +1145,7 @@ export type Schedule_Day_Task_Max_Fields = {
 /** order by max() on columns of table "schedule_day_task" */
 export type Schedule_Day_Task_Max_Order_By = {
   description?: Maybe<Order_By>
+  end_time?: Maybe<Order_By>
   id?: Maybe<Order_By>
   schedule_day_id?: Maybe<Order_By>
   start_time?: Maybe<Order_By>
@@ -1150,6 +1155,7 @@ export type Schedule_Day_Task_Max_Order_By = {
 export type Schedule_Day_Task_Min_Fields = {
   __typename?: 'schedule_day_task_min_fields'
   description?: Maybe<Scalars['String']>
+  end_time?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   schedule_day_id?: Maybe<Scalars['String']>
   start_time?: Maybe<Scalars['timestamptz']>
@@ -1158,6 +1164,7 @@ export type Schedule_Day_Task_Min_Fields = {
 /** order by min() on columns of table "schedule_day_task" */
 export type Schedule_Day_Task_Min_Order_By = {
   description?: Maybe<Order_By>
+  end_time?: Maybe<Order_By>
   id?: Maybe<Order_By>
   schedule_day_id?: Maybe<Order_By>
   start_time?: Maybe<Order_By>
@@ -1188,6 +1195,7 @@ export type Schedule_Day_Task_On_Conflict = {
 /** ordering options when selecting data from "schedule_day_task" */
 export type Schedule_Day_Task_Order_By = {
   description?: Maybe<Order_By>
+  end_time?: Maybe<Order_By>
   id?: Maybe<Order_By>
   schedule_day?: Maybe<Schedule_Day_Order_By>
   schedule_day_id?: Maybe<Order_By>
@@ -1204,6 +1212,8 @@ export enum Schedule_Day_Task_Select_Column {
   /** column name */
   Description = 'description',
   /** column name */
+  EndTime = 'end_time',
+  /** column name */
   Id = 'id',
   /** column name */
   ScheduleDayId = 'schedule_day_id',
@@ -1214,6 +1224,7 @@ export enum Schedule_Day_Task_Select_Column {
 /** input type for updating data in table "schedule_day_task" */
 export type Schedule_Day_Task_Set_Input = {
   description?: Maybe<Scalars['String']>
+  end_time?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['String']>
   schedule_day_id?: Maybe<Scalars['String']>
   start_time?: Maybe<Scalars['timestamptz']>
@@ -1223,6 +1234,8 @@ export type Schedule_Day_Task_Set_Input = {
 export enum Schedule_Day_Task_Update_Column {
   /** column name */
   Description = 'description',
+  /** column name */
+  EndTime = 'end_time',
   /** column name */
   Id = 'id',
   /** column name */
@@ -1755,7 +1768,7 @@ export type ScheduleQuery = { __typename?: 'query_root' } & {
               tasks: Array<
                 { __typename?: 'schedule_day_task' } & Pick<
                   Schedule_Day_Task,
-                  'id' | 'description' | 'start_time'
+                  'id' | 'description' | 'start_time' | 'end_time'
                 >
               >
               tasks_aggregate: {
@@ -1813,7 +1826,7 @@ export type AddTasksToScheduleMutation = { __typename?: 'mutation_root' } & {
                   tasks: Array<
                     { __typename?: 'schedule_day_task' } & Pick<
                       Schedule_Day_Task,
-                      'id' | 'description' | 'start_time'
+                      'id' | 'description' | 'start_time' | 'end_time'
                     >
                   >
                 }
@@ -1836,6 +1849,33 @@ export type UpdateScheduleUserSubscriptionMutation = {
     { __typename?: 'schedule' } & Pick<
       Schedule,
       'id' | 'user_is_subscribed' | 'updated_at'
+    >
+  >
+}
+
+export type UpdateScheduleTaskMutationVariables = Exact<{
+  id: Scalars['String']
+  _set: Schedule_Day_Task_Set_Input
+}>
+
+export type UpdateScheduleTaskMutation = { __typename?: 'mutation_root' } & {
+  update_schedule_day_task_by_pk?: Maybe<
+    { __typename?: 'schedule_day_task' } & Pick<
+      Schedule_Day_Task,
+      'id' | 'description' | 'start_time' | 'end_time' | 'schedule_day_id'
+    >
+  >
+}
+
+export type DeleteScheduleTaskMutationVariables = Exact<{
+  id: Scalars['String']
+}>
+
+export type DeleteScheduleTaskMutation = { __typename?: 'mutation_root' } & {
+  delete_schedule_day_task_by_pk?: Maybe<
+    { __typename?: 'schedule_day_task' } & Pick<
+      Schedule_Day_Task,
+      'id' | 'schedule_day_id'
     >
   >
 }
@@ -1928,6 +1968,7 @@ export const ScheduleDocument = `
         id
         description
         start_time
+        end_time
       }
       tasks_aggregate {
         aggregate {
@@ -1993,6 +2034,7 @@ export const AddTasksToScheduleDocument = `
           id
           description
           start_time
+          end_time
         }
       }
     }
@@ -2057,6 +2099,73 @@ export const useUpdateScheduleUserSubscriptionMutation = <
         UpdateScheduleUserSubscriptionMutation,
         UpdateScheduleUserSubscriptionMutationVariables
       >(UpdateScheduleUserSubscriptionDocument, variables)(),
+    options,
+  )
+export const UpdateScheduleTaskDocument = `
+    mutation UpdateScheduleTask($id: String!, $_set: schedule_day_task_set_input!) {
+  update_schedule_day_task_by_pk(pk_columns: {id: $id}, _set: $_set) {
+    id
+    description
+    start_time
+    end_time
+    schedule_day_id
+  }
+}
+    `
+export const useUpdateScheduleTaskMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    UpdateScheduleTaskMutation,
+    TError,
+    UpdateScheduleTaskMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    UpdateScheduleTaskMutation,
+    TError,
+    UpdateScheduleTaskMutationVariables,
+    TContext
+  >(
+    (variables?: UpdateScheduleTaskMutationVariables) =>
+      fetcher<UpdateScheduleTaskMutation, UpdateScheduleTaskMutationVariables>(
+        UpdateScheduleTaskDocument,
+        variables,
+      )(),
+    options,
+  )
+export const DeleteScheduleTaskDocument = `
+    mutation DeleteScheduleTask($id: String!) {
+  delete_schedule_day_task_by_pk(id: $id) {
+    id
+    schedule_day_id
+  }
+}
+    `
+export const useDeleteScheduleTaskMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    DeleteScheduleTaskMutation,
+    TError,
+    DeleteScheduleTaskMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    DeleteScheduleTaskMutation,
+    TError,
+    DeleteScheduleTaskMutationVariables,
+    TContext
+  >(
+    (variables?: DeleteScheduleTaskMutationVariables) =>
+      fetcher<DeleteScheduleTaskMutation, DeleteScheduleTaskMutationVariables>(
+        DeleteScheduleTaskDocument,
+        variables,
+      )(),
     options,
   )
 export const MeDocument = `

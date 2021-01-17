@@ -1,12 +1,13 @@
-import { addWeeks, format, parse, parseISO, setDay } from 'date-fns'
+import { format, parse, parseISO, setDay } from 'date-fns'
 import {
   ScheduleQuery,
   useAddTasksToScheduleMutation,
+  useDeleteScheduleTaskMutation,
   useScheduleQuery,
+  useUpdateScheduleTaskMutation,
   useUpdateScheduleUserSubscriptionMutation,
 } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
-import useOnLeave from 'hooks/use-on-leave'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -14,7 +15,9 @@ import { useQueryClient } from 'react-query'
 import { useToasts } from 'react-toast-notifications'
 import monthsMappings from 'utils/months-mappings'
 import { TimeIcon, capitalizeFirstLetter } from '../create-schedule-form/step-2'
-import StepTwoNewTask from '../create-schedule-form/step-2-new-task'
+import StepTwoNewTask, {
+  getEpochDate,
+} from '../create-schedule-form/step-2-new-task'
 
 function SchedulerSchedule() {
   const { addToast } = useToasts()
@@ -182,6 +185,118 @@ function SchedulerSchedule() {
     },
   })
 
+  const {
+    mutate: updateTask,
+    status: updateTaskStatus,
+  } = useUpdateScheduleTaskMutation<ClientError>({
+    onError: error => {
+      addToast(
+        <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
+        { appearance: 'error' },
+      )
+    },
+    onSuccess: ({ update_schedule_day_task_by_pk }) => {
+      const queryKey = ['Schedule', { id: scheduleId }]
+      const staleSchedule = queryClient.getQueryData<ScheduleQuery>(queryKey)
+
+      if (staleSchedule) {
+        const updatedScheduleDays = staleSchedule.schedule_by_pk?.days.map(
+          day => {
+            if (day.id !== update_schedule_day_task_by_pk?.schedule_day_id) {
+              return day
+            }
+
+            const updatedTasks = day.tasks.map(task => {
+              if (task.id === update_schedule_day_task_by_pk.id) {
+                return {
+                  ...task,
+                  description: update_schedule_day_task_by_pk.description,
+                  start_time: update_schedule_day_task_by_pk.start_time,
+                  end_time: update_schedule_day_task_by_pk.end_time,
+                }
+              }
+
+              return task
+            })
+
+            return {
+              ...day,
+              tasks: updatedTasks,
+            }
+          },
+        )
+
+        queryClient.setQueryData(queryKey, {
+          ...staleSchedule,
+          schedule_by_pk: {
+            ...staleSchedule.schedule_by_pk,
+            days: updatedScheduleDays,
+          },
+        })
+
+        addToast(
+          <h3 className="text-sm font-medium text-green-800">
+            Your changes were saved successfully.
+          </h3>,
+          { appearance: 'success' },
+        )
+      }
+    },
+  })
+
+  const {
+    mutate: deleteTask,
+    status: deleteTaskStatus,
+  } = useDeleteScheduleTaskMutation<ClientError>({
+    onError: error => {
+      addToast(
+        <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
+        { appearance: 'error' },
+      )
+    },
+    onSuccess: ({ delete_schedule_day_task_by_pk }) => {
+      const queryKey = ['Schedule', { id: scheduleId }]
+      const staleSchedule = queryClient.getQueryData<ScheduleQuery>(queryKey)
+
+      if (staleSchedule) {
+        const updatedScheduleDays = staleSchedule.schedule_by_pk?.days.map(
+          day => {
+            if (day.id !== delete_schedule_day_task_by_pk?.schedule_day_id) {
+              return day
+            }
+
+            const updatedTasks = day.tasks.filter(
+              task => task.id !== delete_schedule_day_task_by_pk.id,
+            )
+
+            return {
+              ...day,
+              tasks: updatedTasks,
+            }
+          },
+        )
+
+        queryClient.setQueryData(queryKey, {
+          ...staleSchedule,
+          schedule_by_pk: {
+            ...staleSchedule.schedule_by_pk,
+            days: updatedScheduleDays,
+          },
+        })
+
+        addToast(
+          <h3 className="text-sm font-medium text-green-800">
+            The task was deleted successfully.
+          </h3>,
+          { appearance: 'success' },
+        )
+      }
+    },
+    onSettled: () => {
+      setDeletingId(null)
+    },
+  })
+
   const enableNotifications = () => {
     mutate({
       id: scheduleId as string,
@@ -194,7 +309,10 @@ function SchedulerSchedule() {
     0,
   )
 
-  const { ref, isVisible, setIsVisible } = useOnLeave(false)
+  const [isEditVisible, setIsEditVisible] = useState(false)
+  const [editingId, setEditingId] = useState<null | string>(null)
+  const [deletingId, setDeletingId] = useState<null | string>(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   if (scheduleQueryStatus === 'loading') {
     return (
@@ -246,7 +364,7 @@ function SchedulerSchedule() {
                         >
                           {/* Heroicon name: bell */}
                           <svg
-                            className="-ml-1 mr-2 h-5 w-5  text-red-600"
+                            className="-ml-1 mr-2 h-5 w-5 text-red-600"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
                             fill="currentColor"
@@ -277,12 +395,13 @@ function SchedulerSchedule() {
                       )}
                     </div>
                     <StepTwoNewTask
-                      ref={ref}
                       position="left"
+                      leaveEvents={['escape']}
                       loading={addTasksStatus === 'loading'}
                       onSubmit={({
                         description,
                         startTime,
+                        endTime,
                         chosenWeekDays,
                       }) => {
                         const chosenDays =
@@ -294,23 +413,45 @@ function SchedulerSchedule() {
 
                         addTasks({
                           tasks: chosenDays.map(day => {
-                            const parsed = parse(
+                            const parsedStart = parse(
                               startTime,
                               'HH:mm',
-                              new Date(0),
+                              getEpochDate(),
                             )
+
+                            if (endTime) {
+                              const parsedEnd = parse(
+                                endTime,
+                                'HH:mm',
+                                getEpochDate(),
+                              )
+
+                              return {
+                                schedule_day_id: day.id,
+                                description,
+                                start_time: setDay(
+                                  parsedStart,
+                                  monthsMappings[
+                                    capitalizeFirstLetter(day.week_day)
+                                  ],
+                                ).toISOString(),
+                                end_time: setDay(
+                                  parsedEnd,
+                                  monthsMappings[
+                                    capitalizeFirstLetter(day.week_day)
+                                  ],
+                                ).toISOString(),
+                              }
+                            }
 
                             return {
                               schedule_day_id: day.id,
                               description,
-                              start_time: addWeeks(
-                                setDay(
-                                  parsed,
-                                  monthsMappings[
-                                    capitalizeFirstLetter(day.week_day)
-                                  ],
-                                ),
-                                1,
+                              start_time: setDay(
+                                parsedStart,
+                                monthsMappings[
+                                  capitalizeFirstLetter(day.week_day)
+                                ],
                               ).toISOString(),
                             }
                           }),
@@ -642,16 +783,221 @@ function SchedulerSchedule() {
                                               {task.description}
                                             </p>
                                           </div>
-                                          <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <time dateTime={task.start_time}>
-                                              {format(
-                                                parseISO(task.start_time),
-                                                "hh:mm' 'a",
+                                          <div className="flex space-x-4 items-center text-right text-sm whitespace-nowrap text-gray-500">
+                                            <span>
+                                              {task.end_time ? (
+                                                <>
+                                                  From{' '}
+                                                  <time
+                                                    dateTime={task.start_time}
+                                                  >
+                                                    {format(
+                                                      parseISO(task.start_time),
+                                                      "hh:mm' 'a",
+                                                    )}{' '}
+                                                    to{' '}
+                                                    <time
+                                                      dateTime={task.end_time}
+                                                    >
+                                                      {format(
+                                                        parseISO(task.end_time),
+                                                        "hh:mm' 'a",
+                                                      )}
+                                                    </time>
+                                                  </time>
+                                                </>
+                                              ) : (
+                                                <time
+                                                  dateTime={task.start_time}
+                                                >
+                                                  {format(
+                                                    parseISO(task.start_time),
+                                                    "hh:mm' 'a",
+                                                  )}
+                                                </time>
                                               )}
-                                            </time>
+                                            </span>
+
+                                            <div className="flex space-x-2">
+                                              <button
+                                                onClick={() => {
+                                                  setIsEditVisible(
+                                                    visible => !visible,
+                                                  )
+                                                  setEditingId(task.id)
+                                                }}
+                                                type="button"
+                                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                              >
+                                                <svg
+                                                  className="h-4 w-4"
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  viewBox="0 0 20 20"
+                                                  fill="currentColor"
+                                                >
+                                                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                  <path
+                                                    fillRule="evenodd"
+                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                                    clipRule="evenodd"
+                                                  />
+                                                </svg>
+                                                <span className="sr-only">
+                                                  Edit task
+                                                </span>
+                                              </button>
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  setDeletingId(task.id)
+                                                  deleteTask({
+                                                    id: task.id,
+                                                  })
+                                                }}
+                                                disabled={
+                                                  deleteTaskStatus ===
+                                                    'loading' &&
+                                                  deletingId === task.id
+                                                }
+                                                className="inline-flex disabled:cursor-not-allowed disabled:opacity-60 items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                              >
+                                                {deleteTaskStatus ===
+                                                  'loading' &&
+                                                deletingId === task.id ? (
+                                                  <svg
+                                                    className="animate-spin h-4 w-4 text-red-600"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                  >
+                                                    <circle
+                                                      className="opacity-25"
+                                                      cx="12"
+                                                      cy="12"
+                                                      r="10"
+                                                      stroke="currentColor"
+                                                      strokeWidth="4"
+                                                    ></circle>
+                                                    <path
+                                                      className="opacity-75"
+                                                      fill="currentColor"
+                                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                    ></path>
+                                                  </svg>
+                                                ) : (
+                                                  <svg
+                                                    className="h-4 w-4 text-red-600"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                  >
+                                                    <path
+                                                      fillRule="evenodd"
+                                                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                      clipRule="evenodd"
+                                                    />
+                                                  </svg>
+                                                )}
+                                                <span className="sr-only">
+                                                  Delete task
+                                                </span>
+                                              </button>
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
+                                      <StepTwoNewTask
+                                        position="right"
+                                        leaveEvents={['escape']}
+                                        loading={updateTaskStatus === 'loading'}
+                                        submitButtonText="Save changes"
+                                        initialValues={{
+                                          chosenWeekDays: [
+                                            capitalizeFirstLetter(day.week_day),
+                                          ],
+                                          description: task.description,
+                                          endTime: task.end_time
+                                            ? format(
+                                                parseISO(task.end_time),
+                                                'HH:mm',
+                                              )
+                                            : '',
+                                          startTime: format(
+                                            parseISO(task.start_time),
+                                            'HH:mm',
+                                          ),
+                                        }}
+                                        onSubmit={({
+                                          description,
+                                          startTime,
+                                          endTime,
+                                        }) => {
+                                          const parsedStart = parse(
+                                            startTime,
+                                            'HH:mm',
+                                            getEpochDate(),
+                                          )
+
+                                          if (endTime) {
+                                            const parsedEnd = parse(
+                                              endTime,
+                                              'HH:mm',
+                                              getEpochDate(),
+                                            )
+
+                                            updateTask({
+                                              id: task.id,
+                                              _set: {
+                                                description,
+                                                start_time: setDay(
+                                                  parsedStart,
+                                                  monthsMappings[
+                                                    capitalizeFirstLetter(
+                                                      day.week_day,
+                                                    )
+                                                  ],
+                                                ).toISOString(),
+                                                end_time: setDay(
+                                                  parsedEnd,
+                                                  monthsMappings[
+                                                    capitalizeFirstLetter(
+                                                      day.week_day,
+                                                    )
+                                                  ],
+                                                ).toISOString(),
+                                              },
+                                            })
+                                          } else {
+                                            updateTask({
+                                              id: task.id,
+                                              _set: {
+                                                description,
+                                                start_time: setDay(
+                                                  parsedStart,
+                                                  monthsMappings[
+                                                    capitalizeFirstLetter(
+                                                      day.week_day,
+                                                    )
+                                                  ],
+                                                ).toISOString(),
+                                                end_time: null,
+                                              },
+                                            })
+                                          }
+                                        }}
+                                        onClose={() => setIsEditVisible(false)}
+                                        isOpen={
+                                          (isEditVisible &&
+                                            editingId === task.id) ||
+                                          (editingId === task.id &&
+                                            updateTaskStatus === 'loading')
+                                        }
+                                        weekDays={
+                                          data?.schedule_by_pk?.days.map(day =>
+                                            capitalizeFirstLetter(day.week_day),
+                                          ) || []
+                                        }
+                                      />
                                     </div>
                                   </li>
                                 ))
