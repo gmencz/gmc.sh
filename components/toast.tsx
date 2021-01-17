@@ -43,7 +43,7 @@ function Toast({
                 />
               </svg>
             </div>
-            <div className="ml-3">{children}</div>
+            <div className="ml-3 overflow-x-auto">{children}</div>
             <div className="ml-auto pl-3">
               <div className="-mx-1.5 -my-1.5">
                 <button
@@ -89,7 +89,7 @@ function Toast({
                 />
               </svg>
             </div>
-            <div className="ml-3">{children}</div>
+            <div className="ml-3 overflow-x-auto">{children}</div>
             <div className="ml-auto pl-3">
               <div className="-mx-1.5 -my-1.5">
                 <button
@@ -135,7 +135,7 @@ function Toast({
                 />
               </svg>
             </div>
-            <div className="ml-3">{children}</div>
+            <div className="ml-3 overflow-x-auto">{children}</div>
             <div className="ml-auto pl-3">
               <div className="-mx-1.5 -my-1.5">
                 <button
@@ -181,7 +181,7 @@ function Toast({
                 />
               </svg>
             </div>
-            <div className="ml-3">{children}</div>
+            <div className="ml-3 overflow-x-auto">{children}</div>
             <div className="ml-auto pl-3">
               <div className="-mx-1.5 -my-1.5">
                 <button

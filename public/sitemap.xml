@@ -6,11 +6,11 @@
   </url>
           
   <url>
-      <loc>https://app.gmc.sh/scheduler/index</loc>
+      <loc>https://app.gmc.sh/scheduler/create-schedule</loc>
   </url>
           
   <url>
-      <loc>https://app.gmc.sh/scheduler/new-schedule</loc>
+      <loc>https://app.gmc.sh/scheduler/index</loc>
   </url>
           
 </urlset>

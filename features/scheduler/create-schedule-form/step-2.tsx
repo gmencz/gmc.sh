@@ -112,8 +112,8 @@ function CreateScheduleFormStepTwo({
               ...previousWeekTasks[day],
               { startTime, id: `${lastTaskId + 1}`, description },
             ].sort((a, b) => {
-              const aParsed = parse(a.startTime, 'HH:mm', new Date())
-              const bParsed = parse(b.startTime, 'HH:mm', new Date())
+              const aParsed = parse(a.startTime, 'HH:mm', new Date(0))
+              const bParsed = parse(b.startTime, 'HH:mm', new Date(0))
               return aParsed.valueOf() - bParsed.valueOf()
             })
 
@@ -144,7 +144,7 @@ function CreateScheduleFormStepTwo({
           week_day: validWeekDay as Schedule_Day_Week_Day_Enum,
           tasks: {
             data: weekTasks[day].map(task => {
-              const parsed = parse(task.startTime, 'HH:mm', new Date())
+              const parsed = parse(task.startTime, 'HH:mm', new Date(0))
 
               const startTime = addWeeks(
                 setDay(parsed, monthsMappings[day]),
@@ -196,12 +196,12 @@ function CreateScheduleFormStepTwo({
               key={weekDay}
               className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5"
             >
-              <div>
-                <span className="block mb-2 text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                  {weekDay}
-                </span>
-              </div>
               <div className="sm:col-span-2">
+                <div className="mb-3">
+                  <span className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    {weekDay}
+                  </span>
+                </div>
                 <div className="flow-root">
                   <ul className="sm:-mb-8">
                     {weekTasks[weekDay].length > 0 ? (
@@ -221,7 +221,7 @@ function CreateScheduleFormStepTwo({
                                     date={parse(
                                       task.startTime,
                                       'HH:mm',
-                                      new Date(),
+                                      new Date(0),
                                     )}
                                   />
                                 </span>
@@ -233,12 +233,12 @@ function CreateScheduleFormStepTwo({
                                   </p>
                                 </div>
                                 <div className="text-right text-sm whitespace-nowrap text-gray-500">
-                                  <time dateTime="2020-09-20">
+                                  <time dateTime={task.startTime}>
                                     {format(
                                       parse(
                                         task.startTime,
                                         'HH:mm',
-                                        new Date(),
+                                        new Date(0),
                                       ),
                                       "hh:mm' 'a",
                                     )}
@@ -250,8 +250,8 @@ function CreateScheduleFormStepTwo({
                         </li>
                       ))
                     ) : (
-                      <li>
-                        <div className="min-w-0 flex-1 sm:pt-2.5 flex justify-between space-x-4">
+                      <li className="pb-8">
+                        <div className="min-w-0 flex-1 flex justify-between space-x-4">
                           <p className="text-sm text-gray-500">
                             No tasks for this day
                           </p>
@@ -333,3 +333,4 @@ type CreateScheduleFormStepTwoProps = {
 }
 
 export default CreateScheduleFormStepTwo
+export { TimeIcon, capitalizeFirstLetter }

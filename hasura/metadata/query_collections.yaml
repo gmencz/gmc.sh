@@ -29,19 +29,33 @@
           [schedule_day_insert_input!]!) {\r\n  insert_schedule(objects: {
           title: $title, days: { data: $days } }) {\r\n    returning
           {\r\n      id\r\n    }\r\n  }\r\n}"
-      - name: Schedule
-        query:
-          "query Schedule($id: String!) {\r\n  schedule_by_pk(id: $id)
-          {\r\n    active\r\n
-          \   created_at\r\n    updated_at\r\n    title\r\n    user_is_subscribed\r\n
-          \   days
-          {\r\n      id\r\n      active\r\n      week_day\r\n      tasks {\r\n
-          \       id\r\n        description\r\n        start_time\r\n      }\r\n    }\r\n
-          \ }\r\n}"
       - name: UpdateScheduleUserSubscription
         query:
           "mutation UpdateScheduleUserSubscription(\r\n  $id:
           String!\r\n  $isUserSubscribed: Boolean!\r\n)
           {\r\n  update_schedule_by_pk(\r\n    pk_columns: { id: $id }\r\n
           \   _set: { user_is_subscribed: $isUserSubscribed }\r\n  )
-          {\r\n    id\r\n \   user_is_subscribed\r\n  }\r\n}"
+          {\r\n    id\r\n \   user_is_subscribed\r\n    updated_at\r\n  }\r\n}"
+      - name: Schedule
+        query:
+          "query Schedule($id: String!) {\r\n  schedule_by_pk(id: $id)
+          {\r\n    active\r\n
+          \   created_at\r\n    updated_at\r\n    title\r\n    user_is_subscribed\r\n
+          \   user {\r\n      name\r\n    }\r\n    days
+          {\r\n      id\r\n      active\r\n
+          \     week_day\r\n      tasks(order_by: { start_time: asc })
+          {\r\n        id\r\n
+          \       description\r\n        start_time\r\n      }\r\n      tasks_aggregate
+          {\r\n        aggregate
+          {\r\n          count\r\n        }\r\n      }\r\n    }\r\n \ }\r\n}"
+      - name: AddTasksToSchedule
+        query:
+          "mutation AddTasksToSchedule($tasks:
+          [schedule_day_task_insert_input!]!)
+          {\r\n  insert_schedule_day_task(objects: $tasks)
+          {\r\n    affected_rows\r\n \   returning {\r\n      schedule_day
+          {\r\n        id\r\n        tasks_aggregate {\r\n          aggregate
+          {\r\n            count\r\n          }\r\n        }\r\n
+          \       tasks(order_by: { start_time: asc })
+          {\r\n          id\r\n          description\r\n
+          \         start_time\r\n        }\r\n      }\r\n    }\r\n  }\r\n}"

@@ -30,12 +30,12 @@ function ContentWrapper({ children }: ContentWrapperProps) {
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
 
   return (
-    <main className="flex-1 relative pb-8 z-0 overflow-y-auto">
+    <main className="flex-1 relative pb-10 z-0 overflow-y-auto">
       {/* Page header */}
       <div className="bg-white shadow">
         <div className="px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
           <div className="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 sm:mr-4">
               {/* Profile */}
               <div className="flex items-center">
                 {status === 'loading' && (
@@ -175,7 +175,7 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                     >
                       <Menu.Items
                         static
-                        className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
+                        className="origin-top-left left-0 sm:origin-top-right absolute sm:right-0 sm:-left-full mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
                       >
                         <Menu.Item>
                           {({ active }) => (

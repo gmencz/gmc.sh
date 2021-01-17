@@ -1,6 +1,6 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
@@ -17,6 +17,8 @@ type StepTwoNewTaskProps = {
   weekDays: string[]
   onClose: VoidFunction
   onSubmit: (data: NewTask) => void
+  position?: 'left' | 'right'
+  loading?: boolean
 }
 
 const schema = yup.object().shape({
@@ -39,9 +41,13 @@ const weekDaysSchema = yup.object().shape({
 })
 
 const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
-  function StepTwoNewTask({ isOpen, weekDays, onClose, onSubmit }, ref) {
+  function StepTwoNewTask(
+    { isOpen, weekDays, onClose, loading, onSubmit, position = 'left' },
+    ref,
+  ) {
     const [chosenWeekDays, setChosenWeekDays] = useState<string[]>([])
     const [weekDaysError, setWeekDaysError] = useState<string | null>(null)
+    const lastLoadingRef = useRef(loading)
 
     const { register, errors, handleSubmit, reset } = useForm<NewTaskFormData>({
       defaultValues: { description: '', startTime: '' },
@@ -49,11 +55,30 @@ const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
     })
 
     const resetAndClose = () => {
-      reset()
-      setWeekDaysError(null)
-      setChosenWeekDays([])
+      if (typeof loading !== 'boolean') {
+        reset()
+        setWeekDaysError(null)
+        setChosenWeekDays([])
+      }
+
       onClose()
     }
+
+    // We only want to clear out the form values when we stop loading.
+    useEffect(() => {
+      if (
+        typeof loading === 'boolean' &&
+        !loading &&
+        !isOpen &&
+        lastLoadingRef.current
+      ) {
+        reset()
+        setWeekDaysError(null)
+        setChosenWeekDays([])
+      }
+
+      lastLoadingRef.current = loading
+    }, [isOpen, loading, reset])
 
     const handleClose = () => resetAndClose()
 
@@ -78,7 +103,9 @@ const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <div className="origin-top-left max-w-md w-full absolute left-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none">
+          <div
+            className={`origin-top-${position} max-w-sm w-full absolute ${position}-0 mt-2 rounded-md shadow-lg p-4 bg-gray-50 ring-1 ring-black ring-opacity-5 outline-none`}
+          >
             <form onSubmit={handleSubmit(submit)}>
               <div className="w-full mb-4">
                 <Listbox
@@ -122,7 +149,7 @@ const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
                           >
                             <span className="block truncate">
                               {chosenWeekDays.join(', ') ||
-                                'Choose the days for this task'}
+                                'Choose the days for the task'}
                             </span>
                             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                               <svg
@@ -261,14 +288,38 @@ const StepTwoNewTask = forwardRef<HTMLDivElement, StepTwoNewTaskProps>(
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  disabled={loading}
+                  className="inline-flex items-center disabled:cursor-not-allowed disabled:opacity-60 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="ml-2 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  disabled={loading}
+                  className="ml-2 inline-flex items-center disabled:cursor-not-allowed disabled:opacity-60 px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
+                  {loading && (
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  )}
                   Add task
                 </button>
               </div>

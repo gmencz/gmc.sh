@@ -30,14 +30,22 @@ query Schedule($id: String!) {
     updated_at
     title
     user_is_subscribed
+    user {
+      name
+    }
     days {
       id
       active
       week_day
-      tasks {
+      tasks(order_by: { start_time: asc }) {
         id
         description
         start_time
+      }
+      tasks_aggregate {
+        aggregate {
+          count
+        }
       }
     }
   }
@@ -47,6 +55,27 @@ mutation CreateSchedule($title: String!, $days: [schedule_day_insert_input!]!) {
   insert_schedule(objects: { title: $title, days: { data: $days } }) {
     returning {
       id
+    }
+  }
+}
+
+mutation AddTasksToSchedule($tasks: [schedule_day_task_insert_input!]!) {
+  insert_schedule_day_task(objects: $tasks) {
+    affected_rows
+    returning {
+      schedule_day {
+        id
+        tasks_aggregate {
+          aggregate {
+            count
+          }
+        }
+        tasks(order_by: { start_time: asc }) {
+          id
+          description
+          start_time
+        }
+      }
     }
   }
 }
@@ -61,5 +90,6 @@ mutation UpdateScheduleUserSubscription(
   ) {
     id
     user_is_subscribed
+    updated_at
   }
 }

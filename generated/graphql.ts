@@ -1746,6 +1746,7 @@ export type ScheduleQuery = { __typename?: 'query_root' } & {
       Schedule,
       'active' | 'created_at' | 'updated_at' | 'title' | 'user_is_subscribed'
     > & {
+        user?: Maybe<{ __typename?: 'account' } & Pick<Account, 'name'>>
         days: Array<
           { __typename?: 'schedule_day' } & Pick<
             Schedule_Day,
@@ -1757,6 +1758,16 @@ export type ScheduleQuery = { __typename?: 'query_root' } & {
                   'id' | 'description' | 'start_time'
                 >
               >
+              tasks_aggregate: {
+                __typename?: 'schedule_day_task_aggregate'
+              } & {
+                aggregate?: Maybe<
+                  { __typename?: 'schedule_day_task_aggregate_fields' } & Pick<
+                    Schedule_Day_Task_Aggregate_Fields,
+                    'count'
+                  >
+                >
+              }
             }
         >
       }
@@ -1776,6 +1787,43 @@ export type CreateScheduleMutation = { __typename?: 'mutation_root' } & {
   >
 }
 
+export type AddTasksToScheduleMutationVariables = Exact<{
+  tasks: Array<Schedule_Day_Task_Insert_Input> | Schedule_Day_Task_Insert_Input
+}>
+
+export type AddTasksToScheduleMutation = { __typename?: 'mutation_root' } & {
+  insert_schedule_day_task?: Maybe<
+    { __typename?: 'schedule_day_task_mutation_response' } & Pick<
+      Schedule_Day_Task_Mutation_Response,
+      'affected_rows'
+    > & {
+        returning: Array<
+          { __typename?: 'schedule_day_task' } & {
+            schedule_day?: Maybe<
+              { __typename?: 'schedule_day' } & Pick<Schedule_Day, 'id'> & {
+                  tasks_aggregate: {
+                    __typename?: 'schedule_day_task_aggregate'
+                  } & {
+                    aggregate?: Maybe<
+                      {
+                        __typename?: 'schedule_day_task_aggregate_fields'
+                      } & Pick<Schedule_Day_Task_Aggregate_Fields, 'count'>
+                    >
+                  }
+                  tasks: Array<
+                    { __typename?: 'schedule_day_task' } & Pick<
+                      Schedule_Day_Task,
+                      'id' | 'description' | 'start_time'
+                    >
+                  >
+                }
+            >
+          }
+        >
+      }
+  >
+}
+
 export type UpdateScheduleUserSubscriptionMutationVariables = Exact<{
   id: Scalars['String']
   isUserSubscribed: Scalars['Boolean']
@@ -1785,7 +1833,10 @@ export type UpdateScheduleUserSubscriptionMutation = {
   __typename?: 'mutation_root'
 } & {
   update_schedule_by_pk?: Maybe<
-    { __typename?: 'schedule' } & Pick<Schedule, 'id' | 'user_is_subscribed'>
+    { __typename?: 'schedule' } & Pick<
+      Schedule,
+      'id' | 'user_is_subscribed' | 'updated_at'
+    >
   >
 }
 
@@ -1866,14 +1917,22 @@ export const ScheduleDocument = `
     updated_at
     title
     user_is_subscribed
+    user {
+      name
+    }
     days {
       id
       active
       week_day
-      tasks {
+      tasks(order_by: {start_time: asc}) {
         id
         description
         start_time
+      }
+      tasks_aggregate {
+        aggregate {
+          count
+        }
       }
     }
   }
@@ -1918,6 +1977,52 @@ export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
       )(),
     options,
   )
+export const AddTasksToScheduleDocument = `
+    mutation AddTasksToSchedule($tasks: [schedule_day_task_insert_input!]!) {
+  insert_schedule_day_task(objects: $tasks) {
+    affected_rows
+    returning {
+      schedule_day {
+        id
+        tasks_aggregate {
+          aggregate {
+            count
+          }
+        }
+        tasks(order_by: {start_time: asc}) {
+          id
+          description
+          start_time
+        }
+      }
+    }
+  }
+}
+    `
+export const useAddTasksToScheduleMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    AddTasksToScheduleMutation,
+    TError,
+    AddTasksToScheduleMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    AddTasksToScheduleMutation,
+    TError,
+    AddTasksToScheduleMutationVariables,
+    TContext
+  >(
+    (variables?: AddTasksToScheduleMutationVariables) =>
+      fetcher<AddTasksToScheduleMutation, AddTasksToScheduleMutationVariables>(
+        AddTasksToScheduleDocument,
+        variables,
+      )(),
+    options,
+  )
 export const UpdateScheduleUserSubscriptionDocument = `
     mutation UpdateScheduleUserSubscription($id: String!, $isUserSubscribed: Boolean!) {
   update_schedule_by_pk(
@@ -1926,6 +2031,7 @@ export const UpdateScheduleUserSubscriptionDocument = `
   ) {
     id
     user_is_subscribed
+    updated_at
   }
 }
     `
