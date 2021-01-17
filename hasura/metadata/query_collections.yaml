@@ -68,3 +68,8 @@
           $_set)
           {\r\n    id\r\n    description\r\n    start_time\r\n    end_time\r\n    schedule_day_id\r\n
           \ }\r\n}"
+      - name: DeleteScheduleTask
+        query:
+          "mutation DeleteScheduleTask($id: String!)
+          {\r\n  delete_schedule_day_task_by_pk(id: $id)
+          {\r\n    id\r\n    schedule_day_id\r\n  }\r\n}"

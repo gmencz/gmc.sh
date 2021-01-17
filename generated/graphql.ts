@@ -1867,6 +1867,19 @@ export type UpdateScheduleTaskMutation = { __typename?: 'mutation_root' } & {
   >
 }
 
+export type DeleteScheduleTaskMutationVariables = Exact<{
+  id: Scalars['String']
+}>
+
+export type DeleteScheduleTaskMutation = { __typename?: 'mutation_root' } & {
+  delete_schedule_day_task_by_pk?: Maybe<
+    { __typename?: 'schedule_day_task' } & Pick<
+      Schedule_Day_Task,
+      'id' | 'schedule_day_id'
+    >
+  >
+}
+
 export type MeQueryVariables = Exact<{ [key: string]: never }>
 
 export type MeQuery = { __typename?: 'query_root' } & {
@@ -2119,6 +2132,38 @@ export const useUpdateScheduleTaskMutation = <
     (variables?: UpdateScheduleTaskMutationVariables) =>
       fetcher<UpdateScheduleTaskMutation, UpdateScheduleTaskMutationVariables>(
         UpdateScheduleTaskDocument,
+        variables,
+      )(),
+    options,
+  )
+export const DeleteScheduleTaskDocument = `
+    mutation DeleteScheduleTask($id: String!) {
+  delete_schedule_day_task_by_pk(id: $id) {
+    id
+    schedule_day_id
+  }
+}
+    `
+export const useDeleteScheduleTaskMutation = <
+  TError = unknown,
+  TContext = unknown
+>(
+  options?: UseMutationOptions<
+    DeleteScheduleTaskMutation,
+    TError,
+    DeleteScheduleTaskMutationVariables,
+    TContext
+  >,
+) =>
+  useMutation<
+    DeleteScheduleTaskMutation,
+    TError,
+    DeleteScheduleTaskMutationVariables,
+    TContext
+  >(
+    (variables?: DeleteScheduleTaskMutationVariables) =>
+      fetcher<DeleteScheduleTaskMutation, DeleteScheduleTaskMutationVariables>(
+        DeleteScheduleTaskDocument,
         variables,
       )(),
     options,
