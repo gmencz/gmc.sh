@@ -2,7 +2,6 @@ import { Transition } from '@headlessui/react'
 import { PER_PAGE } from 'features/scheduler/list'
 import Image from 'next/image'
 import ActiveLink from './active-link'
-import 'twin.macro'
 
 type SidebarProps = {
   isMobileSidebarOpen: boolean
@@ -12,8 +11,11 @@ type SidebarProps = {
 function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
   return (
     <>
-      <div tw="lg:hidden">
-        <Transition show={isMobileSidebarOpen} tw="fixed inset-0 flex z-40">
+      <div className="lg:hidden">
+        <Transition
+          show={isMobileSidebarOpen}
+          className="fixed inset-0 flex z-40"
+        >
           <Transition.Child
             enter="transition-opacity ease-linear duration-300"
             enterFrom="opacity-0"
@@ -22,9 +24,9 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div tw="fixed inset-0">
+            <div className="fixed inset-0">
               <div
-                tw="absolute inset-0 bg-gray-600 opacity-75"
+                className="absolute inset-0 bg-gray-600 opacity-75"
                 aria-hidden="true"
               ></div>
             </div>
@@ -37,18 +39,18 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
             leave="transition ease-in-out duration-300 transform"
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
-            tw="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-indigo-700"
+            className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-indigo-700"
           >
-            <div tw="absolute top-0 right-0 -mr-12 pt-2">
+            <div className="absolute top-0 right-0 -mr-12 pt-2">
               <Transition.Child
                 onClick={onCloseMobileSidebar}
                 as="button"
-                tw="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               >
-                <span tw="sr-only">Close sidebar</span>
+                <span className="sr-only">Close sidebar</span>
                 {/* Heroicon name: x */}
                 <svg
-                  tw="h-6 w-6 text-white"
+                  className="h-6 w-6 text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -64,9 +66,9 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                 </svg>
               </Transition.Child>
             </div>
-            <div tw="flex-shrink-0 flex items-center px-4">
+            <div className="flex-shrink-0 flex items-center px-4">
               <Image
-                tw="h-8 w-auto"
+                className="h-8 w-auto"
                 src="/logo_full.svg"
                 alt="Gmc.sh logo"
                 width={130}
@@ -75,22 +77,21 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               />
             </div>
             <nav
-              tw="mt-5 flex-shrink-0 h-full divide-y divide-indigo-800 overflow-y-auto"
+              className="mt-5 flex-shrink-0 h-full divide-y divide-indigo-800 overflow-y-auto"
               aria-label="Sidebar"
             >
-              <div tw="px-2 space-y-1">
+              <div className="px-2 space-y-1">
                 <ActiveLink
                   activeClassName="bg-indigo-800 text-white hover"
                   exact
                   href="/"
                 >
                   <a
-                    className="group"
-                    tw="text-indigo-100 cursor-pointer hover:text-white hover:bg-indigo-600 flex items-center px-2 py-2 text-base font-medium rounded-md"
+                    className="text-indigo-100 hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md"
                     aria-current="page"
                   >
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -115,13 +116,10 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                     query: { page: 1, 'per-page': PER_PAGE },
                   }}
                 >
-                  <a
-                    className="group"
-                    tw="text-indigo-100 cursor-pointer hover:text-white hover:bg-indigo-600 flex items-center px-2 py-2 text-base font-medium rounded-md"
-                  >
+                  <a className="text-indigo-100 hover:text-white hover:bg-indigo-600 group flex items-center px-2 py-2 text-base font-medium rounded-md">
                     {/* Heroicon name: clock */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -139,16 +137,15 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                   </a>
                 </ActiveLink>
               </div>
-              <div tw="mt-6 pt-6">
-                <div tw="px-2 space-y-1">
+              <div className="mt-6 pt-6">
+                <div className="px-2 space-y-1">
                   <a
                     // href="/"
-                    className="group"
-                    tw="cursor-not-allowed flex items-center px-2 py-2 text-base font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                    className="group cursor-not-allowed flex items-center px-2 py-2 text-base font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
                   >
                     {/* Heroicon name: cog */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200 group-hover:text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200 group-hover:text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -173,12 +170,11 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
 
                   <a
                     // href="/"
-                    className="group"
-                    tw="cursor-not-allowed flex items-center px-2 py-2 text-base font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                    className="group cursor-not-allowed flex items-center px-2 py-2 text-base font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
                   >
                     {/* Heroicon name: question-mark-circle */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-300 group-hover:text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-300 group-hover:text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -197,12 +193,11 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
 
                   <a
                     // href="/"
-                    className="group"
-                    tw="cursor-not-allowed flex items-center px-2 py-2 text-base font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                    className="group cursor-not-allowed flex items-center px-2 py-2 text-base font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
                   >
                     {/* Heroicon name: shield-check */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-300 group-hover:text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-300 group-hover:text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -223,20 +218,20 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
             </nav>
           </Transition.Child>
 
-          <div tw="flex-shrink-0 w-14" aria-hidden="true">
+          <div className="flex-shrink-0 w-14" aria-hidden="true">
             {/* Dummy element to force sidebar to shrink to fit close icon */}
           </div>
         </Transition>
       </div>
 
       {/* Static sidebar for desktop */}
-      <div tw="hidden lg:flex lg:flex-shrink-0">
-        <div tw="flex flex-col w-64">
+      <div className="hidden lg:flex lg:flex-shrink-0">
+        <div className="flex flex-col w-64">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div tw="flex flex-col flex-grow bg-indigo-700 pt-5 pb-4 overflow-y-auto">
-            <div tw="flex items-center flex-shrink-0 px-4">
+          <div className="flex flex-col flex-grow bg-indigo-700 pt-5 pb-4 overflow-y-auto">
+            <div className="flex items-center flex-shrink-0 px-4">
               <Image
-                tw="h-8 w-auto"
+                className="h-8 w-auto"
                 src="/logo_full.svg"
                 alt="Gmc.sh logo"
                 width={130}
@@ -246,23 +241,20 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
               />
             </div>
             <nav
-              tw="mt-5 flex-1 flex flex-col divide-y divide-indigo-800 overflow-y-auto"
+              className="mt-5 flex-1 flex flex-col divide-y divide-indigo-800 overflow-y-auto"
               aria-label="Sidebar"
             >
-              <div tw="px-2 space-y-1">
+              <div className="px-2 space-y-1">
                 <ActiveLink
                   activeClassName="bg-indigo-800 text-white hover"
                   href="/"
                   exact
                 >
                   {/* Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:text-white hover:bg-indigo-600" */}
-                  <a
-                    className="group"
-                    tw="flex items-center cursor-pointer px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
-                  >
+                  <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">
                     {/* Heroicon name: home */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -287,13 +279,10 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                     query: { page: 1, 'per-page': PER_PAGE },
                   }}
                 >
-                  <a
-                    className="group"
-                    tw="flex cursor-pointer items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
-                  >
+                  <a className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600">
                     {/* Heroicon name: clock */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -311,16 +300,15 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
                   </a>
                 </ActiveLink>
               </div>
-              <div tw="mt-6 pt-6">
-                <div tw="px-2 space-y-1 ">
+              <div className="mt-6 pt-6">
+                <div className="px-2 space-y-1 ">
                   <a
-                    className="group"
                     // href="/"
-                    tw="cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                    className="group cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
                   >
                     {/* Heroicon name: cog */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -345,12 +333,11 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
 
                   <a
                     // href="/"
-                    className="group"
-                    tw="cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                    className="group cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
                   >
                     {/* Heroicon name: question-mark-circle */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -369,12 +356,11 @@ function Sidebar({ isMobileSidebarOpen, onCloseMobileSidebar }: SidebarProps) {
 
                   <a
                     // href="/"
-                    className="group"
-                    tw="cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
+                    className="group cursor-not-allowed flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-indigo-100 hover:text-white hover:bg-indigo-600"
                   >
                     {/* Heroicon name: shield-check */}
                     <svg
-                      tw="mr-4 h-6 w-6 text-indigo-200"
+                      className="mr-4 h-6 w-6 text-indigo-200"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"

@@ -1,4 +1,3 @@
-import 'twin.macro'
 import { ReactNode, useState } from 'react'
 import ContentWrapper from './content-wrapper'
 import Header from './header'
@@ -14,14 +13,14 @@ function Layout({ children }: LayoutProps) {
   const closeMobileSidebar = () => setIsMobileSidebarOpen(false)
 
   return (
-    <div tw="h-screen flex overflow-hidden bg-gray-100">
+    <div className="h-screen flex overflow-hidden bg-gray-100">
       <Sidebar
         isMobileSidebarOpen={isMobileSidebarOpen}
         onCloseMobileSidebar={closeMobileSidebar}
       />
 
       <div
-        tw="flex-1 overflow-auto flex flex-col focus:outline-none"
+        className="flex-1 overflow-auto flex flex-col focus:outline-none"
         tabIndex={0}
       >
         <Header openMobileSidebar={openMobileSidebar} />

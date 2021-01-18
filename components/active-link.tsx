@@ -34,8 +34,6 @@ function ActiveLink({
     : childClassName
 
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     <Link {...props}>
       {cloneElement(child, {
         className: className || undefined,
