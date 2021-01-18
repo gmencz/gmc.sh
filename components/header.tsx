@@ -1,5 +1,6 @@
 import { Menu, Transition } from '@headlessui/react'
 import { useMeQuery } from 'generated/graphql'
+import tw from 'twin.macro'
 
 type HeaderProps = {
   openMobileSidebar: () => void
@@ -16,15 +17,15 @@ function Header({ openMobileSidebar }: HeaderProps) {
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
 
   return (
-    <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
+    <div tw="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
       <button
         onClick={openMobileSidebar}
-        className="px-4 border-r border-gray-200 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
+        tw="px-4 border-r border-gray-200 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
       >
-        <span className="sr-only">Open sidebar</span>
+        <span tw="sr-only">Open sidebar</span>
         {/* Heroicon name: menu-alt-1 */}
         <svg
-          className="h-6 w-6"
+          tw="h-6 w-6"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -40,20 +41,20 @@ function Header({ openMobileSidebar }: HeaderProps) {
         </svg>
       </button>
       {/* Search bar */}
-      <div className="flex-1 px-4 flex justify-between sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-        <div className="flex-1 flex">
-          <form className="w-full flex md:ml-0" action="#" method="GET">
-            <label htmlFor="search_field" className="sr-only">
+      <div tw="flex-1 px-4 flex justify-between sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
+        <div tw="flex-1 flex">
+          <form tw="w-full flex md:ml-0" action="#" method="GET">
+            <label htmlFor="search_field" tw="sr-only">
               Search
             </label>
-            <div className="relative w-full text-gray-400 focus-within:text-gray-600">
+            <div tw="relative w-full text-gray-400 focus-within:text-gray-600">
               <div
-                className="absolute inset-y-0 left-0 flex items-center pointer-events-none"
+                tw="absolute inset-y-0 left-0 flex items-center pointer-events-none"
                 aria-hidden="true"
               >
                 {/* Heroicon name: search */}
                 <svg
-                  className="h-5 w-5"
+                  tw="h-5 w-5"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -70,19 +71,19 @@ function Header({ openMobileSidebar }: HeaderProps) {
                 id="search_field"
                 disabled
                 name="search_field"
-                className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent sm:text-sm"
+                tw="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent sm:text-sm"
                 placeholder="Search"
                 type="search"
               />
             </div>
           </form>
         </div>
-        <div className="ml-4 flex items-center md:ml-6">
-          <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            <span className="sr-only">View notifications</span>
+        <div tw="ml-4 flex items-center md:ml-6">
+          <button tw="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <span tw="sr-only">View notifications</span>
             {/* Heroicon name: bell */}
             <svg
-              className="h-6 w-6"
+              tw="h-6 w-6"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -99,26 +100,26 @@ function Header({ openMobileSidebar }: HeaderProps) {
           </button>
 
           {/* Profile dropdown */}
-          <div className="ml-3 relative">
+          <div tw="ml-3 relative">
             <Menu>
               {({ open }) => (
                 <>
                   <div>
-                    <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
+                    <Menu.Button tw="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       {status === 'loading' && (
-                        <div className="animate-pulse">
-                          <div className="rounded-full bg-gray-200 h-8 w-8"></div>
+                        <div tw="animate-pulse">
+                          <div tw="rounded-full bg-gray-200 h-8 w-8"></div>
                         </div>
                       )}
                       {status === 'success' && (
                         <img
-                          className="h-8 w-8 rounded-full"
+                          tw="h-8 w-8 rounded-full"
                           src={profilePicture}
                           alt={me?.me.account?.name}
                         />
                       )}
                       {status === 'error' && (
-                        <div className="rounded-full h-8 w-8 text-red-600">
+                        <div tw="rounded-full h-8 w-8 text-red-600">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -134,18 +135,18 @@ function Header({ openMobileSidebar }: HeaderProps) {
                           </svg>
                         </div>
                       )}
-                      <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
-                        <span className="sr-only">Open user menu for </span>
+                      <span tw="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
+                        <span tw="sr-only">Open user menu for </span>
                         {status === 'loading' && (
-                          <div className="animate-pulse">
-                            <div className="rounded-full bg-gray-200 h-4 w-40"></div>
+                          <div tw="animate-pulse">
+                            <div tw="rounded-full bg-gray-200 h-4 w-40"></div>
                           </div>
                         )}
                         {status === 'success' && (me?.me.account?.name || '')}
                       </span>
                       {/* Heroicon name: chevron-down */}
                       <svg
-                        className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
+                        tw="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -169,19 +170,17 @@ function Header({ openMobileSidebar }: HeaderProps) {
                     >
                       <Menu.Items
                         static
-                        className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
+                        tw="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
                       >
                         <Menu.Item disabled>
                           {({ active, disabled }) => (
                             <a
                               // href="/"
-                              className={`${
-                                active
-                                  ? 'bg-gray-100 text-gray-900'
-                                  : 'text-gray-700'
-                              } ${
-                                disabled ? 'cursor-not-allowed' : ''
-                              } block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+                              css={[
+                                tw`block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`,
+                                active && tw`bg-gray-100 text-gray-900`,
+                                disabled && tw`cursor-not-allowed`,
+                              ]}
                             >
                               Your Profile
                             </a>
@@ -191,13 +190,11 @@ function Header({ openMobileSidebar }: HeaderProps) {
                           {({ active, disabled }) => (
                             <a
                               // href="/"
-                              className={`${
-                                active
-                                  ? 'bg-gray-100 text-gray-900'
-                                  : 'text-gray-700'
-                              } ${
-                                disabled ? 'cursor-not-allowed' : ''
-                              } block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+                              css={[
+                                tw`block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`,
+                                active && tw`bg-gray-100 text-gray-900`,
+                                disabled && tw`cursor-not-allowed`,
+                              ]}
                               role="menuitem"
                             >
                               Settings
@@ -208,13 +205,11 @@ function Header({ openMobileSidebar }: HeaderProps) {
                           {({ active, disabled }) => (
                             <a
                               href="/api/logout"
-                              className={`${
-                                active
-                                  ? 'bg-gray-100 text-gray-900'
-                                  : 'text-gray-700'
-                              } ${
-                                disabled ? 'cursor-not-allowed' : ''
-                              } block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+                              css={[
+                                tw`block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`,
+                                active && tw`bg-gray-100 text-gray-900`,
+                                disabled && tw`cursor-not-allowed`,
+                              ]}
                             >
                               Logout
                             </a>

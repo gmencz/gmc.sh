@@ -4,6 +4,7 @@ import { MeQuery, useMeQuery } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import tw from 'twin.macro'
 
 type ContentWrapperProps = {
   children: ReactNode
@@ -30,54 +31,54 @@ function ContentWrapper({ children }: ContentWrapperProps) {
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
 
   return (
-    <main className="flex-1 relative pb-10 z-0 overflow-y-auto">
+    <main tw="flex-1 relative pb-10 z-0 overflow-y-auto">
       {/* Page header */}
-      <div className="bg-white shadow">
-        <div className="px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-          <div className="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
-            <div className="flex-1 min-w-0 sm:mr-4">
+      <div tw="bg-white shadow">
+        <div tw="px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
+          <div tw="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
+            <div tw="flex-1 min-w-0 sm:mr-4">
               {/* Profile */}
-              <div className="flex items-center">
+              <div tw="flex items-center">
                 {status === 'loading' && (
-                  <div className="animate-pulse">
-                    <div className="hidden rounded-full sm:block bg-gray-200 h-16 w-16">
-                      <span className="sr-only">loading...</span>
+                  <div tw="animate-pulse">
+                    <div tw="hidden rounded-full sm:block bg-gray-200 h-16 w-16">
+                      <span tw="sr-only">loading...</span>
                     </div>
                   </div>
                 )}
                 {status === 'success' && (
                   <img
-                    className="hidden h-16 w-16 rounded-full sm:block"
+                    tw="hidden h-16 w-16 rounded-full sm:block"
                     src={profilePicture}
                     alt={me?.me.account?.name}
                   />
                 )}
-                <div className="flex-1">
-                  <div className="flex items-center">
+                <div tw="flex-1">
+                  <div tw="flex items-center">
                     {status === 'loading' && (
-                      <div className="animate-pulse">
-                        <div className="rounded-full sm:hidden bg-gray-200 h-16 w-16">
-                          <span className="sr-only">loading...</span>
+                      <div tw="animate-pulse">
+                        <div tw="rounded-full sm:hidden bg-gray-200 h-16 w-16">
+                          <span tw="sr-only">loading...</span>
                         </div>
                       </div>
                     )}
                     {status === 'success' && (
                       <img
-                        className="h-16 w-16 rounded-full sm:hidden"
+                        tw="h-16 w-16 rounded-full sm:hidden"
                         src={profilePicture}
                         alt={me?.me.account?.name}
                       />
                     )}
-                    <div className="ml-3 flex-1">
+                    <div tw="ml-3 flex-1">
                       {status === 'loading' && (
-                        <div className="animate-pulse mb-3">
-                          <div className="h-4 bg-gray-200 rounded">
-                            <span className="sr-only">loading...</span>
+                        <div tw="animate-pulse mb-3">
+                          <div tw="h-4 bg-gray-200 rounded">
+                            <span tw="sr-only">loading...</span>
                           </div>
                         </div>
                       )}
                       {status === 'success' && (
-                        <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
+                        <h1 tw="text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
                           {greetUser()}, {me?.me.account?.name}
                         </h1>
                       )}
@@ -87,21 +88,21 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                     </div>
                   </div>
                   {status === 'loading' && (
-                    <div className="animate-pulse sm:ml-3 mt-4 sm:mt-1">
-                      <div className="h-14 sm:h-4 bg-gray-200 rounded">
-                        <span className="sr-only">loading...</span>
+                    <div tw="animate-pulse sm:ml-3 mt-4 sm:mt-1">
+                      <div tw="h-14 sm:h-4 bg-gray-200 rounded">
+                        <span tw="sr-only">loading...</span>
                       </div>
                     </div>
                   )}
                   {status === 'success' && (
-                    <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
+                    <dl tw="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                       {me?.me.account?.company && (
                         <>
-                          <dt className="sr-only">Company</dt>
-                          <dd className="flex items-center text-sm text-gray-500 font-medium capitalize sm:mr-6">
+                          <dt tw="sr-only">Company</dt>
+                          <dd tw="flex items-center text-sm text-gray-500 font-medium capitalize sm:mr-6">
                             {/* Heroicon name: office-building */}
                             <svg
-                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                              tw="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 20 20"
                               fill="currentColor"
@@ -119,11 +120,11 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                       )}
                       {me?.me.account?.verified && (
                         <dl>
-                          <dt className="sr-only">Account status</dt>
-                          <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
+                          <dt tw="sr-only">Account status</dt>
+                          <dd tw="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
                             {/* Heroicon name: check-circle */}
                             <svg
-                              className="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"
+                              tw="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 20 20"
                               fill="currentColor"
@@ -144,14 +145,14 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex space-x-3 md:mt-0 relative">
+            <div tw="mt-6 flex space-x-3 md:mt-0 relative">
               <Menu>
                 {({ open }) => (
                   <div>
-                    <Menu.Button className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Menu.Button tw="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       Create
                       <svg
-                        className="-mr-1 ml-1.5 mt-0.5 h-5 w-5"
+                        tw="-mr-1 ml-1.5 mt-0.5 h-5 w-5"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -175,24 +176,25 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                     >
                       <Menu.Items
                         static
-                        className="origin-top-left left-0 sm:origin-top-right absolute sm:right-0 sm:-left-full mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
+                        tw="origin-top-left left-0 sm:origin-top-right absolute sm:right-0 sm:-left-full mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 outline-none"
                       >
                         <Menu.Item>
                           {({ active }) => (
                             <Link href="/scheduler/create-schedule">
                               <a
-                                className={
+                                className="group"
+                                css={
                                   active
-                                    ? 'group rounded-md flex items-center px-4 py-2 text-sm bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500'
-                                    : 'group rounded-md flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                                    ? tw`rounded-md flex items-center px-4 py-2 text-sm bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500`
+                                    : tw`rounded-md flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500`
                                 }
                                 role="menuitem"
                               >
                                 <svg
-                                  className={
+                                  css={
                                     active
-                                      ? 'mr-3 h-5 w-5 text-gray-500'
-                                      : 'mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500'
+                                      ? tw`mr-3 h-5 w-5 text-gray-500`
+                                      : tw`mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500`
                                   }
                                   xmlns="http://www.w3.org/2000/svg"
                                   fill="none"
@@ -209,7 +211,7 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                                 </svg>
                                 <div>
                                   <span>Schedule</span>
-                                  <span className="block text-gray-500">
+                                  <span tw="block text-gray-500">
                                     Manage your time
                                   </span>
                                 </div>
@@ -226,8 +228,8 @@ function ContentWrapper({ children }: ContentWrapperProps) {
           </div>
         </div>
       </div>
-      <div className="mt-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
+      <div tw="mt-8">
+        <div tw="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
       </div>
     </main>
   )

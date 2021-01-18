@@ -1,3 +1,4 @@
+import GlobalStyles from 'components/global-styles'
 import Toast from 'components/toast'
 import ToastContainer from 'components/toast-container'
 import { AppProps } from 'next/app'
@@ -13,6 +14,7 @@ const queryClient = new QueryClient()
 function App({ Component, pageProps }: AppProps) {
   return (
     <Fragment>
+      <GlobalStyles />
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           <ToastProvider components={{ Toast, ToastContainer }}>
