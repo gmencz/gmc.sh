@@ -1,41 +1,36 @@
 import Layout from 'components/layout'
 import SchedulerSchedule from 'features/scheduler/schedule'
-import { ScheduleDocument, ScheduleQueryVariables } from 'generated/graphql'
 import Head from 'next/head'
-import { QueryClient } from 'react-query'
-import { dehydrate } from 'react-query/hydration'
-import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
-import { gqlProxyClient } from 'utils/gql-client'
 
-export const getServerSideProps = authenticatedServerSideProps(
-  async (ctx, { accessToken }) => {
-    gqlProxyClient.setHeader('Authorization', `Bearer ${accessToken}`)
-    gqlProxyClient.setHeader('Cookie', ctx.req.headers.cookie || '')
-    const queryClient = new QueryClient()
-    const scheduleId = ctx.params?.id as string | undefined
-    if (!scheduleId) {
-      return {
-        props: {
-          dehydratedState: dehydrate(queryClient),
-        },
-      }
-    }
+// export const getServerSideProps = authenticatedServerSideProps(
+//   async (ctx, { accessToken }) => {
+//     gqlProxyClient.setHeader('Authorization', `Bearer ${accessToken}`)
+//     gqlProxyClient.setHeader('Cookie', ctx.req.headers.cookie || '')
+//     const queryClient = new QueryClient()
+//     const scheduleId = ctx.params?.id as string | undefined
+//     if (!scheduleId) {
+//       return {
+//         props: {
+//           dehydratedState: dehydrate(queryClient),
+//         },
+//       }
+//     }
 
-    const variables: ScheduleQueryVariables = {
-      id: scheduleId,
-    }
+//     const variables: ScheduleQueryVariables = {
+//       id: scheduleId,
+//     }
 
-    await queryClient.prefetchQuery(['Schedule', variables], async () => {
-      return gqlProxyClient.request(ScheduleDocument, variables)
-    })
+//     await queryClient.prefetchQuery(['Schedule', variables], async () => {
+//       return gqlProxyClient.request(ScheduleDocument, variables)
+//     })
 
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-      },
-    }
-  },
-)
+//     return {
+//       props: {
+//         dehydratedState: dehydrate(queryClient),
+//       },
+//     }
+//   },
+// )
 
 function Schedule() {
   return (
@@ -78,9 +73,10 @@ function Schedule() {
           content="https://app.gmc.sh/generic_hero.png"
         />
       </Head>
-      <Layout>
+      <p>Scheduler schedule</p>
+      {/* <Layout>
         <SchedulerSchedule />
-      </Layout>
+      </Layout> */}
     </>
   )
 }

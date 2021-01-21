@@ -1,9 +1,4 @@
-import Layout from 'components/layout'
-import CreateScheduleFormStepOne from 'features/scheduler/create-schedule-form/step-1'
 import Head from 'next/head'
-import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
-
-export const getServerSideProps = authenticatedServerSideProps()
 
 function NewSchedule() {
   return (
@@ -46,9 +41,10 @@ function NewSchedule() {
           content="https://app.gmc.sh/generic_hero.png"
         />
       </Head>
-      <Layout>
+      <p>Create schedule</p>
+      {/* <Layout>
         <CreateScheduleFormStepOne />
-      </Layout>
+      </Layout> */}
     </>
   )
 }

@@ -1,11 +1,10 @@
 import Head from 'next/head'
-import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
-import AccountOverview from 'features/account-overview'
-import Layout from 'components/layout'
-
-export const getServerSideProps = authenticatedServerSideProps()
+import { useAuth } from 'react-use-auth'
 
 function Index() {
+  const auth = useAuth()
+  console.log({ auth })
+
   return (
     <>
       <Head>
@@ -46,9 +45,10 @@ function Index() {
           content="https://app.gmc.sh/generic_hero.png"
         />
       </Head>
-      <Layout>
+      <p>Hi</p>
+      {/* <Layout>
         <AccountOverview />
-      </Layout>
+      </Layout> */}
     </>
   )
 }

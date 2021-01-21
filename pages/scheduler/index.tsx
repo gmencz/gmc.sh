@@ -1,38 +1,31 @@
 import Head from 'next/head'
-import { authenticatedServerSideProps } from 'utils/authenticated-server-side-props'
-import Layout from 'components/layout'
-import SchedulerList, { PER_PAGE } from 'features/scheduler/list'
-import { QueryClient } from 'react-query'
-import { dehydrate } from 'react-query/hydration'
-import { gqlProxyClient } from 'utils/gql-client'
-import { MySchedulesDocument } from 'generated/graphql'
 
-export const getServerSideProps = authenticatedServerSideProps(
-  async (ctx, { accessToken }) => {
-    gqlProxyClient.setHeader('Authorization', `Bearer ${accessToken}`)
-    gqlProxyClient.setHeader('Cookie', ctx.req.headers.cookie || '')
-    const queryClient = new QueryClient()
+// export const getServerSideProps = authenticatedServerSideProps(
+//   async (ctx, { accessToken }) => {
+//     gqlProxyClient.setHeader('Authorization', `Bearer ${accessToken}`)
+//     gqlProxyClient.setHeader('Cookie', ctx.req.headers.cookie || '')
+//     const queryClient = new QueryClient()
 
-    const page = Number(ctx.query.page) || 1
-    const perPage = Number(ctx.query['per-page']) || PER_PAGE
-    const offset = page === 1 ? 0 : (page - 1) * perPage
+//     const page = Number(ctx.query.page) || 1
+//     const perPage = Number(ctx.query['per-page']) || PER_PAGE
+//     const offset = page === 1 ? 0 : (page - 1) * perPage
 
-    const variables = {
-      limit: perPage,
-      offset,
-    }
+//     const variables = {
+//       limit: perPage,
+//       offset,
+//     }
 
-    await queryClient.prefetchQuery(['MySchedules', variables], async () => {
-      return gqlProxyClient.request(MySchedulesDocument, variables)
-    })
+//     await queryClient.prefetchQuery(['MySchedules', variables], async () => {
+//       return gqlProxyClient.request(MySchedulesDocument, variables)
+//     })
 
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-      },
-    }
-  },
-)
+//     return {
+//       props: {
+//         dehydratedState: dehydrate(queryClient),
+//       },
+//     }
+//   },
+// )
 
 function Scheduler() {
   return (
@@ -75,14 +68,14 @@ function Scheduler() {
           content="https://app.gmc.sh/generic_hero.png"
         />
       </Head>
-      <Layout>
+      <p>Schedule index</p>
+      {/* <Layout>
         <h2 className="max-w-6xl mx-auto mt-8 text-lg leading-6 font-medium text-gray-900">
           Schedules
         </h2>
 
-        {/* Activity list */}
         <SchedulerList />
-      </Layout>
+      </Layout> */}
     </>
   )
 }
