@@ -1,5 +1,5 @@
-query MySchedules($limit: Int!, $offset: Int!) {
-  me {
+query MySchedules($limit: Int!, $offset: Int!, $userId: String!) {
+  me(user_id: $userId) {
     account {
       schedules(
         limit: $limit

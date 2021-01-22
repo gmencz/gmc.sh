@@ -17,7 +17,5 @@ generates:
     config:
       scalars:
         timestamptz: string
-      fetcher: utils/gql-client#fetcher
-      # The path of the fetcher is relative to 
-      # the generated file (generated/graphql.ts)
+      fetcher: graphql-request
 

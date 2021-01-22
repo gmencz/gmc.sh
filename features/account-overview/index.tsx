@@ -1,12 +1,15 @@
 import { MeQuery, useMeQuery } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import { useApi } from 'hooks/use-api'
 import Link from 'next/link'
 import { useToasts } from 'react-toast-notifications'
 
 function AccountOverview() {
   const { addToast } = useToasts()
+  const { client, isReady, user } = useApi()
   const { data: me, status } = useMeQuery<MeQuery, ClientError>(
-    {},
+    client,
+    { userId: user.sub },
     {
       onError: error => {
         addToast(
@@ -15,6 +18,7 @@ function AccountOverview() {
         )
       },
       staleTime: Infinity,
+      enabled: isReady,
     },
   )
 

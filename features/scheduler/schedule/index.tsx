@@ -9,6 +9,7 @@ import {
   useUpdateScheduleUserSubscriptionMutation,
 } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import { useApi } from 'hooks/use-api'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -25,14 +26,17 @@ function SchedulerSchedule() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { id: scheduleId } = router.query
+  const { client, isReady } = useApi()
   const { data, status: scheduleQueryStatus } = useScheduleQuery<
     ScheduleQuery,
     ClientError
   >(
+    client,
     {
       id: scheduleId as string,
     },
     {
+      enabled: isReady,
       staleTime: Infinity,
       onError: error => {
         addToast(
@@ -56,7 +60,7 @@ function SchedulerSchedule() {
   const {
     mutate,
     status,
-  } = useUpdateScheduleUserSubscriptionMutation<ClientError>({
+  } = useUpdateScheduleUserSubscriptionMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -128,7 +132,7 @@ function SchedulerSchedule() {
   const {
     mutate: addTasks,
     status: addTasksStatus,
-  } = useAddTasksToScheduleMutation<ClientError>({
+  } = useAddTasksToScheduleMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -189,7 +193,7 @@ function SchedulerSchedule() {
   const {
     mutate: updateTask,
     status: updateTaskStatus,
-  } = useUpdateScheduleTaskMutation<ClientError>({
+  } = useUpdateScheduleTaskMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -248,7 +252,7 @@ function SchedulerSchedule() {
   const {
     mutate: deleteTask,
     status: deleteTaskStatus,
-  } = useDeleteScheduleTaskMutation<ClientError>({
+  } = useDeleteScheduleTaskMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,

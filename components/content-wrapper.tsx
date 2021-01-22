@@ -2,6 +2,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { getHours } from 'date-fns'
 import { MeQuery, useMeQuery } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import { useApi } from 'hooks/use-api'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -21,10 +22,13 @@ const greetUser = () => {
 }
 
 function ContentWrapper({ children }: ContentWrapperProps) {
+  const { client, isReady, user } = useApi()
   const { data: me, status } = useMeQuery<MeQuery, ClientError>(
-    {},
+    client,
+    { userId: user.sub },
     {
       staleTime: Infinity,
+      enabled: isReady,
     },
   )
   const profilePicture = me?.me.account?.picture || '/default_picture.png'

@@ -5,6 +5,7 @@ import {
   useCreateScheduleMutation,
 } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import { useApi } from 'hooks/use-api'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import { useToasts } from 'react-toast-notifications'
@@ -66,9 +67,10 @@ type TimeIconProps = {
 function CreateScheduleFormStepTwo({
   previousStepData,
 }: CreateScheduleFormStepTwoProps) {
+  const { client } = useApi()
   const { addToast } = useToasts()
   const router = useRouter()
-  const { mutate, status } = useCreateScheduleMutation<ClientError>({
+  const { mutate, status } = useCreateScheduleMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,

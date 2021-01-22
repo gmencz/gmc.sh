@@ -1,5 +1,3 @@
-import Layout from 'components/layout'
-import SchedulerSchedule from 'features/scheduler/schedule'
 import Head from 'next/head'
 
 // export const getServerSideProps = authenticatedServerSideProps(

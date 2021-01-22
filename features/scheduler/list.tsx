@@ -1,5 +1,6 @@
 import { format, parseISO } from 'date-fns'
 import { useMySchedulesQuery } from 'generated/graphql'
+import { useApi } from 'hooks/use-api'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -10,13 +11,16 @@ function SchedulerList() {
   const page = Number(paginationInfo['page']) || 1
   const perPage = Number(paginationInfo['per-page']) || PER_PAGE
   const offset = page === 1 ? 0 : (page - 1) * perPage
+  const { client, isReady, user } = useApi()
 
   const { data, status } = useMySchedulesQuery(
+    client,
     {
+      userId: user.sub,
       limit: perPage,
       offset,
     },
-    { staleTime: Infinity },
+    { staleTime: Infinity, enabled: isReady },
   )
 
   const totalSchedules =

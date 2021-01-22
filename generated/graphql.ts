@@ -1,10 +1,10 @@
+import { GraphQLClient } from 'graphql-request'
 import {
   useQuery,
   UseQueryOptions,
   useMutation,
   UseMutationOptions,
 } from 'react-query'
-import { fetcher } from 'utils/gql-client'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
@@ -13,6 +13,15 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
   { [SubKey in K]: Maybe<T[SubKey]> }
+
+function fetcher<TData, TVariables>(
+  client: GraphQLClient,
+  query: string,
+  variables?: TVariables,
+) {
+  return async (): Promise<TData> =>
+    client.request<TData, TVariables>(query, variables)
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -635,6 +644,11 @@ export type Query_RootAccount_AggregateArgs = {
 /** query root */
 export type Query_RootAccount_By_PkArgs = {
   id: Scalars['String']
+}
+
+/** query root */
+export type Query_RootMeArgs = {
+  user_id: Scalars['String']
 }
 
 /** query root */
@@ -1613,6 +1627,11 @@ export type Subscription_RootAccount_By_PkArgs = {
 }
 
 /** subscription root */
+export type Subscription_RootMeArgs = {
+  user_id: Scalars['String']
+}
+
+/** subscription root */
 export type Subscription_RootScheduleArgs = {
   distinct_on?: Maybe<Array<Schedule_Select_Column>>
   limit?: Maybe<Scalars['Int']>
@@ -1720,6 +1739,7 @@ export type Timestamptz_Comparison_Exp = {
 export type MySchedulesQueryVariables = Exact<{
   limit: Scalars['Int']
   offset: Scalars['Int']
+  userId: Scalars['String']
 }>
 
 export type MySchedulesQuery = { __typename?: 'query_root' } & {
@@ -1880,7 +1900,9 @@ export type DeleteScheduleTaskMutation = { __typename?: 'mutation_root' } & {
   >
 }
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>
+export type MeQueryVariables = Exact<{
+  userId: Scalars['String']
+}>
 
 export type MeQuery = { __typename?: 'query_root' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'user_id'> & {
@@ -1916,8 +1938,8 @@ export type UserQuery = { __typename?: 'query_root' } & {
 }
 
 export const MySchedulesDocument = `
-    query MySchedules($limit: Int!, $offset: Int!) {
-  me {
+    query MySchedules($limit: Int!, $offset: Int!, $userId: String!) {
+  me(user_id: $userId) {
     account {
       schedules(limit: $limit, offset: $offset, order_by: {created_at: desc}) {
         id
@@ -1938,12 +1960,14 @@ export const MySchedulesDocument = `
 }
     `
 export const useMySchedulesQuery = <TData = MySchedulesQuery, TError = unknown>(
+  client: GraphQLClient,
   variables: MySchedulesQueryVariables,
   options?: UseQueryOptions<MySchedulesQuery, TError, TData>,
 ) =>
   useQuery<MySchedulesQuery, TError, TData>(
     ['MySchedules', variables],
     fetcher<MySchedulesQuery, MySchedulesQueryVariables>(
+      client,
       MySchedulesDocument,
       variables,
     ),
@@ -1980,12 +2004,17 @@ export const ScheduleDocument = `
 }
     `
 export const useScheduleQuery = <TData = ScheduleQuery, TError = unknown>(
+  client: GraphQLClient,
   variables: ScheduleQueryVariables,
   options?: UseQueryOptions<ScheduleQuery, TError, TData>,
 ) =>
   useQuery<ScheduleQuery, TError, TData>(
     ['Schedule', variables],
-    fetcher<ScheduleQuery, ScheduleQueryVariables>(ScheduleDocument, variables),
+    fetcher<ScheduleQuery, ScheduleQueryVariables>(
+      client,
+      ScheduleDocument,
+      variables,
+    ),
     options,
   )
 export const CreateScheduleDocument = `
@@ -1998,6 +2027,7 @@ export const CreateScheduleDocument = `
 }
     `
 export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
+  client: GraphQLClient,
   options?: UseMutationOptions<
     CreateScheduleMutation,
     TError,
@@ -2013,6 +2043,7 @@ export const useCreateScheduleMutation = <TError = unknown, TContext = unknown>(
   >(
     (variables?: CreateScheduleMutationVariables) =>
       fetcher<CreateScheduleMutation, CreateScheduleMutationVariables>(
+        client,
         CreateScheduleDocument,
         variables,
       )(),
@@ -2045,6 +2076,7 @@ export const useAddTasksToScheduleMutation = <
   TError = unknown,
   TContext = unknown
 >(
+  client: GraphQLClient,
   options?: UseMutationOptions<
     AddTasksToScheduleMutation,
     TError,
@@ -2060,6 +2092,7 @@ export const useAddTasksToScheduleMutation = <
   >(
     (variables?: AddTasksToScheduleMutationVariables) =>
       fetcher<AddTasksToScheduleMutation, AddTasksToScheduleMutationVariables>(
+        client,
         AddTasksToScheduleDocument,
         variables,
       )(),
@@ -2081,6 +2114,7 @@ export const useUpdateScheduleUserSubscriptionMutation = <
   TError = unknown,
   TContext = unknown
 >(
+  client: GraphQLClient,
   options?: UseMutationOptions<
     UpdateScheduleUserSubscriptionMutation,
     TError,
@@ -2098,7 +2132,7 @@ export const useUpdateScheduleUserSubscriptionMutation = <
       fetcher<
         UpdateScheduleUserSubscriptionMutation,
         UpdateScheduleUserSubscriptionMutationVariables
-      >(UpdateScheduleUserSubscriptionDocument, variables)(),
+      >(client, UpdateScheduleUserSubscriptionDocument, variables)(),
     options,
   )
 export const UpdateScheduleTaskDocument = `
@@ -2116,6 +2150,7 @@ export const useUpdateScheduleTaskMutation = <
   TError = unknown,
   TContext = unknown
 >(
+  client: GraphQLClient,
   options?: UseMutationOptions<
     UpdateScheduleTaskMutation,
     TError,
@@ -2131,6 +2166,7 @@ export const useUpdateScheduleTaskMutation = <
   >(
     (variables?: UpdateScheduleTaskMutationVariables) =>
       fetcher<UpdateScheduleTaskMutation, UpdateScheduleTaskMutationVariables>(
+        client,
         UpdateScheduleTaskDocument,
         variables,
       )(),
@@ -2148,6 +2184,7 @@ export const useDeleteScheduleTaskMutation = <
   TError = unknown,
   TContext = unknown
 >(
+  client: GraphQLClient,
   options?: UseMutationOptions<
     DeleteScheduleTaskMutation,
     TError,
@@ -2163,14 +2200,15 @@ export const useDeleteScheduleTaskMutation = <
   >(
     (variables?: DeleteScheduleTaskMutationVariables) =>
       fetcher<DeleteScheduleTaskMutation, DeleteScheduleTaskMutationVariables>(
+        client,
         DeleteScheduleTaskDocument,
         variables,
       )(),
     options,
   )
 export const MeDocument = `
-    query Me {
-  me {
+    query Me($userId: String!) {
+  me(user_id: $userId) {
     user_id
     account {
       last_seen
@@ -2188,12 +2226,13 @@ export const MeDocument = `
 }
     `
 export const useMeQuery = <TData = MeQuery, TError = unknown>(
-  variables?: MeQueryVariables,
+  client: GraphQLClient,
+  variables: MeQueryVariables,
   options?: UseQueryOptions<MeQuery, TError, TData>,
 ) =>
   useQuery<MeQuery, TError, TData>(
     ['Me', variables],
-    fetcher<MeQuery, MeQueryVariables>(MeDocument, variables),
+    fetcher<MeQuery, MeQueryVariables>(client, MeDocument, variables),
     options,
   )
 export const UserDocument = `
@@ -2209,11 +2248,12 @@ export const UserDocument = `
 }
     `
 export const useUserQuery = <TData = UserQuery, TError = unknown>(
+  client: GraphQLClient,
   variables: UserQueryVariables,
   options?: UseQueryOptions<UserQuery, TError, TData>,
 ) =>
   useQuery<UserQuery, TError, TData>(
     ['User', variables],
-    fetcher<UserQuery, UserQueryVariables>(UserDocument, variables),
+    fetcher<UserQuery, UserQueryVariables>(client, UserDocument, variables),
     options,
   )
