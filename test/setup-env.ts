@@ -7,6 +7,8 @@ config({ path: join(__dirname, '..', '.env.test.local') })
 jest.mock('hooks/use-api', () => {
   const { GraphQLClient } = jest.requireActual('graphql-request')
 
+  console.log(process.env.NEXT_PUBLIC_GQL_ENDPOINT)
+
   return {
     useApi: jest.fn().mockImplementation(() => ({
       client: new GraphQLClient(process.env.NEXT_PUBLIC_GQL_ENDPOINT as string),
