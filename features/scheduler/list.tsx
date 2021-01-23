@@ -19,7 +19,7 @@ function SchedulerList() {
       limit: perPage,
       offset,
     },
-    { staleTime: Infinity, enabled: isReady },
+    { enabled: isReady },
   )
 
   const totalSchedules =

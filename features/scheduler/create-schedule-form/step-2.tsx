@@ -1,6 +1,7 @@
 import { format, getHours, parse, setDay } from 'date-fns'
 import {
   CreateScheduleMutationVariables,
+  MeQuery,
   Schedule_Day_Week_Day_Enum,
   useCreateScheduleMutation,
 } from 'generated/graphql'
@@ -8,6 +9,7 @@ import { ClientError } from 'graphql-request'
 import { useApi } from 'hooks/use-api'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
+import { useQueryClient } from 'react-query'
 import { useToasts } from 'react-toast-notifications'
 import monthsMappings from 'utils/months-mappings'
 import { FormData } from './step-1'
@@ -67,7 +69,8 @@ type TimeIconProps = {
 function CreateScheduleFormStepTwo({
   previousStepData,
 }: CreateScheduleFormStepTwoProps) {
-  const { client } = useApi()
+  const queryClient = useQueryClient()
+  const { client, user } = useApi()
   const { addToast } = useToasts()
   const router = useRouter()
   const { mutate, status } = useCreateScheduleMutation<ClientError>(client, {
@@ -78,6 +81,30 @@ function CreateScheduleFormStepTwo({
       )
     },
     onSuccess: data => {
+      const key = ['Me', { userId: user.sub }]
+      const staleUserData = queryClient.getQueryData<MeQuery>(key)
+
+      if (staleUserData?.me.account) {
+        queryClient.setQueryData<MeQuery>(key, {
+          ...staleUserData,
+          me: {
+            ...staleUserData.me,
+            account: {
+              ...staleUserData.me.account,
+              schedules_aggregate: {
+                ...staleUserData.me.account.schedules_aggregate,
+                aggregate: {
+                  ...staleUserData.me.account.schedules_aggregate.aggregate,
+                  count:
+                    (staleUserData.me.account.schedules_aggregate.aggregate
+                      ?.count || 0) + 1,
+                },
+              },
+            },
+          },
+        })
+      }
+
       const newScheduleId = data.insert_schedule?.returning[0].id
       router.push(`/scheduler/${newScheduleId}`)
     },
