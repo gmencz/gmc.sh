@@ -1,5 +1,5 @@
-query Me($userId: String!) {
-  me(user_id: $userId) {
+query Me {
+  me {
     user_id
     account {
       last_seen

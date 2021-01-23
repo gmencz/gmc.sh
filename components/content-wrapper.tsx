@@ -22,10 +22,10 @@ const greetUser = () => {
 }
 
 function ContentWrapper({ children }: ContentWrapperProps) {
-  const { client, isReady, user } = useApi()
+  const { client, isReady } = useApi()
   const { data: me, status } = useMeQuery<MeQuery, ClientError>(
     client,
-    { userId: user.sub },
+    {},
     {
       staleTime: Infinity,
       enabled: isReady,

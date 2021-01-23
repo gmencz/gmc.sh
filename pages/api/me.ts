@@ -9,7 +9,7 @@ export default async function me(req: NextApiRequest, res: NextApiResponse) {
       `Bearer ${req.headers.authorization?.split(' ')[1]}`,
     )
 
-    const { user_id } = req.body.input
+    const { 'x-hasura-user-id': user_id } = req.body.session_variables
 
     const user = await client.request<UserQuery, UserQueryVariables>(
       UserDocument,

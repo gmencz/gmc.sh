@@ -8,11 +8,11 @@ type HeaderProps = {
 }
 
 function Header({ openMobileSidebar }: HeaderProps) {
-  const { client, isReady, user } = useApi()
+  const { client, isReady } = useApi()
   const { logout } = useAuth0()
   const { data: me, status } = useMeQuery(
     client,
-    { userId: user.sub },
+    {},
     {
       staleTime: Infinity,
       enabled: isReady,

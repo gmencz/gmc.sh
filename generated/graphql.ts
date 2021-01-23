@@ -647,11 +647,6 @@ export type Query_RootAccount_By_PkArgs = {
 }
 
 /** query root */
-export type Query_RootMeArgs = {
-  user_id: Scalars['String']
-}
-
-/** query root */
 export type Query_RootScheduleArgs = {
   distinct_on?: Maybe<Array<Schedule_Select_Column>>
   limit?: Maybe<Scalars['Int']>
@@ -1627,11 +1622,6 @@ export type Subscription_RootAccount_By_PkArgs = {
 }
 
 /** subscription root */
-export type Subscription_RootMeArgs = {
-  user_id: Scalars['String']
-}
-
-/** subscription root */
 export type Subscription_RootScheduleArgs = {
   distinct_on?: Maybe<Array<Schedule_Select_Column>>
   limit?: Maybe<Scalars['Int']>
@@ -1739,7 +1729,6 @@ export type Timestamptz_Comparison_Exp = {
 export type MySchedulesQueryVariables = Exact<{
   limit: Scalars['Int']
   offset: Scalars['Int']
-  userId: Scalars['String']
 }>
 
 export type MySchedulesQuery = { __typename?: 'query_root' } & {
@@ -1900,9 +1889,7 @@ export type DeleteScheduleTaskMutation = { __typename?: 'mutation_root' } & {
   >
 }
 
-export type MeQueryVariables = Exact<{
-  userId: Scalars['String']
-}>
+export type MeQueryVariables = Exact<{ [key: string]: never }>
 
 export type MeQuery = { __typename?: 'query_root' } & {
   me: { __typename?: 'Me' } & Pick<Me, 'user_id'> & {
@@ -1938,8 +1925,8 @@ export type UserQuery = { __typename?: 'query_root' } & {
 }
 
 export const MySchedulesDocument = `
-    query MySchedules($limit: Int!, $offset: Int!, $userId: String!) {
-  me(user_id: $userId) {
+    query MySchedules($limit: Int!, $offset: Int!) {
+  me {
     account {
       schedules(limit: $limit, offset: $offset, order_by: {created_at: desc}) {
         id
@@ -2207,8 +2194,8 @@ export const useDeleteScheduleTaskMutation = <
     options,
   )
 export const MeDocument = `
-    query Me($userId: String!) {
-  me(user_id: $userId) {
+    query Me {
+  me {
     user_id
     account {
       last_seen
@@ -2227,7 +2214,7 @@ export const MeDocument = `
     `
 export const useMeQuery = <TData = MeQuery, TError = unknown>(
   client: GraphQLClient,
-  variables: MeQueryVariables,
+  variables?: MeQueryVariables,
   options?: UseQueryOptions<MeQuery, TError, TData>,
 ) =>
   useQuery<MeQuery, TError, TData>(

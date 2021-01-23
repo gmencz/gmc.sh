@@ -57,21 +57,19 @@
           "mutation DeleteScheduleTask($id: String!)
           {\r\n  delete_schedule_day_task_by_pk(id: $id)
           {\r\n    id\r\n    schedule_day_id\r\n  }\r\n}"
-      - name: Me
-        query:
-          "query Me($userId: String!) {\r\n  me(user_id: $userId)
-          {\r\n    user_id\r\n \   account
-          {\r\n      last_seen\r\n      company\r\n      name\r\n      picture\r\n
-          \     verified\r\n      schedules_aggregate {\r\n        aggregate
-          {\r\n          count\r\n \       }\r\n      }\r\n    }\r\n  }\r\n}"
       - name: MySchedules
         query:
-          "query MySchedules($limit: Int!, $offset: Int!, $userId: String!)
-          {\r\n \ me(user_id: $userId) {\r\n    account
-          {\r\n      schedules(\r\n        limit: $limit\r\n        offset:
-          $offset\r\n        order_by: { created_at: desc }\r\n      )
-          {\r\n        id\r\n        title\r\n        days
-          {\r\n          week_day\r\n
-          \       }\r\n        active\r\n        created_at\r\n      }\r\n      schedules_aggregate
+          "query MySchedules($limit: Int!, $offset: Int!) {\r\n  me
+          {\r\n    account {\r\n      schedules(\r\n        limit:
+          $limit\r\n        offset: $offset\r\n \       order_by: { created_at:
+          desc }\r\n      ) {\r\n        id\r\n        title\r\n \       days
+          {\r\n          week_day\r\n        }\r\n        active\r\n        created_at\r\n
+          \     }\r\n      schedules_aggregate {\r\n        aggregate
+          {\r\n          count\r\n \       }\r\n      }\r\n    }\r\n  }\r\n}"
+      - name: Me
+        query:
+          "query Me {\r\n  me {\r\n    user_id\r\n    account
+          {\r\n      last_seen\r\n
+          \     company\r\n      name\r\n      picture\r\n      verified\r\n      schedules_aggregate
           {\r\n        aggregate
           {\r\n          count\r\n        }\r\n      }\r\n    }\r\n \ }\r\n}"
