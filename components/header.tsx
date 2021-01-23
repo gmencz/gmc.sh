@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import { Menu, Transition } from '@headlessui/react'
 import { useMeQuery } from 'generated/graphql'
 import { useApi } from 'hooks/use-api'
@@ -8,6 +9,7 @@ type HeaderProps = {
 
 function Header({ openMobileSidebar }: HeaderProps) {
   const { client, isReady, user } = useApi()
+  const { logout } = useAuth0()
   const { data: me, status } = useMeQuery(
     client,
     { userId: user.sub },
@@ -210,18 +212,18 @@ function Header({ openMobileSidebar }: HeaderProps) {
                         </Menu.Item>
                         <Menu.Item>
                           {({ active, disabled }) => (
-                            <a
-                              href="/api/logout"
+                            <button
+                              onClick={() => logout()}
                               className={`${
                                 active
                                   ? 'bg-gray-100 text-gray-900'
                                   : 'text-gray-700'
                               } ${
                                 disabled ? 'cursor-not-allowed' : ''
-                              } block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+                              } w-full text-left block rounded-md px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                             >
                               Logout
-                            </a>
+                            </button>
                           )}
                         </Menu.Item>
                       </Menu.Items>
