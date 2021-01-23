@@ -1,5 +1,3 @@
-import { withAuthenticationRequired } from '@auth0/auth0-react'
-import AuthenticationSpinner from 'components/authentication-spinner'
 import AccountOverview from 'features/account-overview'
 import Head from 'next/head'
 
@@ -15,6 +13,4 @@ function Index() {
   )
 }
 
-export default withAuthenticationRequired(Index, {
-  onRedirecting: AuthenticationSpinner,
-})
+export default Index

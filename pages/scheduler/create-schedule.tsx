@@ -1,5 +1,3 @@
-import { withAuthenticationRequired } from '@auth0/auth0-react'
-import AuthenticationSpinner from 'components/authentication-spinner'
 import CreateScheduleFormStepOne from 'features/scheduler/create-schedule-form/step-1'
 import Head from 'next/head'
 
@@ -15,6 +13,4 @@ function NewSchedule() {
   )
 }
 
-export default withAuthenticationRequired(NewSchedule, {
-  onRedirecting: AuthenticationSpinner,
-})
+export default NewSchedule

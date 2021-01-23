@@ -1,5 +1,3 @@
-import { withAuthenticationRequired } from '@auth0/auth0-react'
-import AuthenticationSpinner from 'components/authentication-spinner'
 import SchedulerList from 'features/scheduler/list'
 import Head from 'next/head'
 
@@ -18,6 +16,4 @@ function Scheduler() {
   )
 }
 
-export default withAuthenticationRequired(Scheduler, {
-  onRedirecting: AuthenticationSpinner,
-})
+export default Scheduler
