@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { client } from 'utils/graphql'
 
 function useApi() {
-  const { getAccessTokenSilently, user } = useAuth0()
+  const { getAccessTokenSilently, user = {} } = useAuth0()
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {

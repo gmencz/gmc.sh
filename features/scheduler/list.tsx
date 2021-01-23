@@ -12,7 +12,6 @@ function SchedulerList() {
   const perPage = Number(paginationInfo['per-page']) || PER_PAGE
   const offset = page === 1 ? 0 : (page - 1) * perPage
   const { client, isReady, user } = useApi()
-
   const { data, status } = useMySchedulesQuery(
     client,
     {
@@ -30,7 +29,7 @@ function SchedulerList() {
     <>
       <div className="hidden sm:block">
         <div className="max-w-6xl mx-auto">
-          {status === 'loading' && (
+          {(status === 'loading' || status === 'idle') && (
             <div className="hidden sm:flex animate-pulse mt-2 sm:flex-col">
               <span className="sr-only">loading schedules...</span>
               <div className="block rounded-t-md bg-gray-200 h-8"></div>
@@ -240,7 +239,7 @@ function SchedulerList() {
 
       {/* Mobile list */}
       <div className="shadow sm:hidden -ml-4 -mr-4">
-        {status === 'loading' && (
+        {(status === 'loading' || status === 'idle') && (
           <div className="flex sm:hidden animate-pulse mt-2 flex-col">
             <span className="sr-only">loading schedules...</span>
             <div className="block bg-gray-200 h-16"></div>

@@ -27,7 +27,6 @@ function App({ Component, pageProps }: AppProps) {
         domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string}
         clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID as string}
         audience={process.env.NEXT_PUBLIC_AUTH0_AUDIENCE}
-        scope="read:users"
         onRedirectCallback={authRedirect}
         redirectUri={
           typeof window !== 'undefined' ? window.location.origin : undefined

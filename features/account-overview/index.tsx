@@ -52,8 +52,8 @@ function AccountOverview() {
                     Schedules
                   </dt>
                   <dd>
-                    {status === 'loading' && (
-                      <div className="animate-pulse mt-4">
+                    {(status === 'loading' || status === 'idle') && (
+                      <div className="animate-pulse mt-2 w-1/2">
                         <div className="hidden sm:block bg-gray-200 h-5 w-full rounded-full">
                           <span className="sr-only">loading schedules...</span>
                         </div>

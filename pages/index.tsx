@@ -1,30 +1,23 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react'
-import { useMeQuery } from 'generated/graphql'
-import { useApi } from 'hooks/use-api'
+import AuthenticationSpinner from 'components/authentication-spinner'
+import Layout from 'components/layout'
+import AccountOverview from 'features/account-overview'
 import Head from 'next/head'
 
 function Index() {
-  const { client, isReady, user } = useApi()
-  const meQuery = useMeQuery(
-    client,
-    { userId: user.sub },
-    { enabled: isReady, staleTime: Infinity },
-  )
-
-  console.log(meQuery)
-
   return (
     <>
       <Head>
         <title>Home / Gmc.sh</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <p>Hi</p>
-      {/* <Layout>
+      <Layout>
         <AccountOverview />
-      </Layout> */}
+      </Layout>
     </>
   )
 }
 
-export default withAuthenticationRequired(Index)
+export default withAuthenticationRequired(Index, {
+  onRedirecting: AuthenticationSpinner,
+})

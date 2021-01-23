@@ -31,6 +31,7 @@ function ContentWrapper({ children }: ContentWrapperProps) {
       enabled: isReady,
     },
   )
+
   const profilePicture = me?.me.account?.picture || '/default_picture.png'
 
   return (
