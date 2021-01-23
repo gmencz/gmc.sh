@@ -9,6 +9,7 @@ import {
   useUpdateScheduleUserSubscriptionMutation,
 } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import { useApi } from 'hooks/use-api'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -25,14 +26,17 @@ function SchedulerSchedule() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { id: scheduleId } = router.query
+  const { client, isReady } = useApi()
   const { data, status: scheduleQueryStatus } = useScheduleQuery<
     ScheduleQuery,
     ClientError
   >(
+    client,
     {
       id: scheduleId as string,
     },
     {
+      enabled: isReady,
       staleTime: Infinity,
       onError: error => {
         addToast(
@@ -56,7 +60,7 @@ function SchedulerSchedule() {
   const {
     mutate,
     status,
-  } = useUpdateScheduleUserSubscriptionMutation<ClientError>({
+  } = useUpdateScheduleUserSubscriptionMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -128,7 +132,7 @@ function SchedulerSchedule() {
   const {
     mutate: addTasks,
     status: addTasksStatus,
-  } = useAddTasksToScheduleMutation<ClientError>({
+  } = useAddTasksToScheduleMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -189,7 +193,7 @@ function SchedulerSchedule() {
   const {
     mutate: updateTask,
     status: updateTaskStatus,
-  } = useUpdateScheduleTaskMutation<ClientError>({
+  } = useUpdateScheduleTaskMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -248,7 +252,7 @@ function SchedulerSchedule() {
   const {
     mutate: deleteTask,
     status: deleteTaskStatus,
-  } = useDeleteScheduleTaskMutation<ClientError>({
+  } = useDeleteScheduleTaskMutation<ClientError>(client, {
     onError: error => {
       addToast(
         <h3 className="text-sm font-medium text-red-800">{error.message}</h3>,
@@ -273,6 +277,11 @@ function SchedulerSchedule() {
             return {
               ...day,
               tasks: updatedTasks,
+              tasks_aggregate: {
+                aggregate: {
+                  count: updatedTasks.length,
+                },
+              },
             }
           },
         )
@@ -315,16 +324,6 @@ function SchedulerSchedule() {
   const [deletingId, setDeletingId] = useState<null | string>(null)
   const [isVisible, setIsVisible] = useState(false)
 
-  if (scheduleQueryStatus === 'loading') {
-    return (
-      <main className="flex-1 relative focus:outline-none" tabIndex={-1}>
-        <div className="py-2">
-          <p>Loading...</p>
-        </div>
-      </main>
-    )
-  }
-
   return (
     <>
       <main className="flex-1 relative focus:outline-none" tabIndex={-1}>
@@ -333,284 +332,312 @@ function SchedulerSchedule() {
             <div className="xl:col-span-2 xl:pr-8 xl:border-r xl:border-gray-200">
               <div>
                 <div className="md:flex md:items-center md:justify-between md:space-x-4 xl:border-b xl:pb-4">
-                  <div>
-                    <h1 className="text-xl font-bold text-gray-900">
-                      {data?.schedule_by_pk?.title}
-                    </h1>
-                    <div className="mt-2">
-                      <p className="mt-2 text-sm text-gray-500">
-                        Created by{' '}
-                        <Link href="/">
-                          <a className="font-medium text-gray-900">
-                            {data?.schedule_by_pk?.user?.name}
-                          </a>
-                        </Link>
-                      </p>
+                  {(scheduleQueryStatus === 'idle' ||
+                    scheduleQueryStatus === 'loading') && (
+                    <div className="flex-1">
+                      <span className="sr-only">
+                        loading schedule details...
+                      </span>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="flex animate-pulse flex-col mt-3">
+                          <div className="block rounded-full bg-gray-200 h-4"></div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mt-4 flex flex-col md:mt-0">
-                    <div className="flex space-x-3">
-                      <button
-                        onClick={() => setIsVisible(true)}
-                        className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        New task
-                      </button>
+                  )}
 
-                      {data?.schedule_by_pk?.user_is_subscribed ? (
-                        <button
-                          onClick={() => setShowNotificationsDisabledInfo(true)}
-                          type="button"
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                        >
-                          {/* Heroicon name: bell */}
-                          <svg
-                            className="-ml-1 mr-2 h-5 w-5 text-red-600"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
+                  {scheduleQueryStatus === 'success' && data && (
+                    <>
+                      <div>
+                        <h1 className="text-xl font-bold text-gray-900">
+                          {data?.schedule_by_pk?.title}
+                        </h1>
+                        <div className="mt-2">
+                          <p className="mt-2 text-sm text-gray-500">
+                            Created by{' '}
+                            <Link href="/">
+                              <a className="font-medium text-gray-900">
+                                {data?.schedule_by_pk?.user?.name}
+                              </a>
+                            </Link>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex flex-col md:mt-0">
+                        <div className="flex space-x-3">
+                          <button
+                            onClick={() => setIsVisible(true)}
+                            className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                           >
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                          </svg>
-                          <span>Turn notifications off</span>
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setShowNotificationsEnabledInfo(true)}
-                          type="button"
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                          {/* Heroicon name: bell */}
-                          <svg
-                            className="-ml-1 mr-2 h-5 w-5  text-indigo-600"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                          </svg>
-                          <span>Turn notifications on</span>
-                        </button>
-                      )}
-                    </div>
-                    <StepTwoNewTask
-                      position="left"
-                      leaveEvents={['escape']}
-                      loading={addTasksStatus === 'loading'}
-                      onSubmit={({
-                        description,
-                        startTime,
-                        endTime,
-                        chosenWeekDays,
-                      }) => {
-                        const chosenDays =
-                          data?.schedule_by_pk?.days.filter(day =>
-                            chosenWeekDays.includes(
-                              capitalizeFirstLetter(day.week_day),
-                            ),
-                          ) || []
+                            New task
+                          </button>
 
-                        addTasks({
-                          tasks: chosenDays.map(day => {
-                            const parsedStart = parse(
-                              startTime,
-                              'HH:mm',
-                              getEpochDate(),
-                            )
-
-                            if (endTime) {
-                              const parsedEnd = parse(
-                                endTime,
-                                'HH:mm',
-                                getEpochDate(),
-                              )
-
-                              return {
-                                schedule_day_id: day.id,
-                                description,
-                                start_time: setDay(
-                                  parsedStart,
-                                  monthsMappings[
-                                    capitalizeFirstLetter(day.week_day)
-                                  ],
-                                ).toISOString(),
-                                end_time: setDay(
-                                  parsedEnd,
-                                  monthsMappings[
-                                    capitalizeFirstLetter(day.week_day)
-                                  ],
-                                ).toISOString(),
+                          {data?.schedule_by_pk?.user_is_subscribed ? (
+                            <button
+                              onClick={() =>
+                                setShowNotificationsDisabledInfo(true)
                               }
-                            }
+                              type="button"
+                              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            >
+                              {/* Heroicon name: bell */}
+                              <svg
+                                className="-ml-1 mr-2 h-5 w-5 text-red-600"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                              </svg>
+                              <span>Turn notifications off</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                setShowNotificationsEnabledInfo(true)
+                              }
+                              type="button"
+                              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                              {/* Heroicon name: bell */}
+                              <svg
+                                className="-ml-1 mr-2 h-5 w-5  text-indigo-600"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                              </svg>
+                              <span>Turn notifications on</span>
+                            </button>
+                          )}
+                        </div>
+                        <StepTwoNewTask
+                          position="left"
+                          leaveEvents={['escape']}
+                          loading={addTasksStatus === 'loading'}
+                          onSubmit={({
+                            description,
+                            startTime,
+                            endTime,
+                            chosenWeekDays,
+                          }) => {
+                            const chosenDays =
+                              data?.schedule_by_pk?.days.filter(day =>
+                                chosenWeekDays.includes(
+                                  capitalizeFirstLetter(day.week_day),
+                                ),
+                              ) || []
 
-                            return {
-                              schedule_day_id: day.id,
-                              description,
-                              start_time: setDay(
-                                parsedStart,
-                                monthsMappings[
-                                  capitalizeFirstLetter(day.week_day)
-                                ],
-                              ).toISOString(),
-                            }
-                          }),
-                        })
-                      }}
-                      onClose={() => setIsVisible(false)}
-                      isOpen={isVisible || addTasksStatus === 'loading'}
-                      weekDays={
-                        data?.schedule_by_pk?.days.map(day =>
-                          capitalizeFirstLetter(day.week_day),
-                        ) || []
-                      }
-                    />
-                  </div>
+                            addTasks({
+                              tasks: chosenDays.map(day => {
+                                const parsedStart = parse(
+                                  startTime,
+                                  'HH:mm',
+                                  getEpochDate(),
+                                )
+
+                                if (endTime) {
+                                  const parsedEnd = parse(
+                                    endTime,
+                                    'HH:mm',
+                                    getEpochDate(),
+                                  )
+
+                                  return {
+                                    schedule_day_id: day.id,
+                                    description,
+                                    start_time: setDay(
+                                      parsedStart,
+                                      monthsMappings[
+                                        capitalizeFirstLetter(day.week_day)
+                                      ],
+                                    ).toISOString(),
+                                    end_time: setDay(
+                                      parsedEnd,
+                                      monthsMappings[
+                                        capitalizeFirstLetter(day.week_day)
+                                      ],
+                                    ).toISOString(),
+                                  }
+                                }
+
+                                return {
+                                  schedule_day_id: day.id,
+                                  description,
+                                  start_time: setDay(
+                                    parsedStart,
+                                    monthsMappings[
+                                      capitalizeFirstLetter(day.week_day)
+                                    ],
+                                  ).toISOString(),
+                                }
+                              }),
+                            })
+                          }}
+                          onClose={() => setIsVisible(false)}
+                          isOpen={isVisible || addTasksStatus === 'loading'}
+                          weekDays={
+                            data?.schedule_by_pk?.days.map(day =>
+                              capitalizeFirstLetter(day.week_day),
+                            ) || []
+                          }
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                <aside className="mt-8 xl:hidden">
-                  <h2 className="sr-only">Details</h2>
-                  <div className="space-y-5">
-                    <div className="flex items-center space-x-2">
-                      {data?.schedule_by_pk?.active ? (
-                        <>
-                          <svg
-                            className="h-5 w-5 text-green-500"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <span className="text-green-700 text-sm font-medium">
-                            Active
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="h-5 w-5 text-red-500"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <span className="text-red-700 text-sm font-medium">
-                            Inactive
-                          </span>
-                        </>
-                      )}
+                {scheduleQueryStatus === 'success' && data && (
+                  <aside className="mt-8 xl:hidden">
+                    <h2 className="sr-only">Details</h2>
+                    <div className="space-y-5">
+                      <div className="flex items-center space-x-2">
+                        {data?.schedule_by_pk?.active ? (
+                          <>
+                            <svg
+                              className="h-5 w-5 text-green-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <span className="text-green-700 text-sm font-medium">
+                              Active
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              className="h-5 w-5 text-red-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <span className="text-red-700 text-sm font-medium">
+                              Inactive
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <svg
+                          className="h-5 w-5 text-gray-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                        </svg>
+                        <span className="text-gray-900 text-sm font-medium">
+                          {tasksCount} tasks assigned
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        {data?.schedule_by_pk?.user_is_subscribed ? (
+                          <>
+                            <svg
+                              className="h-5 w-5 text-green-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                            </svg>
+                            <span className="text-green-700 text-sm font-medium">
+                              Notifications on
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              className="h-5 w-5 text-red-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                            </svg>
+                            <span className="text-red-700 text-sm font-medium">
+                              Notifications off
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        {/* Heroicon name: calendar */}
+                        <svg
+                          className="h-5 w-5 text-gray-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="text-gray-900 text-sm font-medium">
+                          Created on{' '}
+                          <time dateTime={data?.schedule_by_pk?.created_at}>
+                            {format(
+                              parseISO(
+                                data?.schedule_by_pk?.created_at as string,
+                              ),
+                              "MMM' 'd', 'y",
+                            )}
+                          </time>
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        {/* Heroicon name: calendar */}
+                        <svg
+                          className="h-5 w-5 text-gray-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="text-gray-900 text-sm font-medium">
+                          Updated on{' '}
+                          <time dateTime={data?.schedule_by_pk?.updated_at}>
+                            {format(
+                              parseISO(
+                                data?.schedule_by_pk?.updated_at as string,
+                              ),
+                              "MMM' 'd', 'y",
+                            )}
+                          </time>
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <svg
-                        className="h-5 w-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                      </svg>
-                      <span className="text-gray-900 text-sm font-medium">
-                        {tasksCount} tasks assigned
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {data?.schedule_by_pk?.user_is_subscribed ? (
-                        <>
-                          <svg
-                            className="h-5 w-5 text-green-500"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                          </svg>
-                          <span className="text-green-700 text-sm font-medium">
-                            Notifications on
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="h-5 w-5 text-red-500"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                          </svg>
-                          <span className="text-red-700 text-sm font-medium">
-                            Notifications off
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {/* Heroicon name: calendar */}
-                      <svg
-                        className="h-5 w-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-gray-900 text-sm font-medium">
-                        Created on{' '}
-                        <time dateTime={data?.schedule_by_pk?.created_at}>
-                          {format(
-                            parseISO(
-                              data?.schedule_by_pk?.created_at as string,
-                            ),
-                            "MMM' 'd', 'y",
-                          )}
-                        </time>
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {/* Heroicon name: calendar */}
-                      <svg
-                        className="h-5 w-5 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-gray-900 text-sm font-medium">
-                        Updated on{' '}
-                        <time dateTime={data?.schedule_by_pk?.updated_at}>
-                          {format(
-                            parseISO(
-                              data?.schedule_by_pk?.updated_at as string,
-                            ),
-                            "MMM' 'd', 'y",
-                          )}
-                        </time>
-                      </span>
-                    </div>
-                  </div>
-                </aside>
+                  </aside>
+                )}
 
                 <section>
                   {showNotificationsEnabledInfo && (
@@ -742,409 +769,515 @@ function SchedulerSchedule() {
                     </div>
                   )}
 
-                  <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
-                    {data?.schedule_by_pk?.days.map((day, index) => (
-                      <div
-                        key={day.id}
-                        className={
-                          index === 0
-                            ? 'sm:grid sm:grid-cols-2 sm:gap-4 sm:items-start pt-5 xl:pt-0'
-                            : 'sm:grid sm:grid-cols-2 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'
-                        }
-                      >
-                        <div className="sm:col-span-2">
-                          <div className="mb-3">
-                            <span className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 capitalize">
-                              {day.week_day}
-                            </span>
-                          </div>
-                          <div className="flow-root">
-                            <ul className="sm:-mb-8">
-                              {day.tasks.length > 0 ? (
-                                day.tasks.map((task, index, weekTasksRef) => (
-                                  <li key={task.id}>
-                                    <div className="relative pb-8">
-                                      {index < weekTasksRef.length - 1 && (
-                                        <span
-                                          className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                                          aria-hidden="true"
-                                        ></span>
-                                      )}
-                                      <div className="pt-0.5 relative flex space-x-3">
-                                        <div>
-                                          <span className="h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center">
-                                            <TimeIcon
-                                              date={parseISO(task.start_time)}
-                                            />
-                                          </span>
-                                        </div>
-                                        <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                  {(scheduleQueryStatus === 'idle' ||
+                    scheduleQueryStatus === 'loading') && (
+                    <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                      <div className="flex animate-pulse flex-col">
+                        <div className="block rounded-full bg-gray-200 h-5"></div>
+                        <div className="block rounded-full mt-2 bg-gray-200 h-4"></div>
+                      </div>
+                    </div>
+                  )}
+
+                  {scheduleQueryStatus === 'success' && data && (
+                    <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+                      {data?.schedule_by_pk?.days.map((day, index) => (
+                        <div
+                          key={day.id}
+                          className={
+                            index === 0
+                              ? 'sm:grid sm:grid-cols-2 sm:gap-4 sm:items-start pt-5 xl:pt-0'
+                              : 'sm:grid sm:grid-cols-2 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'
+                          }
+                        >
+                          <div className="sm:col-span-2">
+                            <div className="mb-3">
+                              <span className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2 capitalize">
+                                {day.week_day}
+                              </span>
+                            </div>
+                            <div className="flow-root">
+                              <ul className="sm:-mb-8">
+                                {day.tasks.length > 0 ? (
+                                  day.tasks.map((task, index, weekTasksRef) => (
+                                    <li key={task.id}>
+                                      <div className="relative pb-8">
+                                        {index < weekTasksRef.length - 1 && (
+                                          <span
+                                            className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
+                                            aria-hidden="true"
+                                          ></span>
+                                        )}
+                                        <div className="pt-0.5 relative flex space-x-3">
                                           <div>
-                                            <p className="text-sm text-gray-500">
-                                              {task.description}
-                                            </p>
+                                            <span className="h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center">
+                                              <TimeIcon
+                                                date={parseISO(task.start_time)}
+                                              />
+                                            </span>
                                           </div>
-                                          <div className="flex space-x-4 items-center text-right text-sm whitespace-nowrap text-gray-500">
-                                            <span>
-                                              {task.end_time ? (
-                                                <>
-                                                  From{' '}
+                                          <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                              <p className="text-sm text-gray-500">
+                                                {task.description}
+                                              </p>
+                                            </div>
+                                            <div className="flex space-x-4 items-center text-right text-sm whitespace-nowrap text-gray-500">
+                                              <span>
+                                                {task.end_time ? (
+                                                  <>
+                                                    From{' '}
+                                                    <time
+                                                      dateTime={task.start_time}
+                                                    >
+                                                      {format(
+                                                        parseISO(
+                                                          task.start_time,
+                                                        ),
+                                                        "hh:mm' 'a",
+                                                      )}{' '}
+                                                      to{' '}
+                                                      <time
+                                                        dateTime={task.end_time}
+                                                      >
+                                                        {format(
+                                                          parseISO(
+                                                            task.end_time,
+                                                          ),
+                                                          "hh:mm' 'a",
+                                                        )}
+                                                      </time>
+                                                    </time>
+                                                  </>
+                                                ) : (
                                                   <time
                                                     dateTime={task.start_time}
                                                   >
                                                     {format(
                                                       parseISO(task.start_time),
                                                       "hh:mm' 'a",
-                                                    )}{' '}
-                                                    to{' '}
-                                                    <time
-                                                      dateTime={task.end_time}
-                                                    >
-                                                      {format(
-                                                        parseISO(task.end_time),
-                                                        "hh:mm' 'a",
-                                                      )}
-                                                    </time>
+                                                    )}
                                                   </time>
-                                                </>
-                                              ) : (
-                                                <time
-                                                  dateTime={task.start_time}
-                                                >
-                                                  {format(
-                                                    parseISO(task.start_time),
-                                                    "hh:mm' 'a",
-                                                  )}
-                                                </time>
-                                              )}
-                                            </span>
+                                                )}
+                                              </span>
 
-                                            <div className="flex space-x-2">
-                                              <button
-                                                onClick={() => {
-                                                  setIsEditVisible(
-                                                    visible => !visible,
-                                                  )
-                                                  setEditingId(task.id)
-                                                }}
-                                                type="button"
-                                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                              >
-                                                <svg
-                                                  className="h-4 w-4"
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  viewBox="0 0 20 20"
-                                                  fill="currentColor"
+                                              <div className="flex space-x-2">
+                                                <button
+                                                  onClick={() => {
+                                                    setIsEditVisible(
+                                                      visible => !visible,
+                                                    )
+                                                    setEditingId(task.id)
+                                                  }}
+                                                  type="button"
+                                                  className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                 >
-                                                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                  <path
-                                                    fillRule="evenodd"
-                                                    d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                                    clipRule="evenodd"
-                                                  />
-                                                </svg>
-                                                <span className="sr-only">
-                                                  Edit task
-                                                </span>
-                                              </button>
-                                              <button
-                                                type="button"
-                                                className="inline-flex disabled:cursor-not-allowed disabled:opacity-60 items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                                onClick={() => {
-                                                  setDeletingId(task.id)
-                                                }}
-                                              >
-                                                <svg
-                                                  className="h-4 w-4 text-red-600"
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  viewBox="0 0 20 20"
-                                                  fill="currentColor"
+                                                  <svg
+                                                    className="h-4 w-4"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                  >
+                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                    <path
+                                                      fillRule="evenodd"
+                                                      d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                                      clipRule="evenodd"
+                                                    />
+                                                  </svg>
+                                                  <span className="sr-only">
+                                                    Edit task
+                                                  </span>
+                                                </button>
+                                                <button
+                                                  type="button"
+                                                  className="inline-flex disabled:cursor-not-allowed disabled:opacity-60 items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                                  onClick={() => {
+                                                    setDeletingId(task.id)
+                                                  }}
                                                 >
-                                                  <path
-                                                    fillRule="evenodd"
-                                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                    clipRule="evenodd"
-                                                  />
-                                                </svg>
-                                                <span className="sr-only">
-                                                  Delete task
-                                                </span>
-                                              </button>
+                                                  <svg
+                                                    className="h-4 w-4 text-red-600"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                  >
+                                                    <path
+                                                      fillRule="evenodd"
+                                                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                      clipRule="evenodd"
+                                                    />
+                                                  </svg>
+                                                  <span className="sr-only">
+                                                    Delete task
+                                                  </span>
+                                                </button>
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
-                                      </div>
-                                      <ConfirmDialog
-                                        confirmButtonText="Yes, delete it"
-                                        isOpen={deletingId === task.id}
-                                        loading={deleteTaskStatus === 'loading'}
-                                        onClose={() => setDeletingId(null)}
-                                        confirmButtonVariant="danger"
-                                        leaveEvents={['escape']}
-                                        position="right"
-                                        onConfirm={() => {
-                                          deleteTask({
-                                            id: task.id,
-                                          })
-                                        }}
-                                      >
-                                        <div className="pt-2 pb-4">
-                                          <p className="text-base text-gray-900">
-                                            Do you really want to delete this
-                                            task?
-                                          </p>
-                                        </div>
-                                      </ConfirmDialog>
+                                        <ConfirmDialog
+                                          confirmButtonText="Yes, delete it"
+                                          isOpen={deletingId === task.id}
+                                          loading={
+                                            deleteTaskStatus === 'loading'
+                                          }
+                                          onClose={() => setDeletingId(null)}
+                                          confirmButtonVariant="danger"
+                                          leaveEvents={['escape']}
+                                          position="right"
+                                          onConfirm={() => {
+                                            deleteTask({
+                                              id: task.id,
+                                            })
+                                          }}
+                                        >
+                                          <div className="pt-2 pb-4">
+                                            <p className="text-base text-gray-900">
+                                              Do you really want to delete this
+                                              task?
+                                            </p>
+                                          </div>
+                                        </ConfirmDialog>
 
-                                      <StepTwoNewTask
-                                        position="right"
-                                        leaveEvents={['escape']}
-                                        loading={updateTaskStatus === 'loading'}
-                                        submitButtonText="Save changes"
-                                        initialValues={{
-                                          chosenWeekDays: [
-                                            capitalizeFirstLetter(day.week_day),
-                                          ],
-                                          description: task.description,
-                                          endTime: task.end_time
-                                            ? format(
-                                                parseISO(task.end_time),
-                                                'HH:mm',
-                                              )
-                                            : '',
-                                          startTime: format(
-                                            parseISO(task.start_time),
-                                            'HH:mm',
-                                          ),
-                                        }}
-                                        onSubmit={({
-                                          description,
-                                          startTime,
-                                          endTime,
-                                        }) => {
-                                          const parsedStart = parse(
+                                        <StepTwoNewTask
+                                          position="right"
+                                          leaveEvents={['escape']}
+                                          loading={
+                                            updateTaskStatus === 'loading'
+                                          }
+                                          submitButtonText="Save changes"
+                                          initialValues={{
+                                            chosenWeekDays: [
+                                              capitalizeFirstLetter(
+                                                day.week_day,
+                                              ),
+                                            ],
+                                            description: task.description,
+                                            endTime: task.end_time
+                                              ? format(
+                                                  parseISO(task.end_time),
+                                                  'HH:mm',
+                                                )
+                                              : '',
+                                            startTime: format(
+                                              parseISO(task.start_time),
+                                              'HH:mm',
+                                            ),
+                                          }}
+                                          onSubmit={({
+                                            description,
                                             startTime,
-                                            'HH:mm',
-                                            getEpochDate(),
-                                          )
-
-                                          if (endTime) {
-                                            const parsedEnd = parse(
-                                              endTime,
+                                            endTime,
+                                          }) => {
+                                            const parsedStart = parse(
+                                              startTime,
                                               'HH:mm',
                                               getEpochDate(),
                                             )
 
-                                            updateTask({
-                                              id: task.id,
-                                              _set: {
-                                                description,
-                                                start_time: setDay(
-                                                  parsedStart,
-                                                  monthsMappings[
-                                                    capitalizeFirstLetter(
-                                                      day.week_day,
-                                                    )
-                                                  ],
-                                                ).toISOString(),
-                                                end_time: setDay(
-                                                  parsedEnd,
-                                                  monthsMappings[
-                                                    capitalizeFirstLetter(
-                                                      day.week_day,
-                                                    )
-                                                  ],
-                                                ).toISOString(),
-                                              },
-                                            })
-                                          } else {
-                                            updateTask({
-                                              id: task.id,
-                                              _set: {
-                                                description,
-                                                start_time: setDay(
-                                                  parsedStart,
-                                                  monthsMappings[
-                                                    capitalizeFirstLetter(
-                                                      day.week_day,
-                                                    )
-                                                  ],
-                                                ).toISOString(),
-                                                end_time: null,
-                                              },
-                                            })
+                                            if (endTime) {
+                                              const parsedEnd = parse(
+                                                endTime,
+                                                'HH:mm',
+                                                getEpochDate(),
+                                              )
+
+                                              updateTask({
+                                                id: task.id,
+                                                _set: {
+                                                  description,
+                                                  start_time: setDay(
+                                                    parsedStart,
+                                                    monthsMappings[
+                                                      capitalizeFirstLetter(
+                                                        day.week_day,
+                                                      )
+                                                    ],
+                                                  ).toISOString(),
+                                                  end_time: setDay(
+                                                    parsedEnd,
+                                                    monthsMappings[
+                                                      capitalizeFirstLetter(
+                                                        day.week_day,
+                                                      )
+                                                    ],
+                                                  ).toISOString(),
+                                                },
+                                              })
+                                            } else {
+                                              updateTask({
+                                                id: task.id,
+                                                _set: {
+                                                  description,
+                                                  start_time: setDay(
+                                                    parsedStart,
+                                                    monthsMappings[
+                                                      capitalizeFirstLetter(
+                                                        day.week_day,
+                                                      )
+                                                    ],
+                                                  ).toISOString(),
+                                                  end_time: null,
+                                                },
+                                              })
+                                            }
+                                          }}
+                                          onClose={() =>
+                                            setIsEditVisible(false)
                                           }
-                                        }}
-                                        onClose={() => setIsEditVisible(false)}
-                                        isOpen={
-                                          (isEditVisible &&
-                                            editingId === task.id) ||
-                                          (editingId === task.id &&
-                                            updateTaskStatus === 'loading')
-                                        }
-                                        weekDays={
-                                          data?.schedule_by_pk?.days.map(day =>
-                                            capitalizeFirstLetter(day.week_day),
-                                          ) || []
-                                        }
-                                      />
+                                          isOpen={
+                                            (isEditVisible &&
+                                              editingId === task.id) ||
+                                            (editingId === task.id &&
+                                              updateTaskStatus === 'loading')
+                                          }
+                                          weekDays={
+                                            data?.schedule_by_pk?.days.map(
+                                              day =>
+                                                capitalizeFirstLetter(
+                                                  day.week_day,
+                                                ),
+                                            ) || []
+                                          }
+                                        />
+                                      </div>
+                                    </li>
+                                  ))
+                                ) : (
+                                  <li className="pb-8">
+                                    <div className="min-w-0 flex-1 flex justify-between space-x-4">
+                                      <p className="text-sm text-gray-500">
+                                        No tasks for this day
+                                      </p>
                                     </div>
                                   </li>
-                                ))
-                              ) : (
-                                <li className="pb-8">
-                                  <div className="min-w-0 flex-1 flex justify-between space-x-4">
-                                    <p className="text-sm text-gray-500">
-                                      No tasks for this day
-                                    </p>
-                                  </div>
-                                </li>
-                              )}
-                            </ul>
+                                )}
+                              </ul>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </section>
               </div>
             </div>
+
+            {(scheduleQueryStatus === 'loading' ||
+              scheduleQueryStatus === 'idle') && (
+              <aside className="hidden xl:block xl:pl-8 sticky top-10 max-h-0">
+                <div className="space-y-5">
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                </div>
+                <div className="mt-6 border-t border-gray-200 py-6 space-y-5">
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                  <div className="flex animate-pulse flex-col">
+                    <div className="block rounded-full bg-gray-200 h-5"></div>
+                  </div>
+                </div>
+              </aside>
+            )}
+
             {/* max-h-0 so position sticky works, not a problem because the entire app is wrapped in overflow-hidden */}
-            <aside className="hidden xl:block xl:pl-8 sticky top-10 max-h-0">
-              <h2 className="sr-only">Details</h2>
-              <div className="space-y-5">
-                <div className="flex items-center space-x-2">
-                  {data?.schedule_by_pk?.active ? (
-                    <>
-                      <svg
-                        className="h-5 w-5 text-green-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
+            {scheduleQueryStatus === 'success' && data && (
+              <aside className="hidden xl:block xl:pl-8 sticky top-10 max-h-0">
+                <h2 className="sr-only">Details</h2>
+                <div className="space-y-5">
+                  <div className="flex items-center space-x-2">
+                    {data?.schedule_by_pk?.active ? (
+                      <>
+                        <svg
+                          className="h-5 w-5 text-green-500"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="text-green-700 text-sm font-medium">
+                          Active
+                        </span>
+                      </>
+                    ) : (
+                      <svg>
+                        <svg
+                          className="h-5 w-5 text-red-500"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="text-red-700 text-sm font-medium">
+                          Inactive
+                        </span>
                       </svg>
-                      <span className="text-green-700 text-sm font-medium">
-                        Active
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        className="h-5 w-5 text-red-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-red-700 text-sm font-medium">
-                        Inactive
-                      </span>
-                    </>
-                  )}
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {data?.schedule_by_pk?.user_is_subscribed ? (
+                      <>
+                        <svg
+                          className="h-5 w-5 text-green-500"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                        </svg>
+                        <span className="text-green-700 text-sm font-medium">
+                          Notifications enabled
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="h-5 w-5 text-red-500"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                        </svg>
+                        <span className="text-red-700 text-sm font-medium">
+                          Notifications disabled
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                    </svg>
+                    <span className="text-gray-900 text-sm font-medium">
+                      {tasksCount} tasks assigned
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {/* Heroicon name: calendar */}
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-900 text-sm font-medium">
+                      Created on{' '}
+                      <time dateTime={data?.schedule_by_pk?.created_at}>
+                        {format(
+                          parseISO(data?.schedule_by_pk?.created_at as string),
+                          "MMM' 'd', 'y",
+                        )}
+                      </time>
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  {data?.schedule_by_pk?.user_is_subscribed ? (
-                    <>
-                      <svg
-                        className="h-5 w-5 text-green-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                      </svg>
-                      <span className="text-green-700 text-sm font-medium">
-                        Notifications enabled
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        className="h-5 w-5 text-red-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                      </svg>
-                      <span className="text-red-700 text-sm font-medium">
-                        Notifications disabled
-                      </span>
-                    </>
-                  )}
-                </div>
-                <div className="flex items-center space-x-2">
-                  <svg
-                    className="h-5 w-5 text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                  </svg>
-                  <span className="text-gray-900 text-sm font-medium">
-                    {tasksCount} tasks assigned
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  {/* Heroicon name: calendar */}
-                  <svg
-                    className="h-5 w-5 text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-900 text-sm font-medium">
-                    Created on{' '}
-                    <time dateTime={data?.schedule_by_pk?.created_at}>
-                      {format(
-                        parseISO(data?.schedule_by_pk?.created_at as string),
-                        "MMM' 'd', 'y",
-                      )}
-                    </time>
-                  </span>
-                </div>
-              </div>
-              <div className="mt-6 border-t border-gray-200 py-6 space-y-8">
-                <div>
-                  <h2 className="text-sm font-medium text-gray-500">Days</h2>
-                  <ul className="mt-3 space-y-3">
-                    {data?.schedule_by_pk?.days.map(day => (
-                      <li className="flex justify-start" key={day.id}>
-                        <div className="flex items-center space-x-3">
-                          <div className="rounded-full font-semibold w-8 h-8 bg-gray-300 flex items-center justify-center">
-                            <span className="sr-only">
-                              Tasks assigned for {day.week_day}
+                <div className="mt-6 border-t border-gray-200 py-6 space-y-8">
+                  <div>
+                    <h2 className="text-sm font-medium text-gray-500">Days</h2>
+                    <ul className="mt-3 space-y-3">
+                      {data?.schedule_by_pk?.days.map(day => (
+                        <li className="flex justify-start" key={day.id}>
+                          <div className="flex items-center space-x-3">
+                            <div className="rounded-full font-semibold w-8 h-8 bg-gray-300 flex items-center justify-center">
+                              <span className="sr-only">
+                                Tasks assigned for {day.week_day}
+                              </span>
+                              <span>
+                                {day.tasks_aggregate.aggregate?.count}
+                              </span>
+                            </div>
+                            <span className="text-sm font-medium text-gray-900 capitalize">
+                              {day.week_day}
                             </span>
-                            <span>{day.tasks_aggregate.aggregate?.count}</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-900 capitalize">
-                            {day.week_day}
-                          </span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </aside>
+              </aside>
+            )}
           </div>
         </div>
       </main>

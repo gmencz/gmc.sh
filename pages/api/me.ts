@@ -1,24 +1,20 @@
 import { UserDocument, UserQuery, UserQueryVariables } from 'generated/graphql'
 import { NextApiRequest, NextApiResponse } from 'next'
-import auth0 from 'utils/auth0'
-import { gqlProxyClient } from 'utils/gql-client'
+import { client } from 'utils/graphql'
 
 export default async function me(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const session = await auth0.getSession(req)
-    if (!session || !session.user) {
-      return res.status(401).json({
-        message: `You must login to access this resource.`,
-        code: 'unauthenticated',
-      })
-    }
+    client.setHeader(
+      'Authorization',
+      `Bearer ${req.headers.authorization?.split(' ')[1]}`,
+    )
 
-    gqlProxyClient.setHeader('Authorization', `Bearer ${session.accessToken}`)
+    const { user_id } = req.body.input
 
-    const user = await gqlProxyClient.request<UserQuery, UserQueryVariables>(
+    const user = await client.request<UserQuery, UserQueryVariables>(
       UserDocument,
       {
-        id: session.user.sub,
+        id: user_id,
       },
     )
 

@@ -1,12 +1,15 @@
 import { MeQuery, useMeQuery } from 'generated/graphql'
 import { ClientError } from 'graphql-request'
+import { useApi } from 'hooks/use-api'
 import Link from 'next/link'
 import { useToasts } from 'react-toast-notifications'
 
 function AccountOverview() {
   const { addToast } = useToasts()
+  const { client, isReady, user } = useApi()
   const { data: me, status } = useMeQuery<MeQuery, ClientError>(
-    {},
+    client,
+    { userId: user.sub },
     {
       onError: error => {
         addToast(
@@ -15,6 +18,7 @@ function AccountOverview() {
         )
       },
       staleTime: Infinity,
+      enabled: isReady,
     },
   )
 
@@ -48,8 +52,8 @@ function AccountOverview() {
                     Schedules
                   </dt>
                   <dd>
-                    {status === 'loading' && (
-                      <div className="animate-pulse mt-4">
+                    {(status === 'loading' || status === 'idle') && (
+                      <div className="animate-pulse mt-2 w-1/2">
                         <div className="hidden sm:block bg-gray-200 h-5 w-full rounded-full">
                           <span className="sr-only">loading schedules...</span>
                         </div>

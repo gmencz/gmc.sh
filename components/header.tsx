@@ -1,15 +1,19 @@
 import { Menu, Transition } from '@headlessui/react'
 import { useMeQuery } from 'generated/graphql'
+import { useApi } from 'hooks/use-api'
 
 type HeaderProps = {
   openMobileSidebar: () => void
 }
 
 function Header({ openMobileSidebar }: HeaderProps) {
+  const { client, isReady, user } = useApi()
   const { data: me, status } = useMeQuery(
-    {},
+    client,
+    { userId: user.sub },
     {
       staleTime: Infinity,
+      enabled: isReady,
     },
   )
 
