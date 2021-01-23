@@ -12,6 +12,7 @@ import SlowNetProgressBar from 'components/slow-net-progress-bar'
 import 'nprogress/nprogress.css'
 import 'styles/custom-nprogress.css'
 import 'tailwindcss/tailwind.css'
+import Layout from 'components/layout'
 
 const authRedirect = (appState: AppState) => {
   Router.replace(appState.returnTo || '/')
@@ -35,7 +36,9 @@ function App({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <ToastProvider components={{ Toast, ToastContainer }}>
-              <Component {...pageProps} />
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
             </ToastProvider>
           </Hydrate>
           <ReactQueryDevtools />
