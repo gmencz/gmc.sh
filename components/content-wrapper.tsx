@@ -75,7 +75,7 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                     )}
                     <div className="ml-3 flex-1">
                       {status === 'loading' && (
-                        <div className="animate-pulse mb-3">
+                        <div className="animate-pulse self-start mb-3 w-1/2">
                           <div className="h-4 bg-gray-200 rounded">
                             <span className="sr-only">loading...</span>
                           </div>
@@ -92,7 +92,7 @@ function ContentWrapper({ children }: ContentWrapperProps) {
                     </div>
                   </div>
                   {status === 'loading' && (
-                    <div className="animate-pulse sm:ml-3 mt-4 sm:mt-1">
+                    <div className="animate-pulse self-start sm:ml-3 mt-4 sm:mt-1 w-1/2">
                       <div className="h-14 sm:h-4 bg-gray-200 rounded">
                         <span className="sr-only">loading...</span>
                       </div>
