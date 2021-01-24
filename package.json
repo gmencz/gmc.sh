@@ -17,7 +17,7 @@
     "gen-gql-types:watch": "dotenv -e .env.hasura -- graphql-codegen --config codegen.yml --watch gql/**/*.graphql",
     "hasura-init": "cd hasura && npx hasura migrate apply --admin-secret notsecretatallthisisjustfordevelopment && npx hasura metadata apply --admin-secret notsecretatallthisisjustfordevelopment",
     "hasura-console": "cd hasura && npx hasura console --admin-secret notsecretatallthisisjustfordevelopment",
-    "precommit": "dotenv -e .env.hasura -- lint-staged"
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "@auth0/auth0-react": "^1.2.0",
