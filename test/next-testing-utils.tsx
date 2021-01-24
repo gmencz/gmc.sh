@@ -47,11 +47,7 @@ jest.mock('next/image', () => ({
   },
 }))
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-  },
-})
+const queryClient = new QueryClient()
 
 const renderWithRouter = (component: ReactElement): RenderResult => {
   return render(

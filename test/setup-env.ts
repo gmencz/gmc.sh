@@ -2,20 +2,27 @@ import '@testing-library/jest-dom'
 import { server } from './server/test-server'
 import { config } from 'dotenv'
 import { join } from 'path'
+
 config({ path: join(__dirname, '..', '.env.test.local') })
 
 jest.mock('hooks/use-api', () => {
   const { GraphQLClient } = jest.requireActual('graphql-request')
+  const faker = jest.requireActual('faker')
 
-  console.log(process.env.NEXT_PUBLIC_GQL_ENDPOINT)
+  const fakeUser = {
+    email: faker.internet.email(),
+    name: faker.name.findName(),
+    nickname: faker.internet.userName(),
+    picture: faker.image.imageUrl(),
+    sub: faker.random.uuid(),
+    updated_at: faker.date.recent(),
+  }
 
   return {
     useApi: jest.fn().mockImplementation(() => ({
       client: new GraphQLClient(process.env.NEXT_PUBLIC_GQL_ENDPOINT as string),
       isReady: true,
-      user: {
-        sub: '123',
-      },
+      user: fakeUser,
     })),
   }
 })

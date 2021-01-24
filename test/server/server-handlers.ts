@@ -1,5 +1,5 @@
 import { UserQuery, UserQueryVariables } from 'generated/graphql'
-import { graphql } from 'msw'
+import { graphql, rest } from 'msw'
 import faker from 'faker'
 
 export const handlers = [
@@ -20,4 +20,18 @@ export const handlers = [
       }),
     )
   }),
+
+  // Auth0 endpoints
+  rest.get(
+    `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/*`,
+    (_req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ ok: true }))
+    },
+  ),
+  rest.post(
+    `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/*`,
+    (_req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ ok: true }))
+    },
+  ),
 ]

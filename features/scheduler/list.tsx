@@ -1,5 +1,6 @@
 import { format, parseISO } from 'date-fns'
-import { useMySchedulesQuery } from 'generated/graphql'
+import { MySchedulesQuery, useMySchedulesQuery } from 'generated/graphql'
+import { ClientError } from 'graphql-request'
 import { useApi } from 'hooks/use-api'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,15 +12,17 @@ function SchedulerList() {
   const page = Number(paginationInfo['page']) || 1
   const perPage = Number(paginationInfo['per-page']) || PER_PAGE
   const offset = page === 1 ? 0 : (page - 1) * perPage
-  const { client, isReady, user } = useApi()
-  const { data, status } = useMySchedulesQuery(
+  const { client, isReady } = useApi()
+  const { data, status, error } = useMySchedulesQuery<
+    MySchedulesQuery,
+    ClientError
+  >(
     client,
     {
-      userId: user.sub,
       limit: perPage,
       offset,
     },
-    { staleTime: Infinity, enabled: isReady },
+    { enabled: isReady },
   )
 
   const totalSchedules =
@@ -27,6 +30,12 @@ function SchedulerList() {
 
   return (
     <>
+      {status === 'error' && (
+        <div className="max-w-6xl mx-auto mt-2">
+          <p>{error?.message}</p>
+        </div>
+      )}
+
       <div className="hidden sm:block">
         <div className="max-w-6xl mx-auto">
           {(status === 'loading' || status === 'idle') && (

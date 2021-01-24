@@ -1,4 +1,6 @@
+import { withAuthenticationRequired } from '@auth0/auth0-react'
 import { ReactNode, useState } from 'react'
+import AuthenticationSpinner from './authentication-spinner'
 import ContentWrapper from './content-wrapper'
 import Header from './header'
 import Sidebar from './sidebar'
@@ -31,4 +33,6 @@ function Layout({ children }: LayoutProps) {
   )
 }
 
-export default Layout
+export default withAuthenticationRequired(Layout, {
+  onRedirecting: AuthenticationSpinner,
+})

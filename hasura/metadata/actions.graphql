@@ -1,5 +1,5 @@
 type Query {
-  me(user_id: String!): Me!
+  me: Me!
 }
 
 type MeOutput {

@@ -4,7 +4,7 @@ import NProgress from 'nprogress'
 let timer: NodeJS.Timeout
 let state: 'loading' | 'stop'
 const activeRequests = 0
-const delay = 250
+const delay = 300
 
 function load() {
   if (state === 'loading') {

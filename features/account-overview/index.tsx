@@ -6,10 +6,10 @@ import { useToasts } from 'react-toast-notifications'
 
 function AccountOverview() {
   const { addToast } = useToasts()
-  const { client, isReady, user } = useApi()
+  const { client, isReady } = useApi()
   const { data: me, status } = useMeQuery<MeQuery, ClientError>(
     client,
-    { userId: user.sub },
+    {},
     {
       onError: error => {
         addToast(

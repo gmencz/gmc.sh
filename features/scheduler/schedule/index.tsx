@@ -1,5 +1,18 @@
 import ConfirmDialog from 'components/confirm-dialog'
-import { format, parse, parseISO, setDay } from 'date-fns'
+import {
+  format,
+  parse,
+  parseISO,
+  setDay,
+  isBefore,
+  getDay,
+  set,
+  getDate,
+  getYear,
+  getMonth,
+  compareAsc,
+  differenceInMinutes,
+} from 'date-fns'
 import {
   ScheduleQuery,
   useAddTasksToScheduleMutation,
@@ -12,7 +25,7 @@ import { ClientError } from 'graphql-request'
 import { useApi } from 'hooks/use-api'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQueryClient } from 'react-query'
 import { useToasts } from 'react-toast-notifications'
 import monthsMappings from 'utils/months-mappings'
@@ -46,6 +59,95 @@ function SchedulerSchedule() {
       },
     },
   )
+
+  useEffect(() => {
+    let notificationTimeout: null | NodeJS.Timeout = null
+    if (data) {
+      // Check that the user is subscribed to notifications
+      // before proceeding.
+      if (
+        !data.schedule_by_pk?.user_is_subscribed ||
+        !('Notification' in window)
+      ) {
+        return
+      }
+
+      // Map all the tasks into an array.
+      const tasks = data.schedule_by_pk.days.flatMap(day =>
+        day.tasks.map(task => task),
+      )
+
+      // Check that there are tasks before proceeding.
+      if (tasks.length === 0) {
+        return
+      }
+
+      const currentDate = new Date()
+
+      // Filter out the tasks which have already happened
+      const upcomingTasks = tasks.filter(task => {
+        const taskStartDate = parseISO(task.start_time)
+        const taskWeekDay = getDay(taskStartDate)
+        const currentDateWeekDay = getDay(currentDate)
+        if (taskWeekDay < currentDateWeekDay) {
+          return false
+        }
+
+        const comparableCurrentDate = set(currentDate, {
+          year: getYear(taskStartDate),
+          date: getDate(taskStartDate),
+          month: getMonth(taskStartDate),
+        })
+
+        return isBefore(comparableCurrentDate, taskStartDate)
+      })
+
+      const firstUpcomingTask = upcomingTasks.sort((a, b) => {
+        const aStartDate = parseISO(a.start_time)
+        const bStartDate = parseISO(b.start_time)
+        return compareAsc(aStartDate, bStartDate)
+      })[0]
+
+      const taskStartDate = parseISO(firstUpcomingTask.start_time)
+      const comparableCurrentDate = set(currentDate, {
+        year: getYear(taskStartDate),
+        date: getDate(taskStartDate),
+        month: getMonth(taskStartDate),
+      })
+
+      const minutesUntilTask = differenceInMinutes(
+        taskStartDate,
+        comparableCurrentDate,
+      )
+
+      // Send first notification 5 minutes before the task
+      // For now we will use the static value of "5" minutes.
+      // The idea is that in the future, the user will be able
+      // to configure this value.
+      let notificationMs = minutesUntilTask * 60 * 1000 - 5 * 60 * 1000
+      if (minutesUntilTask < 5) {
+        // Send notification instantly
+        notificationMs = 1
+      }
+
+      notificationTimeout = setTimeout(() => {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            new Notification(data.schedule_by_pk?.title as string, {
+              body: `You have to ${firstUpcomingTask.description} in around 5 minutes!`,
+              requireInteraction: true,
+            })
+          }
+        })
+      }, notificationMs)
+    }
+
+    return () => {
+      if (notificationTimeout) {
+        clearTimeout(notificationTimeout)
+      }
+    }
+  }, [data])
 
   const [
     showNotificationsEnabledInfo,
